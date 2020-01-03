@@ -3,13 +3,13 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import {Greeting} from './views'
 
-import { BrowserRouter as Router,Switch,Route,Redirect } from 'react-router-dom'
+import { BrowserRouter as Router,Switch,Route} from 'react-router-dom'
 
 ReactDOM.render(
     <Router>
       <Switch>
-          <Route path='/' component={Greeting} exact/>
-          <Route path='/app' component={App}/>
+          <Route path='/greeting' component={Greeting}/>
+          <Route path='/' component={App}/>
 
       </Switch>
     </Router>,

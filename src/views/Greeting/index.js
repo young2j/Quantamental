@@ -3,6 +3,8 @@ import { Layout,Button,Icon} from 'antd';
 
 
 import './index.less'
+import './index-pad.less'
+import './index-mobile.less'
 import logo from './images/logo1.png'
 import searchImg from './images/fangdajing.svg'
 import kImg from './images/Kxiantu.svg'
@@ -27,22 +29,24 @@ export default class Greeting extends Component {
                     <div className="page-content">
                         <div className="page-content-left">
                             <img src={searchImg} alt=""/>
-                            <div className='text'>Accounting</div>
+                            <div className='text'>Ac<span>count</span>ing</div>
                         </div>
                         <div className="page-content-center">
                             <div className='title'>基本面量化投资</div>
                             <p>——开启您的价值投资之旅</p>
-                            <Button style={{fontWeight:'bold',width:"125px"}}>开始使用</Button>
-                            <img src={githubImg} />
-                            <Button style={{ fontWeight: 'bold' }}>
-                                biu一下呗~
-                                <Icon type='heart' style={{ color: 'hotpink' }}/>
-                            </Button>
+                            <div className="button-group">
+                                <Button style={{fontWeight:'bold',width:"120px"}}>开始使用</Button>
+                                <img src={githubImg} alt='' />
+                                <Button style={{ fontWeight: 'bold' }}>
+                                    biu一下呗~
+                                    <Icon type='heart' style={{ color: 'hotpink',margin:'0px'}}/>
+                                </Button>
+                            </div>
                         </div>
                         <div className="page-content-right">
-                          <img src={computerImg} id='computer'/>
-                          <img src={kImg} id="k"/>
-                          <div className="text">Tech</div>
+                          <img src={computerImg} id='computer' alt=''/>
+                          <img src={kImg} id="k" alt=''/>
+                          <div className="text">> Tech <span>. . .</span></div>
                         </div>
                     </div>
                 </Content>
