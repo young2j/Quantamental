@@ -16,7 +16,7 @@ const mainRouter = [
         path: '/fundamental/finance',
         component: Finance
     }, {
-        path: '/fundamental/valuation',
+        path: '/fundamental/evaluation',
         component: Evaluation
     }, {
         path: '/fundamental/quality',
