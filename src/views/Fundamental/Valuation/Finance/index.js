@@ -2,20 +2,34 @@ import React, { Component } from 'react'
 // import _ from 'lodash'
 
 import { 
+    Button,
     Icon, 
-    Button, 
-    Input, 
-    AutoComplete, 
-    message,
     Card,
-    Typography,
     Popconfirm,
-    Table,
     Tag,
     Rate,
+    Tabs,
 } from 'antd';
 
-import { searchFirmcode,getFinancialData,getFinancialsData} from '../../../../api'
+import { 
+    PageTitle,
+    SearchBar,
+    ProfitTabTable,
+    ProfitTabChart,
+    SolvencyTabTable,
+    SolvencyTabChart,
+    OperationTabTable,
+    OperationTabChart,
+    GrowthTabTable,
+    GrowthTabChart,
+    CashTabTable,
+    CashTabChart,
+    MarketTabTable,
+    MarketTabChart,
+} from '../../../../components/Finance'
+
+
+import { getFinancialData,getFinancialsData} from '../../../../api'
 
 import './index.less'
 
@@ -47,56 +61,13 @@ export default class Finance extends Component {
     constructor(props){
         super(props)    
         this.state = {
-            searchDataSource: [],
-            switchTitle:false,
-            isSearching:false,
-
-            columns:[],
-            dataSource: []
+            dataSource: [],
+            tabMode:'top',
+            tabIndex:0,
+            switchTableChart:true,
+            activeTabKey:"1",
         }
     }
-
-
-    //处理输入的值，并提供数据源
-    handleSearch = value => {
-        searchFirmcode()
-            .then(resp => {
-                const searchDataSource = resp.data.map(item=>{
-                        return item.stkcd+` ${item.name}`
-                })
-                this.setState({
-                    searchDataSource
-                })
-            })
-    }; 
-    //处理选择的值
-    onSelect = (value) => {
-        this.setState({
-            isSearching:true
-        })
-        const stkcd = /^\d{6}/.exec(value) //返回数组,没有则返回null
-        if (stkcd){
-            getFinancialData(stkcd[0])
-            .then(resp=>{
-                console.log(resp);
-            })
-            .finally(()=>
-               this.setState({
-                    isSearching: false
-                })
-            )
-        } else {
-            message.error("输入的公司不存在")
-            this.setState({
-                isSearching: false
-            })
-        }
-    }
-    //处理输入框回车
-    onPressEnter = (value)=>{
-        this.onSelect(value)
-    }
-
 
     //table
     handleDelete = record => {        
@@ -135,12 +106,12 @@ export default class Finance extends Component {
                 firm => { //Object
                     const profitability = Object.assign(
                         {}, firm.profitability, {
-                        stkcd: firm.stkcd
+                        stkcd: firm.stkcd+' '+firm.name
                     }
                     )
                     const solvency = Object.assign(
                         {}, firm.solvency, {
-                        stkcd: firm.stkcd
+                        stkcd: firm.stkcd+' '+firm.name
                     }
                     )
                     return { profitability, solvency }
@@ -163,6 +134,17 @@ export default class Finance extends Component {
             
     }
     
+    //切换tabMode
+    switchTabMode = () => {
+        const { tabIndex } = this.state
+        const newTabIndex = tabIndex + 1 < 4 ? tabIndex + 1 : 0
+        const newTabMode = ['top', 'right', 'bottom', 'left'][newTabIndex]
+        this.setState({
+            tabIndex: newTabIndex,
+            tabMode: newTabMode
+        })
+    }
+    
     componentDidMount() {
         getFinancialsData()
             .then(resp => {
@@ -179,7 +161,9 @@ export default class Finance extends Component {
         const profitabilityColumns = Object.keys(columnsNames.profitability).map((k, i) => {
             if (k === 'operate') {
                 return {
-                    title: columnsNames.profitability[k],
+                    title: (<span style={{ color: '#1890ff' }}>
+                                {columnsNames.profitability[k]}
+                            </span>),
                     dataIndex: k,
                     render: (text, record) => {
                         return (
@@ -196,6 +180,7 @@ export default class Finance extends Component {
             if (k==='stkcd'){
                 return {
                     title: (<Button ghost
+                                size='small'
                                 onClick={this.handleAdd} 
                                 type="primary"
                                 shape='round' 
@@ -220,7 +205,9 @@ export default class Finance extends Component {
                 }
             }
             return {
-                title: columnsNames.profitability[k],
+                title: (<span style={{ color:'#1890ff'}}>
+                            {columnsNames.profitability[k]}(%)
+                        </span>),
                 dataIndex: k,
                 sorter: (a, b) => Object.values(a)[i] - Object.values(b)[i],
                 sortDirections: ['descend', 'ascend'],
@@ -228,8 +215,8 @@ export default class Finance extends Component {
                     return (<>{text}
                             <sup><Rate allowHalf 
                                      disabled 
-                                     value={text * 3}
-                                     style={{color:text>1? 'red':'green'}}
+                                     value={text/100*5}
+                                     style={{color:text>50? 'red':'green'}}
                                  /></sup>
                             </>)
                 }
@@ -241,57 +228,133 @@ export default class Finance extends Component {
             // solvencyColumns: data[0].solvencyColumns,
         }
 
-        const pageTitle = (
-            <div className='finance-title'>
-                <Typography.Text className='finance-title-text'
-                    onClick={() => this.setState({ switchTitle: !this.state.switchTitle })}
-                >
-                    {this.state.switchTitle ? '纵向分析' : '横向分析'}
-                    <Icon type="retweet" />
-                </Typography.Text>
-            </div>
-        )
 
-        const searchBar = (
-            <div className="global-search-wrapper">
-                <AutoComplete
-                    className="global-search"
-                    size="large"
-                    dataSource={this.state.searchDataSource}
-                    onSelect={this.onSelect}
-                    onSearch={this.handleSearch}
-                    placeholder="输入公司代码或公司名"
-                    filterOption={(inputValue, option) =>
-                        option.props.children.indexOf(inputValue) !== -1
-                    }
-                >
-                    <Input.Search 
-                        enterButton={
-                            <Button type='primary' shape='circle' style={{height:'40px'}}>
-                                <Icon type='search'/>
-                            </Button>
-                            }
-                        loading={this.state.isSearching}  
-                        onSearch={this.onPressEnter}/>
-                </AutoComplete>
-            </div>
-        )
-
-
+        const {dataSource,switchTableChart,activeTabKey} = this.state
+        
+        
         return (
             <Card 
                 className="finance-page"
-                title={pageTitle} 
-                extra={searchBar}
+                title={<SearchBar />} //交换了位置
+                extra={<PageTitle />} //
                 // bordered={false}
+                hoverable
+                type='inner'
             >
-                <Table
-                    size='middle'
-                    bordered={false}
-                    rowKey = {(record)=>record.stkcd}
-                    dataSource={this.state.dataSource.profitabilityDataSource}
-                    columns={columns.profitabilityColumns}
-                />
+                
+                <Tabs defaultActiveKey="1" 
+                    tabBarGutter={30}
+                    tabBarExtraContent={
+                        <Button style={{display:"flex"}}
+                            onClick={this.switchTabMode}
+                        >切换导航</Button>
+                    }
+                    tabPosition={this.state.tabMode}
+                    tabBarStyle={{fontWeight:'bold',fontSize:30}}
+                    onChange={(activeKey)=>{this.setState({
+                        activeTabKey:activeKey,
+                        switchTableChart:true,
+                    })}}
+                >
+                    <Tabs.TabPane key='1'
+                        tab={
+                            <span>
+                                <Icon type='dollar' />
+                                 盈利能力  
+                            </span>
+                        }
+                    >
+                        {
+                            switchTableChart && activeTabKey==="1"?
+                            <ProfitTabTable 
+                                rowKey={(record) => record.stkcd}
+                                dataSource={dataSource.profitabilityDataSource}
+                                columns={columns.profitabilityColumns}
+                            />
+                            :
+                            <ProfitTabChart dataSource={dataSource.profitabilityDataSource}/>
+                        }
+                    </Tabs.TabPane>
+                    <Tabs.TabPane key="2"
+                     tab={
+                       <span>
+                         <Icon type="safety-certificate" />
+                         偿债能力
+                       </span>
+                     }
+                   >
+                    {
+                        switchTableChart && activeTabKey==="2"?
+                        <SolvencyTabTable/>:<SolvencyTabChart/>
+                    }
+                   </Tabs.TabPane>
+                    <Tabs.TabPane key='3'
+                      tab = {
+                        <span>
+                            <Icon type='android'/>
+                            营运能力
+                        </span>
+                      }
+                    >{
+                            switchTableChart && activeTabKey === "3"?
+                        <OperationTabTable/>:<OperationTabChart/>
+                    }
+                    </Tabs.TabPane>
+                    <Tabs.TabPane key='4'
+                      tab = {
+                        <span>
+                            <Icon type='rise'/>
+                            成长能力
+                        </span>
+                      }
+                    >
+                        {
+                            switchTableChart && activeTabKey === "4"?
+                          <GrowthTabTable/>:<GrowthTabChart/>
+                        }
+                    </Tabs.TabPane>
+                    <Tabs.TabPane key='5'
+                      tab = {
+                        <span>
+                            <Icon type='transaction'/>
+                            现金流量
+                        </span>
+                      }
+                    >
+                        {
+                            switchTableChart && activeTabKey === "5"?
+                          <CashTabTable/>:<CashTabChart/>
+                        }
+                    </Tabs.TabPane>
+                    <Tabs.TabPane key='6'
+                      tab = {
+                        <span>
+                            <Icon type='sliders'/>
+                            市场表现
+                        </span>
+                      }
+                    >
+                        {
+                          switchTableChart && activeTabKey === "6"?
+                          <MarketTabTable/>:<MarketTabChart/>
+                        }
+                    </Tabs.TabPane>
+                </Tabs>
+
+
+                <div className='footer-btn-group'>
+                    <Button className='footer-btn-left'
+                        onClick={() => this.setState({
+                            switchTableChart:true
+                        })}
+                    >看表</Button>
+                    <Icon type='retweet' />
+                    <Button className='footer-btn-right'
+                        onClick={() => this.setState({
+                            switchTableChart: false
+                        })}
+                    >看图</Button>
+                </div>
             </Card>
         );
     }

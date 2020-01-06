@@ -1,13 +1,5 @@
 .finance-page{
-    .finance-title{
-        text-align: center;
-        .finance-title-text{
-            font-size:25px;
-            letter-spacing: 3px;
-            margin-right: 12px;
-        }
-    }
-
+    margin: 0px 0px 50px 0px;
     .ant-rate-star{
         width: 1px;
         svg{
@@ -16,12 +8,73 @@
         }
     }
 }
-.global-search-wrapper{
-    width: 300px;
+
+
+.footer-btn-group{
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    .global-search{
-        width:80%;
+    justify-content: center;
+    margin-top: -20px;
+    padding-right: 40px;
+    .footer-btn-left{
+        color:#2db7f5;
+        height: 40px;
+        border-radius: 50%;
+        border-left:0px;
+        border-top: 0px;
+        border-bottom: 0px;
+        border-right:3px solid #2db7f5;
     }
-  }
+    .footer-btn-right{
+        color:#f50;
+        height: 40px;
+        border-radius: 50%;
+        border-right:0px;
+        border-top: 0px;
+        border-bottom: 0px;
+        border-left:3px solid #f50;
+    }
+}
+
+.ant-table-content{
+    .ant-table-body{
+        table{
+            thead{
+             th{
+                 border-left:0px;
+                 border-right:0px;
+                 border-top:1px solid #2db7f5;
+                 border-bottom:1px solid #2db7f5;
+                 background: #fff;
+             }
+            }
+            tbody{
+                tr{
+                    td{
+                        border-bottom:0px;
+                        border-top:0px;
+                    }
+                    td:first-child{
+                        border-right: 0.2px solid #2db7f5;
+                        // border-bottom: 0.2px solid #2db7f5;
+                    }
+                    td:last-child{
+                        border-left: 0.2px solid #2db7f5;
+                        // border-bottom: 0.2px solid #2db7f5;
+                    }
+                }
+                tr:last-child{
+                    td{
+                        border-bottom: 0.2px solid #2db7f5;
+                    }
+                }
+                // tr:hover{
+                    // td{
+                        // border-bottom: 1px solid #2db7f5;
+                        // border-top: 1px solid #2db7f5;
+                    // }
+                // }                
+            }
+        }
+    }
+}
