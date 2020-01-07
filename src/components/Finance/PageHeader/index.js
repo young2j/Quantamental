@@ -1,4 +1,5 @@
-import React, { Component,useState } from 'react'
+import React, { Component} from 'react'
+
 import {
     Icon,
     Button,
@@ -10,36 +11,54 @@ import {
 
 import './index.less'
 
-import { searchFirmcode,getFinancialData} from '../../../api'
+import { autoCompleteFirmCode} from '../../../api'
+import { connect } from 'react-redux'
+import { horizontalComparision,searchFirm,addFirm } from '../../../redux/actions'
+import { handleDataSource } from '../../../utils'
 
-
-export const PageTitle = ()=>{
-    const [switchTitle, setSwitchTitle] = useState(false)
-    return (
+//==============================
+@connect(state=> {
+            return { 
+            horizontal: state.horizontal 
+            } 
+        },{
+            horizontalComparision,
+            addFirm        
+        })
+class PageTitle extends Component {
+    render(){
+        
+      return (
         <div className='page-title'>
             <Typography.Text className='page-title-text'
-                onClick={() => setSwitchTitle(!switchTitle)}
+                onClick={() => this.props.horizontalComparision()}
                 >
-                {switchTitle ? '纵向分析' : '横向分析'}
+                {this.props.horizontal ?  '横向分析':'纵向分析'}
                 <Icon type="block" />
             </Typography.Text>
         </div>
-    )
+        )
+    }
 }
 
-
-
-export class SearchBar extends Component {
+//============================
+@connect(state=>{
+    return {
+        currentFirmCode:state.financeInfo.currentFirmCode,
+        isLoading:state.financeInfo.isLoading
+    }
+ },{searchFirm,addFirm})
+class SearchBar extends Component {
     constructor(props) {
         super(props)
         this.state = {
             searchDataSource: [],
-            isSearching: false,
+            searchFirmCode:''
         }
     }
     //处理输入的值，并提供数据源
     handleSearch = value => {
-        searchFirmcode()
+        autoCompleteFirmCode()
             .then(resp => {
                 const searchDataSource = resp.data.map(item => {
                     return item.stkcd + ` ${item.name}`
@@ -48,60 +67,78 @@ export class SearchBar extends Component {
                     searchDataSource
                 })
             })
-    };
+        this.setState({
+            searchFirmCode:value
+        })
+            
+    }
     //处理选择的值
     onSelect = (value) => {
         this.setState({
-            isSearching: true
+            searchFirmCode:value
         })
-        const stkcd = /^\d{6}/.exec(value) //返回数组,没有则返回null
-        if (stkcd) {
-            getFinancialData(stkcd[0])
-                .then(resp => {
-                    console.log(resp);
-                })
-                .finally(() =>
-                    this.setState({
-                        isSearching: false
-                    })
-                )
-        } else {
-            message.error("输入的公司不存在")
-            this.setState({
-                isSearching: false
-            })
-        }
     }
     //处理输入框回车
     onPressEnter = (value) => {
-        this.onSelect(value)
+        const stkcd = /^\d{6}/.exec(value) //返回数组,没有则返回null
+        if (stkcd) {
+            this.props.searchFirm(stkcd[0])
+        } else {
+            message.error("输入的公司不存在")
+        }        
+    }
+    //添加指定公司
+    handleAdd=()=>{
+        const stkcd = /^\d{6}/.exec(this.state.searchFirmCode) //返回数组,没有则返回null
+        if (stkcd) {
+            this.props.addFirm(stkcd[0])
+        } else {
+            message.error("输入的公司不存在")
+        }                      
+    }
+
+    componentDidMount(){
+        this.props.searchFirm(this.props.currentFirmCode) //组件加载完,自动获取上次搜索的公司信息
     }
     
-    
     render() {
+        
         return (
                 <div className="global-search-wrapper">
-                    <AutoComplete
+                <AutoComplete 
                         className="global-search"
                         size="default"
                         dataSource={this.state.searchDataSource}
                         onSelect={this.onSelect}
                         onSearch={this.handleSearch}
-                        placeholder="输入公司代码或公司名"
+                        placeholder="输入公司代码进行查询或添加"
                         filterOption={(inputValue, option) =>
                             option.props.children.indexOf(inputValue) !== -1
                         }
                     >
-                        <Input.Search
+                        <Input.Search 
                             enterButton={
                                 <Button type='default' shape='circle' style={{ height: '32px' }}>
                                     <Icon type='search' />
                                 </Button>
                             }
-                            loading={this.state.isSearching}
+                            loading={this.props.isLoading}
                             onSearch={this.onPressEnter} />
                     </AutoComplete>
+                    <Button ghost
+                            type='primary' 
+                            shape='circle' 
+                            style={{ height: '30px' }}
+                            onClick={this.handleAdd}
+                    >
+                        <Icon type='plus' />
+                    </Button>
                 </div>
             )
     }
+}
+
+export {
+    PageTitle,
+    SearchBar
 }

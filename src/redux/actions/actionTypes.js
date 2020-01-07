@@ -1,3 +1,13 @@
 export default {
+    START_REQUEST:"START_REQUEST",
+    END_REQUEST:"END_REQUEST",
+
+    HORIZONTAL: 'HORIZONTAL', //横向分析or纵向分析
+    SEARCH_FIRM:'SEARCH_FIRM', //搜索需要查看的公司
+    ADD_FIRM:'ADD_FIRM', //添加可比公司
+    ADD_DEFAULT_FIRM:'ADD_DEFAULT_FIRM',//添加默认可比公司
+    DELETE_FIRM:'DELETE_FIRM', //删除可比公司
+    FOLLOW_FIRM:'FOLLOW_FIRM', //关注公司
+
     WATCH_TABLE:'WATCH_TABLE',
 }
