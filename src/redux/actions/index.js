@@ -1,5 +1,10 @@
 import actionTypes from './actionTypes'
-import { getFinancialData,getFinancialsData } from '../../api'
+import { 
+    getFinanceInfos,
+    getFinanceYearInfos,
+    getFinanceYearsInfos
+} from '../../api'
+
 import { message } from 'antd'
 
 //====================通用==============
@@ -23,31 +28,34 @@ export const horizontalComparision=()=> dispatch =>{
 
 //----------搜索公司-------------
 //默认返回搜索公司及所处行业前5家公司信息
-export const searchFirm= stkcd => dispatch => {
+export const searchFirm = (stkcd,firmName,startDate,endDate) => async dispatch => {
     dispatch(startRequest())
-    getFinancialsData(stkcd) //这里实际需要提供stkcd
-    .then(resp=>{        
-            if(resp.code==="200"){
-                dispatch({
+    //获取横向数据
+    const respData = await getFinanceInfos(stkcd, startDate, endDate)
+
+    if (respData.code==="200"){
+        console.log("respData:", respData);
+        
+        const data = respData.data
+        dispatch({
                     type:actionTypes.SEARCH_FIRM,
                     payload:{
-                        stkcd,
-                        data:resp.data
-                    }
+                            stkcd,
+                            firmName,
+                            data
+                        }
                 })
-                dispatch(endRequest())
-            } else{
-                message.error('数据请求失败!')
-            }
-        }
-    )
+        dispatch(endRequest())
+    } else {
+        message.error('数据请求失败!')
+    }    
 }
 
+
 //------------添加可比公司--------------
-export const addFirm=stkcd=>dispatch=>{
+export const addFirm = (stkcd, startDate, endDate)=>dispatch=>{
     dispatch(startRequest())
-    // stkcd? getFinancialData(stkcd):getFinancialData() 这里根据是否提供stkcd确定是默认添加还是指定添加
-    getFinancialData(stkcd)
+    getFinanceYearsInfos(stkcd, startDate, endDate)
     .then(resp=>{
         if(resp.code==='200'){
             dispatch({
@@ -60,28 +68,84 @@ export const addFirm=stkcd=>dispatch=>{
         }
     })
 }
-//-------------删除可比公司---------------
-const deleteFirmSync = (stkcd)=>{
-    return {
-        type: actionTypes.DELETE_FIRM,
-        payload: stkcd
-    }
+
+//------------添加时间维度-------------
+export const addDate= (stkcd,date)=>dispatch=>{ //实际应该传入当前显示或添加的所有公司代码
+    dispatch(startRequest())
+    getFinanceYearInfos(stkcd,date)
+        .then(resp => {
+            if (resp.code === '200') {
+                dispatch({
+                    type: actionTypes.ADD_DATE,
+                    payload: resp.data //1d array
+                })
+                dispatch(endRequest())
+            } else {
+                message.error("数据请求错误,添加失败!")
+            }
+        })
 }
+//-------------删除时间维度------------
+export const deleteDate = (stkcd, date) => dispatch => { //实际应该传入当前显示或添加的所有公司代码
+    dispatch({
+        type: actionTypes.DELETE_DATE,
+        stkcd,
+        date
+    })
+}
+
+//-------------选择时间维度-------------
+export const selectDate = (date)=>dispatch=>{
+    dispatch({
+        type:actionTypes.SELECT_DATE,
+        date
+    })
+}
+//------------改变时间范围-------------
+export const changeRange = (stkcd, startDate, endDate)=>dispatch=>{ //实际应该传入当前显示或添加的所有公司代码
+    dispatch(startRequest())
+    getFinanceYearsInfos(stkcd,startDate,endDate)
+        .then(resp => {
+            if (resp.code === '200') {
+                dispatch({
+                    type: actionTypes.CHANGE_RANGE,
+                    payload: resp.data[0] //1d array
+                })
+                dispatch(endRequest())
+            } else {
+                message.error("数据请求错误,添加失败!")
+            }
+        })
+}
+
+//-------------删除可比公司---------------
 export const deleteFirm= stkcd=>{
     return dispatch=>{
-        dispatch(deleteFirmSync(stkcd))
+        dispatch({
+            type: actionTypes.DELETE_FIRM,
+            payload: stkcd
+        })
     }
 }
 
-//---------------关注公司-------------
-const followFirmSync = (stkcd)=>{
-    return {
-        type:actionTypes.FOLLOW_FIRM,
-        payload:stkcd
-    }
-}
+
+//---------------关注公司-------------还没实现
 export const followFirm=stkcd=>{
     return dispatch=>{
-        dispatch(followFirmSync(stkcd))
+        dispatch({
+            type: actionTypes.FOLLOW_FIRM,
+            payload: stkcd
+        })
     }
 }
+
+
+
+//---------------选中一家公司-------------
+export const selectFirm = stkcd => dispatch=>{
+    return dispatch({
+        type:actionTypes.SELECT_FIRM,
+        payload:stkcd
+    })
+}
+

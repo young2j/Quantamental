@@ -11,8 +11,11 @@ import {
 import { 
     PageTitle,
     SearchBar,
+    SelectBar,
     ProfitTabTable,
     ProfitTabChart,
+    ProfitTabTimeTable, 
+    ProfitTabTimeChart,
     SolvencyTabTable,
     SolvencyTabChart,
     OperationTabTable,
@@ -26,17 +29,17 @@ import {
 } from '../../../../components/Finance'
 
 import './index.less'
-import { handleDataSource } from '../../../../utils'
+import { handleDataSource, handleTimeDataSource } from '../../../../utils'
+import { searchFirm } from '../../../../redux/actions'
 
-@connect(state=>state)
+@connect(state=>state,{searchFirm})
 class Finance extends Component {
     constructor(props){
         super(props)    
         this.state = {
             tabMode:'top',
             tabIndex:0,
-            switchTableChart:true,
-            activeTabKey:"1",
+            switchTableToChart:false,
         }
     }
 
@@ -52,22 +55,31 @@ class Finance extends Component {
         })
     }
     
+    //组件加载完,自动获取上次搜索的公司信息
+    componentDidMount() {
+        this.props.searchFirm(
+            this.props.financeInfo.currentFirmCode,
+            this.props.financeInfo.currentFirmName
+            ) 
+    }    
     render() {
         console.log('this.props:',this.props);
 
-        const {switchTableChart,activeTabKey} = this.state
+        const {switchTableToChart} = this.state
         const dataSource = handleDataSource(this.props.financeInfo.data)
-        
+        const timeDataSource = handleTimeDataSource(this.props.financeInfo.data)
         return (
             <Card 
                 className="finance-page"
-                title={<SearchBar />} //交换了位置
-                extra={<PageTitle/>} //
+                title={<PageTitle />} 
+                // extra={<PageTitle/>} //
                 // bordered={false}
                 hoverable
                 type='inner'
             >
-                
+                {
+                    this.props.horizontal ? <SearchBar /> : <SelectBar />
+                }
                 <Tabs defaultActiveKey="1" 
                     tabBarGutter={30}
                     tabBarExtraContent={
@@ -76,26 +88,26 @@ class Finance extends Component {
                         >切换导航</Button>
                     }
                     tabPosition={this.state.tabMode}
-                    tabBarStyle={{fontWeight:'bold',fontSize:30}}
-                    onChange={(activeKey)=>{this.setState({
-                        activeTabKey:activeKey,
-                        switchTableChart:true,
-                    })}}
+                    tabBarStyle={{fontWeight:'bold',fontSize:40}}
                 >
                     <Tabs.TabPane key='1'
                         tab={
                             <span>
-                                <Icon type='dollar' />
-                                 盈利能力  
+                                <Icon type='dollar' />盈利能力  
                             </span>
                         }
                     >
-                       { this.props.horizontal? (
-                            switchTableChart && activeTabKey==="1"?
-                            <ProfitTabTable dataSource={dataSource.profitabilityDataSource}/>
-                            :
+                       { this.props.horizontal ? (
+                            switchTableToChart ?
                             <ProfitTabChart dataSource={dataSource.profitabilityDataSource}/>
-                        ) : null
+                            :
+                            <ProfitTabTable dataSource={dataSource.profitabilityDataSource}/>
+                            ):(
+                            switchTableToChart ?
+                            <ProfitTabTimeChart dataSource={timeDataSource.profitabilityDataSource}/>
+                            :
+                            <ProfitTabTimeTable dataSource={timeDataSource.profitabilityDataSource}/>
+                            )
                       }
                     </Tabs.TabPane>
                     <Tabs.TabPane key="2"
@@ -107,7 +119,7 @@ class Finance extends Component {
                      }
                    >
                     {
-                        switchTableChart && activeTabKey==="2"?
+                        switchTableToChart ?
                         <SolvencyTabTable/>:<SolvencyTabChart/>
                     }
                    </Tabs.TabPane>
@@ -119,7 +131,7 @@ class Finance extends Component {
                         </span>
                       }
                     >{
-                            switchTableChart && activeTabKey === "3"?
+                            switchTableToChart ?
                         <OperationTabTable/>:<OperationTabChart/>
                     }
                     </Tabs.TabPane>
@@ -132,7 +144,7 @@ class Finance extends Component {
                       }
                     >
                         {
-                            switchTableChart && activeTabKey === "4"?
+                            switchTableToChart ?
                           <GrowthTabTable/>:<GrowthTabChart/>
                         }
                     </Tabs.TabPane>
@@ -145,7 +157,7 @@ class Finance extends Component {
                       }
                     >
                         {
-                            switchTableChart && activeTabKey === "5"?
+                            switchTableToChart ?
                           <CashTabTable/>:<CashTabChart/>
                         }
                     </Tabs.TabPane>
@@ -158,7 +170,7 @@ class Finance extends Component {
                       }
                     >
                         {
-                          switchTableChart && activeTabKey === "6"?
+                          switchTableToChart ?
                           <MarketTabTable/>:<MarketTabChart/>
                         }
                     </Tabs.TabPane>
@@ -168,13 +180,13 @@ class Finance extends Component {
                 <div className='footer-btn-group'>
                     <Button className='footer-btn-left'
                         onClick={() => this.setState({
-                            switchTableChart:true
+                            switchTableToChart:true
                         })}
                     >看表</Button>
                     <Icon type='retweet' />
                     <Button className='footer-btn-right'
                         onClick={() => this.setState({
-                            switchTableChart: false
+                            switchTableToChart: false
                         })}
                     >看图</Button>
                 </div>

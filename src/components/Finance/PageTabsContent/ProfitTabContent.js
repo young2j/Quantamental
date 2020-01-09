@@ -1,12 +1,26 @@
 import React,{Component,createRef} from 'react'
-import { Button, Popconfirm, Tag, Rate,Table, message, Spin, Badge } from 'antd'
+import { 
+    Button,
+    Icon,
+    Popconfirm, 
+    Tag, 
+    Rate,
+    Table, 
+    message, 
+    Spin, 
+    Select,
+    Divider,
+    DatePicker} from 'antd'
 import echarts from 'echarts'
 import { connect } from 'react-redux'
+import moment from 'moment'
 
+import './tabContent.less'
+import { deleteFirm,addFirm,addDate,deleteDate,selectDate,changeRange} from '../../../redux/actions'
 
-import { deleteFirm,addFirm} from '../../../redux/actions'
+const { RangePicker } = DatePicker
 
-//===========table component=========================
+//====================table component=========================
 const columnsNames = {
         profitability: {
             stkcd: "公司代码",
@@ -31,33 +45,62 @@ const columnsNames = {
 
 @connect(state => {
     return {
-        isLoading: state.financeInfo.isLoading,
-        firmCount: state.financeInfo.firmCount
+        financeInfo:state.financeInfo,
+        currentDate:state.financeInfo.currentDate
     }
-},{deleteFirm,addFirm})
+},{deleteFirm,addFirm,addDate,deleteDate,selectDate})
 class ProfitTabTable extends Component {
     constructor(props){
         super(props)
         this.state={
-            dataSource:[]
+            open:false,
+            maybeDeleteDate:'',
+            pickDate:'',
         }
     }
-    //table
-    handleDelete = record => {
+
+    handleDeleteFirm = record => {
         const stkcd = /^\d{6}/.exec(record.stkcd)
         this.props.deleteFirm(stkcd[0])
         message.success('移除成功!')
     }
 
-    handleDefaultAdd = () => {
-        this.props.addFirm()
-        message.success('添加成功!')
-    };
+    handleSelectDate = (value,option) => {
+        this.props.selectDate(value)
+    }
+    
+    handlePickDate = (date,dateString) => {
+        this.setState({
+            pickDate:dateString
+        })        
+    }
+    
+    handleAddDate = () => {
+        this.props.addDate(
+            this.props.financeInfo.currentFirmCode,
+            this.state.pickDate
+            )
+    }
+    
+    handleDeleteDate=(e)=>{
+        e.stopPropagation()
+        if (this.state.maybeDeleteDate===this.props.currentDate){
+            let options = this.props.dataSource.map(obj => obj.date)
+            options = options.filter(item=>item!==this.props.currentDate)
+            this.props.selectDate(options[0])
+        }
+
+        this.props.deleteDate(
+            this.props.currentFirmCode,
+            this.state.maybeDeleteDate
+            ) 
+    }
 
 
-  
     render() {
-        // console.log(this.props.firmCount);
+        const options=this.props.dataSource.map(obj=>obj.date)
+        let dataSource = this.props.dataSource.filter(obj=>obj.date===this.props.currentDate)
+        dataSource = dataSource[0]? dataSource[0].profitability:null
         
         //columns
         const profitabilityColumns = Object.keys(columnsNames.profitability).map((k, i) => {
@@ -71,7 +114,9 @@ class ProfitTabTable extends Component {
                         return (
                             <Button.Group >
                                 <Button type='primary' ghost style={{ border: 'none', padding: "0px 3px" }}>关注</Button>
-                                <Popconfirm title="确定要移除该公司?" onConfirm={() => this.handleDelete(record)}>
+                                <Popconfirm title="确定要移除该公司?" okText='确定' cancelText='取消'
+                                    onConfirm={() => this.handleDeleteFirm(record)}
+                                >
                                     |<Button type='danger' ghost style={{ border: 'none', padding: "0px 3px" }}>移除</Button>
                                 </Popconfirm>
                             </Button.Group>
@@ -81,31 +126,53 @@ class ProfitTabTable extends Component {
             }
             if (k === 'stkcd') {
                 return {
-                    title: (
-                        <Badge count={this.props.firmCount} showZero overflowCount={10}>
-                            <Button 
-                                // ghost
-                                size='small'
-                                onClick={this.handleDefaultAdd}
-                                type="primary"
-                                shape='round'
-                                icon='plus'>
-                                  可比公司
-                              </Button>
-                        </Badge>),
+                    title:(
+                        <div className="select-wrapper" 
+                            onClick={() => this.setState({ open: !this.state.open })}
+                        >
+                            <Select 
+                                // autoFocus
+                                defaultValue={this.props.currentDate}
+                                value={this.props.currentDate}
+                                open={this.state.open}
+                                style={{ width: 180 ,textAlign:"center"}}
+                                loading={this.props.financeInfo.isLoading}
+                                onChange={this.handleSelectDate}
+                                // onSelect={(value,option)=>console.log(value,option)} //不带搜索框时===onChange
+                                dropdownRender={menu => (
+                                    <div >
+                                        {menu}
+                                        <Divider style={{ margin: '4px 0' }} />
+                                        <div style={{ display: 'flex', flexWrap: 'nowrap', padding:'5px 3px' }}
+                                            onClick={e => e.stopPropagation()}
+                                        >
+                                            <DatePicker size='small' placeholder=' ' className='add-time-datepicker'
+                                                onChange={this.handlePickDate} />
+                                            <Button icon='plus' size='small' ghost
+                                                className='add-time-btn' type='primary'
+                                                onClick={this.handleAddDate}
+                                            >添加时间</Button>
+                                        </div>
+                                    </div>
+                                )}
+                            >
+                                {options.map(item => (
+                                    <Select.Option key={item} value={item}
+                                     onMouseEnter={({key})=>this.setState({maybeDeleteDate:key})}                                    
+                                    >
+                                        {item}
+                                        <Icon type='close-circle' className='close-icon'
+                                            onClick={this.handleDeleteDate}
+                                            />
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </div>                        
+                    ),
                     dataIndex: k,
                     render: (text, record) => {
-                        const { stkcd } = record
                         return (
-                            <Tag style={{
-                                fontSize: 12,
-                                fontWeight: 'bold',
-                                border: 0,
-                                backgroundColor: 'transparent',
-                                color: '#1890ff'
-                            }}>
-                                {stkcd}
-                            </Tag>
+                            <div style={{color:'#1890ff'}}>{text}</div>
                         )
                     }
                 }
@@ -135,12 +202,12 @@ class ProfitTabTable extends Component {
         }
 
         return (
-          <Spin spinning={this.props.isLoading}>
+          <Spin spinning={this.props.financeInfo.isLoading}>
             <Table
                 size='middle'
                 bordered={false}
                 rowKey={(record)=>record.stkcd}
-                dataSource={this.props.dataSource}
+                dataSource={dataSource}
                 columns={columns.profitabilityColumns}
                 footer={() => {
                     return <p type='warning'>注:...</p>
@@ -429,7 +496,7 @@ const chartOption = {
         }
     ]
 };
-//===============chart component=====================
+//====================chart component========================
 class ProfitTabChart extends Component {
     constructor(props){
         super(props)
@@ -468,7 +535,157 @@ class ProfitTabChart extends Component {
 }
 
 
+
+
+//====================TimeTable component=====================
+const timeColumnsNames = {
+    profitability: {
+        date:'时间',
+        roe: "净资产报酬率",
+        roa: "总资产报酬率",
+        gpm: "销售毛利率",
+        opm: "主营业务利润率",
+        npm: "净利润率",
+        operate: "操作"
+    },
+    solvency: {
+        date:'时间',
+        currentRatio: "流动比率",
+        quickRatio: "速动比率",
+        cashRatio: "现金比率",
+        debtRatio: "资产负债率",
+        equityRatio: "产权比率",
+        interestCRatio: "利息保障倍数",
+        operate: "操作"
+    }
+}
+
+@connect(state => {
+    return {
+        financeInfo: state.financeInfo,
+        selectFirmCode: state.financeInfo.selectFirmCode
+    }
+}, {deleteDate,changeRange})
+class ProfitTabTimeTable extends Component {
+
+    handleDeleteDate = record => {
+        this.props.deleteDate(this.props.selectFirmCode,record.date)
+        message.success('移除成功!')
+    }
+
+    handlePickDate = (dates, datesString) => {
+        const [startDate,endDate] = datesString
+        this.props.changeRange(this.props.selectFirmCode,startDate,endDate)
+    }
+
+
+    render() {
+        let dataSource = this.props.dataSource.filter(obj => obj.stkcd === this.props.selectFirmCode)
+        dataSource = dataSource[0] ? dataSource[0].profitability : null
+        console.log(this.props);
+        
+        //columns
+        const profitabilityColumns = Object.keys(timeColumnsNames.profitability).map((k, i) => {
+            if (k === 'operate') {
+                return {
+                    title: (<span style={{ color: '#1890ff' }}>
+                        {timeColumnsNames.profitability[k]}
+                    </span>),
+                    dataIndex: k,
+                    render: (text, record) => {
+                        return (
+                            <Button.Group >
+                                <Button type='primary' ghost style={{ border: 'none', padding: "0px 3px" }}>标记</Button>
+                                <Popconfirm title="确定要移除该年份?" okText='确定' cancelText='取消'
+                                    onConfirm={() => this.handleDeleteDate(record)}
+                                >
+                                    |<Button type='danger' ghost style={{ border: 'none', padding: "0px 3px" }}>移除</Button>
+                                </Popconfirm>
+                            </Button.Group>
+                        )
+                    }
+                }
+            }
+            if (k === 'date') {
+                return {
+                    title: (
+                        <RangePicker 
+                            ranges={{
+                                '本月': [moment().startOf('month'), moment().endOf('month')],
+                                '本年':[moment().startOf('year'),moment()],
+                                '过去五年':[moment().subtract(5,'y'),moment()],
+                            }}
+                            placeholder={['开始时间','结束时间']}
+                            onChange={this.handlePickDate}
+                        />
+                    ),
+                    dataIndex: k,
+                    render: (text, record) => {
+                        return (
+                            <div style={{ color: '#1890ff' }}>{text}</div>
+                        )
+                    }
+                }
+            }
+            return {
+                title: (<span style={{ color: '#1890ff' }}>
+                    {timeColumnsNames.profitability[k]}(%)
+                        </span>),
+                dataIndex: k,
+                sorter: (a, b) => Object.values(a)[i] - Object.values(b)[i],
+                sortDirections: ['descend', 'ascend'],
+                render: (text, record) => {
+                    return (<>{text}
+                        <sup><Rate allowHalf
+                            disabled
+                            value={text / 100 * 5}
+                            style={{ color: text > 50 ? 'red' : 'green' }}
+                        /></sup>
+                    </>)
+                }
+            }
+        })
+
+        const columns = {
+            profitabilityColumns,
+            // solvencyColumns: data[0].solvencyColumns,
+        }
+
+        return (
+            <Spin spinning={this.props.financeInfo.isLoading}>
+                <Table
+                    size='middle'
+                    bordered={false}
+                    rowKey={(record) => record.date}
+                    dataSource={dataSource}
+                    columns={columns.profitabilityColumns}
+                    footer={() => {
+                        return <p type='warning'>注:...</p>
+                    }}
+                />
+            </Spin>
+        )
+    }
+}
+
+
+
+//========================TimeChart component====================
+class ProfitTabTimeChart extends Component {
+    render() {
+       
+        return (
+            <div>
+                ProfitTabTimeChart
+            </div>
+        )
+    }
+}
+
+
 export {
     ProfitTabTable,
-    ProfitTabChart
+    ProfitTabChart,
+    ProfitTabTimeTable,
+    ProfitTabTimeChart
 }

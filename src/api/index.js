@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { message } from 'antd'
-
+import moment from 'moment'
 
 
 const isDev = process.env.NODE_ENV==='development'
@@ -34,23 +34,38 @@ export const autoCompleteFirmCode = ()=>{
     return service.get("/fundamental/finance/firmcodes")
 }
 
-//-------------获得一家公司横向财务分析数据------------------
-export const getFinancialData = (stkcd)=>{
-    return service.get(`/fundamental/financials/${stkcd}`)
+//---------------获得多家公司多年财务分析数据---------------
+let endDt = moment().subtract(1, 'y').endOf('y') //2019-12-31
+let startDt = endDt.subtract(4, 'y') //2015-12-31
+export const getFinanceInfos = (stkcd,startDate,endDate) =>{
+    return service.get('/fundamental/finance-infos', {
+        params: {
+            stkcd: stkcd || '123456',
+            startDate: startDate || startDt.format('YYYY-MM-DD'),
+            endDate: endDate || endDt.format('YYYY-MM-DD')
+        }
+    })
 }
 
-//-------------获得多家公司横向财务分析数据------------------
-export const getFinancialsData = ()=>{
-    return service.get(`/fundamental/financials`)
+
+//-------------获得一家公司多年的财务数据---------------
+export const getFinanceYearsInfos = (stkcd, startDate, endDate) => {
+    return service.get('/fundamental/finance-years-infos', {
+        params: {
+            stkcd: stkcd || '123456',
+            startDate: startDate || startDt.format('YYYY-MM-DD'),
+            endDate: endDate || endDt.format('YYYY-MM-DD')
+        }
+    })
 }
 
-//-------------获得一家公司纵向财务分析数据------------------
-export const getTimeFinancialData = (stkcd)=>{
-    return service.get(`/fundamental/time-financials/${stkcd}`)
-}
-
-//-------------获得多家公司纵向财务分析数据------------------
-export const getTimeFinancialsData = ()=>{
-    return service.get(`/fundamental/time-financials`)
+//-------------获得多家公司某年的财务数据---------------
+export const getFinanceYearInfos=(stkcd,date)=>{
+    return service.get('/fundamental/finance-year-infos',{
+        params: {
+            stkcd: stkcd || '123456',
+            date:date
+        }
+    })
 }
 
