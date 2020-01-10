@@ -3,7 +3,6 @@ import {
     Button,
     Icon,
     Popconfirm, 
-    Tag, 
     Rate,
     Table, 
     message, 
@@ -14,15 +13,17 @@ import {
 import echarts from 'echarts'
 import { connect } from 'react-redux'
 import moment from 'moment'
+import _ from 'lodash'
 
 import './tabContent.less'
 import { deleteFirm,addFirm,addDate,deleteDate,selectDate,changeRange} from '../../../redux/actions'
+import TableFooter from './TableFooter'
 
 const { RangePicker } = DatePicker
 
 //====================table component=========================
 const columnsNames = {
-        profitability: {
+        profit: {
             stkcd: "公司代码",
             roe: "净资产报酬率",
             roa: "总资产报酬率",
@@ -39,6 +40,37 @@ const columnsNames = {
             debtRatio: "资产负债率",
             equityRatio: "产权比率",
             interestCRatio: "利息保障倍数",
+            operate: "操作"
+        },
+        operation:{
+            stkcd:'公司代码',
+            invTnover: "存货周转率",
+            accRecTnover: "应收账款周转率",
+            taTnover: "总资产周转率",
+            faTnover: "固定资产周转率",
+            operate: "操作",
+        },
+        growth:{
+            stkcd:"公司代码",
+            netProfitGrate: "净利润增长率",
+            salesGrate: "收入增长率",
+            taGrate: "总资产增长率",
+            faTaRatio:"固定资产占比",
+            operate:'操作'
+        },
+        cash:{
+            stkcd:"公司代码",
+            netCashPerSale: "单位销售收入净现金流入",
+            debtProtecRatio: "债务保障率",
+            foCashRatio: "自由现金流与经营活动净现金流比",
+            operate:"操作"
+        },
+        market:{
+            stkcd: "公司代码",
+            eps:"每股收益",
+            peRatio:"市盈率",
+            pbRatio:"市净率",
+            psRatio:"市销率",
             operate: "操作"
         }
     }
@@ -100,14 +132,14 @@ class ProfitTabTable extends Component {
     render() {
         const options=this.props.dataSource.map(obj=>obj.date)
         let dataSource = this.props.dataSource.filter(obj=>obj.date===this.props.currentDate)
-        dataSource = dataSource[0]? dataSource[0].profitability:null
+        dataSource = dataSource[0]? dataSource[0].profit:null
         
         //columns
-        const profitabilityColumns = Object.keys(columnsNames.profitability).map((k, i) => {
+        const profitColumns = Object.keys(columnsNames.profit).map((k, i) => {
             if (k === 'operate') {
                 return {
                     title: (<span style={{ color: '#1890ff' }}>
-                        {columnsNames.profitability[k]}
+                        {columnsNames.profit[k]}
                     </span>),
                     dataIndex: k,
                     render: (text, record) => {
@@ -179,7 +211,7 @@ class ProfitTabTable extends Component {
             }
             return {
                 title: (<span style={{ color: '#1890ff' }}>
-                    {columnsNames.profitability[k]}(%)
+                    {columnsNames.profit[k]}(%)
                         </span>),
                 dataIndex: k,
                 sorter: (a, b) => Object.values(a)[i] - Object.values(b)[i],
@@ -197,7 +229,7 @@ class ProfitTabTable extends Component {
         })
 
         const columns = {
-            profitabilityColumns,
+            profitColumns,
             // solvencyColumns: data[0].solvencyColumns,
         }
 
@@ -208,328 +240,249 @@ class ProfitTabTable extends Component {
                 bordered={false}
                 rowKey={(record)=>record.stkcd}
                 dataSource={dataSource}
-                columns={columns.profitabilityColumns}
-                footer={() => {
-                    return <p type='warning'>注:...</p>
-                }}
+                columns={columns.profitColumns}
+                footer={()=><TableFooter/>}
             />
           </Spin>
         )
     }
 }
 
-//====================chart options==========================
-const chartOption = {
-    // title: {
-    //     text: '',
-    //     subtext: ''
-    // },
-    tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-            type: 'shadow'
-        }
-    },
-    legend: {
-        selectedMode: 'multiple',
-        data: ["净资产报酬率",
-            "总资产报酬率",
-            "销售毛利率",
-            "主营业务利润率",
-            "净利润率"],
-        selected: {
-            "净资产报酬率": true,
-            "总资产报酬率": false,
-            "销售毛利率": false,
-            "主营业务利润率": false,
-            "净利润率": false,
-        },
-    },
-    dataZoom:{
-        type:'slider',
-        start:10,
-        end:90,
-    },
-    // grid: {
-    //     left: '3%',
-    //     right: '4%',
-    //     bottom: '3%',
-    //     containLabel: true
-    // },
-    xAxis: {
-        type: 'category',
-        name: "公司代码",
-        // nameLocation:'center',
-        nameTextStyle: {
-            padding: [30, 0, 0, 0],
-            fontWeight: 'bold',
-            fontSize: 14,
-        },
-        boundaryGap: true,
-        data: []
-    },
-    yAxis: {
-        name: "比率",
-        // nameLocation: 'center',
-        nameTextStyle: {
-            padding: [0, 0, 20, 0],
-            fontWeight: 'bold',
-            fontSize: 14,
-        },
-        type: 'value',
-        axisLabel: {
-            formatter: '{value}%'
-        }
-    },
-    series: [
-        //bar
-        {
-            name: '净资产报酬率',
-            type: 'bar',
-            data: [],
-            markPoint: {
-                data: [
-                    { type: 'max', name: '最大值' },
-                    { type: 'min', name: '最小值' }
-                ]
-            },
-            // markLine: {
-            //     data: [
-            //         { name: '行业平均值', yAxis: 50 }
-            //     ],
-            //     label: { formatter: '{c}%行业均值', position: 'middle' },
-            //     lineStyle: {
-            //         color: '#2db7f5'
-            //     }
-            // },
-            barMaxWidth: '30%'
-        },
-        {
-            name: '总资产报酬率',
-            type: 'bar',
-            data: [],
-            markPoint: {
-                data: [
-                    { type: 'max', name: '最大值' },
-                    { type: 'min', name: '最小值' }
-                ]
-            },
-            // markLine: {
-            //     data: [
-            //         { name: '行业平均值', yAxis: 50 }
-            //     ],
-            //     label: { formatter: '{c}%行业均值', position: 'middle' },
-            //     lineStyle: {
-            //         color: '#2db7f5'
-            //     }
-            // },
-            barMaxWidth: '30%'
-        },
-        {
-            name: '销售毛利率',
-            type: 'bar',
-            data: [],
-            markPoint: {
-                data: [
-                    { type: 'max', name: '最大值' },
-                    { type: 'min', name: '最小值' }
-                ]
-            },
-            // markLine: {
-            //     data: [
-            //         { name: '行业平均值', yAxis: 50 }
-            //     ],
-            //     label: { formatter: '{c}%行业均值', position: 'middle' },
-            //     lineStyle: {
-            //         color: '#2db7f5'
-            //     }
-            // },
-            barMaxWidth: '30%'
-        },
-        {
-            name: '主营业务利润率',
-            type: 'bar',
-            data: [],
-            markPoint: {
-                data: [
-                    { type: 'max', name: '最大值' },
-                    { type: 'min', name: '最小值' }
-                ]
-            },
-            // markLine: {
-            //     data: [
-            //         { name: '行业平均值', yAxis: 50 }
-            //     ],
-            //     label: { formatter: '{c}%行业均值', position: 'middle' },
-            //     lineStyle: {
-            //         color: '#2db7f5'
-            //     }
-            // },
-            barMaxWidth: '30%'
-        },
-        {
-            name: '净利润率',
-            type: 'bar',
-            data: [],
-            markPoint: {
-                data: [
-                    { type: 'max', name: '最大值' },
-                    { type: 'min', name: '最小值' }
-                ]
-            },
-            // markLine: {
-            //     data: [
-            //         { name: '行业平均值', yAxis: 50 }
-            //     ],
-            //     label: { formatter: '{c}%行业均值', position: 'middle' },
-            //     lineStyle: {
-            //         color: '#2db7f5'
-            //     }
-            // },
-            barMaxWidth: '30%'
-        },
-        //line
-        {
-            name: '净资产报酬率',
-            type: 'line',
-            smooth: true,
-            data: [],
-            // markPoint: {
-            //     data: [
-            //         { type: 'max', name: '最大值' },
-            //         { type: 'min', name: '最小值' }
-            //     ]
-            // },
-            markLine: {
-                data: [
-                    { name: '行业平均值', type: 'average' } //yAxis: 50
-                ],
-                label: { formatter: '{c}%行业均值', position: 'end' },
-                // lineStyle: {
-                //     color: '#2db7f5'
-                // }
-            }
-        },
-        {
-            name: '总资产报酬率',
-            type: 'line',
-            smooth: true,
-            data: [],
-            // markPoint: {
-            //     data: [
-            //         { type: 'max', name: '最大值' },
-            //         { type: 'min', name: '最小值' }
-            //     ]
-            // },
-            markLine: {
-                data: [
-                    { name: '行业平均值', type: 'average' } //yAxis: 50
-                ],
-                label: { formatter: '{c}%行业均值', position: 'end' },
-                // lineStyle: {
-                //     color: '#2db7f5'
-                // }
-            }
-        },
-        {
-            name: '销售毛利率',
-            type: 'line',
-            smooth: true,
-            data: [],
-            // markPoint: {
-            //     data: [
-            //         { type: 'max', name: '最大值' },
-            //         { type: 'min', name: '最小值' }
-            //     ]
-            // },
-            markLine: {
-                data: [
-                    { name: '行业平均值', type: 'average' } //yAxis: 50
-                ],
-                label: { formatter: '{c}%行业均值', position: 'end' },
-                // lineStyle: {
-                //     color: '#2db7f5'
-                // }
-            }
-        },
-        {
-            name: '主营业务利润率',
-            type: 'line',
-            smooth: true,
-            data: [],
-            // markPoint: {
-            //     data: [
-            //         { type: 'max', name: '最大值' },
-            //         { type: 'min', name: '最小值' }
-            //     ]
-            // },
-            markLine: {
-                data: [
-                    { name: '行业平均值', type: 'average' } //yAxis: 50
-                ],
-                label: { formatter: '{c}%行业均值', position: 'end' },
-                // lineStyle: {
-                //     color: '#2db7f5'
-                // }
-            }
-        },
-        {
-            name: '净利润率',
-            type: 'line',
-            smooth: true,
-            data: [],
-            // markPoint: {
-            //     data: [
-            //         { type: 'max', name: '最大值' },
-            //         { type: 'min', name: '最小值' }
-            //     ]
-            // },
-            markLine: {
-                data: [
-                    { name: '行业平均值', type: 'average' } //yAxis: 50
-                ],
-                label: { formatter: '{c}%行业均值', position: 'end' },
-                // lineStyle: {
-                //     color: '#2db7f5'
-                // }
-            }
-        }
-    ]
-};
+
 //====================chart component========================
+const chartOption = {
+    baseOption: {
+        timeline: {
+            axisType: 'category',
+            // realtime: false,
+            // loop: false,
+            autoPlay: true,
+            // currentIndex: 2,
+            playInterval: 2000,
+            // controlStyle: {
+            //     position: 'left'
+            // },
+            left:'25%',
+            data: [],//this.props.dataSource.map(obj=>obj.date),
+            label: {
+                formatter: function (s) {
+                    return (new Date(s)).getFullYear();
+                }
+            }
+        },
+        title: {
+            subtext: '可比公司盈利能力分析',
+            // top:'10%',
+        },
+        legend: {
+            right: '0%',
+            data: ["净资产报酬率","总资产报酬率","销售毛利率","主营业务利润率","净利润率"],
+            orient:'vertical',
+            align:'left',
+            top:'30%',
+            itemGap:20,
+            selected: {
+                    "净资产报酬率":true,
+                    "总资产报酬率":false,
+                    "销售毛利率":true,
+                    "主营业务利润率":false,
+                    "净利润率":true,
+            }
+        },
+        tooltip:{
+            show:true,
+            trigger:"item",
+        },
+        grid: {
+            top: 80,
+            bottom: 100,
+            // right:100,
+            // left:'18%',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow',
+                    label: {
+                        show: true,
+                        formatter: function (params) {
+                            return '公司代码:' + params.value
+                        }
+                    }
+                }
+            }
+        },
+        yAxis: 
+            {
+                type: 'category',
+                name:'公司',
+                nameLocation:'start',
+                axisLabel: { 
+                    interval: 0 ,
+                    // fontWeight:'bold'
+                },
+                data: [],
+                // splitLine: { show: false }
+            }
+        ,
+        xAxis: [
+            {   
+                position:'top',
+                type: 'value',
+                name: '比率',
+                axisLabel:{
+                    formatter:'{value}%'
+                }
+            }
+        ],
+        series: [
+            { name: "净资产报酬率", type: 'bar',
+                markPoint: {
+                    data: [
+                        { type: 'max', name: '最大值' },
+                        { type: 'min', name: '最小值' }
+                    ]
+            },
+            markLine: {
+                data: [
+                    { name: '行业平均值', type: 'average'} //yAxis: 50
+                ],
+                label: { formatter: '\n{c}%', position: 'start' },
+            }
+            },
+            {
+                name: "总资产报酬率", type: 'bar',
+                markPoint: {
+                    data: [
+                        { type: 'max', name: '最大值' },
+                        { type: 'min', name: '最小值' }
+                    ]
+                },
+                markLine: {
+                    data: [
+                        { name: '行业平均值', type: 'average' } //yAxis: 50
+                    ],
+                    label: { formatter: '{c}%', position: 'start' },
+                } },
+            {
+                name: "销售毛利率", type: 'bar',
+                markPoint: {
+                    data: [
+                        { type: 'max', name: '最大值' },
+                        { type: 'min', name: '最小值' }
+                    ]
+                },
+                markLine: {
+                    data: [
+                        { name: '行业平均值', type: 'average' } //yAxis: 50
+                    ],
+                    label: { formatter: '\n{c}%', position: 'start' },
+                } },
+            {
+                name: "主营业务利润率", type: 'bar',
+                markPoint: {
+                    data: [
+                        { type: 'max', name: '最大值' },
+                        { type: 'min', name: '最小值' }
+                    ]
+                },
+                markLine: {
+                    data: [
+                        { name: '行业平均值', type: 'average' } //yAxis: 50
+                    ],
+                    label: { formatter: '{c}%', position: 'start' },
+                } },
+            {
+                name: "净利润率", type: 'bar',
+                markPoint: {
+                    data: [
+                        { type: 'max', name: '最大值' },
+                        { type: 'min', name: '最小值' }
+                    ]
+                },
+                markLine: {
+                    data: [
+                        { name: '行业平均值', type: 'average' } //yAxis: 50
+                    ],
+                    label: { formatter: '\n{c}%', position: 'start' },
+                } },
+        ]
+    },
+    options: []
+            // data like:
+            //     {
+            //     roe: [
+            //         { name: '111111', value: 63.38 },
+            //         { name: '222222', value: 65.84 },
+            //         { name: '333333', value: 100.78 },
+            //         { name: '444444', value: 0.26 },
+            //         { name: '555555', value: 6.69 }
+            //     ],
+            //     roa: [
+            //         { name: '111111', value: 7.01 },
+            //         { name: '222222', value: 34.14 },
+            //         { name: '333333', value: 45.63 },
+            //         { name: '444444', value: 65.52 },
+            //         { name: '555555', value: 17.23 }
+            //     ],
+            //     ...
+            //     }
+}
+
 class ProfitTabChart extends Component {
     constructor(props){
         super(props)
-        this.lineBarChartRef = createRef()
+        this.barChartRef = createRef()
     }
     drawChart = ()=>{
-        const lineBarChart = echarts.init(this.lineBarChartRef.current)
-        lineBarChart.setOption(chartOption)
-        const dataKeys = Object.keys(this.props.dataSource[0]).filter(k=>k!=='stkcd')
-        const seriesData = dataKeys.map(k => {
-                const arr = this.props.dataSource.map(obj => {
-                    return obj[k]
-                })
-                return {
-                    data: arr
-                }
-            })
-        
-        lineBarChart.setOption({
-            xAxis: {
-                data: this.props.dataSource.map(obj => obj.stkcd.slice(0,6))
+        const barChart = echarts.init(this.barChartRef.current)
+        barChart.setOption(chartOption)
+
+        barChart.setOption({
+            baseOption:{
+                timeline:{
+                    data: this.props.dataSource.map(obj => obj.date)
+                },
+                yAxis:{
+                    data: this.props.dataSource[0].profit.map(obj => obj.stkcd.match(/^\d{6}/)[0])
+                },
             },
-            series: seriesData.concat(seriesData)
+            options:this.props.dataSource.map(obj => {
+                    const mergeValues = obj.profit.reduce((o1, o2) => {
+                        return _.mergeWith(o1, o2, (o1v, o2v) => {
+                            if (_.isArray(o1v)) {
+                                return o1v.concat(o2v)
+                            }
+                            return [o1v, o2v]
+                        })
+                    })
+
+                    const data = _.mapValues(_.omit(mergeValues, 'stkcd'), (values) => {
+                        return values.map((v, i) => {
+                            return {
+                                name: mergeValues.stkcd[i],
+                                value: v
+                            }
+                        })
+                    })
+
+                    return {
+                        title: { text: `${obj.date}` },
+                        series: _.values(
+                                _.mapValues(data, v=>{
+                                return {data: v}
+                            })
+                        )}
+                })
         })
     }
     componentDidMount(){
         this.drawChart()
     }
-    render() {
-        // console.log(" this.props.dataSource:", this.props.dataSource);
-        
+
+    render() {      
+         
         return (
-            <div ref={this.lineBarChartRef} style={{ height: '450px',marginBottom:'40px',width:'90%'}}></div>
+            <div ref={this.barChartRef} style={{ height: '420px',marginBottom:'40px',width:'90%'}}></div>
         )
     }
 }
@@ -539,7 +492,7 @@ class ProfitTabChart extends Component {
 
 //====================TimeTable component=====================
 const timeColumnsNames = {
-    profitability: {
+    profit: {
         date:'时间',
         roe: "净资产报酬率",
         roa: "总资产报酬率",
@@ -557,7 +510,38 @@ const timeColumnsNames = {
         equityRatio: "产权比率",
         interestCRatio: "利息保障倍数",
         operate: "操作"
-    }
+    },
+    operation: {
+        date: '时间',
+        invTnover: "存货周转率",
+        accRecTnover: "应收账款周转率",
+        taTnover: "总资产周转率",
+        faTnover: "固定资产周转率",
+        operate: "操作",
+    },
+    growth: {
+        date:'时间',
+        netProfitGrate: "净利润增长率",
+        salesGrate: "收入增长率",
+        taGrate: "总资产增长率",
+        faTaRatio: "固定资产占比",
+        operate: '操作'
+    },
+    cash: {
+        date:'时间',
+        netCashPerSale: "单位销售收入净现金流入",
+        debtProtecRatio: "债务保障率",
+        foCashRatio: "自由现金流与经营活动净现金流比",
+        operate: "操作"
+    },
+    market: {
+        date:'时间',
+        eps: "每股收益",
+        peRatio: "市盈率",
+        pbRatio: "市净率",
+        psRatio: "市销率",
+        operate: "操作"
+    }    
 }
 
 @connect(state => {
@@ -581,15 +565,15 @@ class ProfitTabTimeTable extends Component {
 
     render() {
         let dataSource = this.props.dataSource.filter(obj => obj.stkcd === this.props.selectFirmCode)
-        dataSource = dataSource[0] ? dataSource[0].profitability : null
+        dataSource = dataSource[0] ? dataSource[0].profit : null
         console.log(this.props);
         
         //columns
-        const profitabilityColumns = Object.keys(timeColumnsNames.profitability).map((k, i) => {
+        const profitColumns = Object.keys(timeColumnsNames.profit).map((k, i) => {
             if (k === 'operate') {
                 return {
                     title: (<span style={{ color: '#1890ff' }}>
-                        {timeColumnsNames.profitability[k]}
+                        {timeColumnsNames.profit[k]}
                     </span>),
                     dataIndex: k,
                     render: (text, record) => {
@@ -629,7 +613,7 @@ class ProfitTabTimeTable extends Component {
             }
             return {
                 title: (<span style={{ color: '#1890ff' }}>
-                    {timeColumnsNames.profitability[k]}(%)
+                    {timeColumnsNames.profit[k]}(%)
                         </span>),
                 dataIndex: k,
                 sorter: (a, b) => Object.values(a)[i] - Object.values(b)[i],
@@ -647,7 +631,7 @@ class ProfitTabTimeTable extends Component {
         })
 
         const columns = {
-            profitabilityColumns,
+            profitColumns,
             // solvencyColumns: data[0].solvencyColumns,
         }
 
@@ -658,10 +642,8 @@ class ProfitTabTimeTable extends Component {
                     bordered={false}
                     rowKey={(record) => record.date}
                     dataSource={dataSource}
-                    columns={columns.profitabilityColumns}
-                    footer={() => {
-                        return <p type='warning'>注:...</p>
-                    }}
+                    columns={columns.profitColumns}
+                    footer={()=><TableFooter />}
                 />
             </Spin>
         )
@@ -671,17 +653,235 @@ class ProfitTabTimeTable extends Component {
 
 
 //========================TimeChart component====================
+const timeChartOption = {
+    baseOption: {
+        timeline: {
+            axisType: 'category',
+            // realtime: false,
+            // loop: false,
+            // autoPlay: true,
+            // currentIndex: 2,
+            playInterval: 2000,
+            // controlStyle: {
+            //     position: 'left'
+            // },
+            left: '25%',
+            data: [],//this.props.dataSource.map(obj=>obj.date),
+            label: {
+                formatter: function (s) {
+                    // return (new Date(s)).getFullYear();
+                    return s.match(/^\d{6}/)[0]
+                }
+            }
+        },
+        title: {
+            subtext: '盈利能力纵向分析',
+            // top:'10%',
+        },
+        legend: {
+            // right: '0%',
+            data: ["净资产报酬率", "总资产报酬率", "销售毛利率", "主营业务利润率", "净利润率"],
+            // orient: 'vertical',
+            align: 'left',
+            // top: '30%',
+            itemGap: 20,
+            // selected: {
+            //     "净资产报酬率": true,
+            //     "总资产报酬率": false,
+            //     "销售毛利率": true,
+            //     "主营业务利润率": false,
+            //     "净利润率": true,
+            // }
+        },
+        tooltip: {
+            show: true,
+            trigger: "axis",
+        },
+        grid: {
+            top: 80,
+            bottom: 100,
+            // right:100,
+            // left:'18%',
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow',
+                    label: {
+                        show: true,
+                        // formatter: function (params) {
+                        //     return params.value
+                        // }
+                    }
+                }
+            }
+        },
+        xAxis:
+        {
+            type: 'category',
+            name: '年度',
+            nameLocation: 'end',
+            axisLabel: {
+                interval: 0,
+                // fontWeight:'bold'
+            },
+            data: [],
+            // splitLine: { show: false }
+        }
+        ,
+        yAxis: [
+            {
+                type: 'value',
+                name: '比率',
+                axisLabel: {
+                    formatter: '{value}%'
+                }
+            }
+        ],
+        series: [
+            {
+                name: "净资产报酬率", type: 'line',
+                smooth:true,
+                markPoint: {
+                    data: [
+                        { type: 'max', name: '最大值' },
+                        { type: 'min', name: '最小值' }
+                    ]
+                },
+                markLine: {
+                    data: [
+                        { name: '行业平均值', type: 'average' } //yAxis: 50
+                    ],
+                    label: { formatter: '{c}%', position: 'end' },
+                }
+            },
+            {
+                name: "总资产报酬率", type: 'line',
+                smooth:true,
+                markPoint: {
+                    data: [
+                        { type: 'max', name: '最大值' },
+                        { type: 'min', name: '最小值' }
+                    ]
+                },
+                markLine: {
+                    data: [
+                        { name: '行业平均值', type: 'average' } //yAxis: 50
+                    ],
+                    label: { formatter: '{c}%', position: 'end' },
+                }
+            },
+            {
+                name: "销售毛利率", type: 'line',
+                smooth:true,
+                markPoint: {
+                    data: [
+                        { type: 'max', name: '最大值' },
+                        { type: 'min', name: '最小值' }
+                    ]
+                },
+                markLine: {
+                    data: [
+                        { name: '行业平均值', type: 'average' } //yAxis: 50
+                    ],
+                    label: { formatter: '{c}%', position: 'end' },
+                }
+            },
+            {
+                name: "主营业务利润率", type: 'line',
+                smooth:true,
+                markPoint: {
+                    data: [
+                        { type: 'max', name: '最大值' },
+                        { type: 'min', name: '最小值' }
+                    ]
+                },
+                markLine: {
+                    data: [
+                        { name: '行业平均值', type: 'average' } //yAxis: 50
+                    ],
+                    label: { formatter: '{c}%', position: 'end' },
+                }
+            },
+            {
+                name: "净利润率", type: 'line',
+                smooth:true,
+                markPoint: {
+                    data: [
+                        { type: 'max', name: '最大值' },
+                        { type: 'min', name: '最小值' }
+                    ]
+                },
+                markLine: {
+                    data: [
+                        { name: '行业平均值', type: 'average' } //yAxis: 50
+                    ],
+                    label: { formatter: '{c}%', position: 'end' },
+                }
+            },
+        ]
+    },
+    options: []
+}
 class ProfitTabTimeChart extends Component {
+    constructor(props) {
+        super(props)
+        this.lineChartRef = createRef()
+    }
+    drawChart = () => {
+        const lineBarChart = echarts.init(this.lineChartRef.current)
+        lineBarChart.setOption(timeChartOption)
+
+        lineBarChart.setOption({
+            baseOption: {
+                timeline: {
+                    data: this.props.dataSource.map(obj => obj.stkcd)
+                },
+                xAxis: {
+                    data: this.props.dataSource[0].profit.map(obj => obj.date)
+                },
+            },
+            options: this.props.dataSource.map(obj => {
+                const mergeValues = obj.profit.reduce((o1, o2) => {
+                    return _.mergeWith(o1, o2, (o1v, o2v) => {
+                        if (_.isArray(o1v)) {
+                            return o1v.concat(o2v)
+                        }
+                        return [o1v, o2v]
+                    })
+                })
+
+                const data = _.mapValues(_.omit(mergeValues, 'date'), (values) => {
+                    return values.map((v, i) => {
+                        return {
+                            name: mergeValues.date[i],
+                            value: v
+                        }
+                    })
+                })
+
+                return {
+                    title: { text: `${obj.stkcd}` },
+                    series: _.values(
+                        _.mapValues(data, v => {
+                            return { data: v }
+                        })
+                    )
+                }
+            })
+        })
+    }
+    componentDidMount() {
+        this.drawChart()
+    }
+
     render() {
-       
+        console.log(" this.props.dataSource:", this.props.dataSource);
+
         return (
-            <div>
-                ProfitTabTimeChart
-            </div>
+            <div ref={this.lineChartRef} style={{ height: '420px', marginBottom: '40px', width: '90%' }}></div>
         )
     }
 }
-
 
 export {
     ProfitTabTable,

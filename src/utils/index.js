@@ -1,10 +1,10 @@
 //获取数据处理dataSource
 //return:
 // {
-//     profitabilityDataSource:[
+//     profitDataSource:[
 //       {
 //         date,
-//         profitability:[{stkcd1,roe1,...},{stkcd2,roe2,...}],
+//         profit:[{stkcd1,roe1,...},{stkcd2,roe2,...}],
 //       },
 //       {},
 //       ...
@@ -22,7 +22,7 @@
 export const handleDataSource = (respData) => {
     //---------------
     let profitData = respData.map(firm => {
-        return firm.profitability.map(obj=>{
+        return firm.profit.map(obj=>{
             return {
                 stkcd:firm.stkcd+` ${firm.name}`,
                 ...obj
@@ -36,10 +36,10 @@ export const handleDataSource = (respData) => {
         profitRes.push(profitData.map(arr=>arr[i]))
     }
 
-    const profitabilityDataSource = profitRes.map(arr => {
+    const profitDataSource = profitRes.map(arr => {
         return {
             date: arr[0].date || '2019-12-31',
-            profitability: arr.map(obj => {
+            profit: arr.map(obj => {
                 const { date, ...rest } = obj
                 return {
                     ...rest
@@ -74,10 +74,118 @@ export const handleDataSource = (respData) => {
             })
         }
     })
+    //-------------------
+    let operationData = respData.map(firm => {
+        return firm.operation.map(obj=>{
+            return {
+                stkcd:firm.stkcd,
+                ...obj
+            }
+        })
+    })
+
+    let operationRes = []
+    arrForLength = operationData[0] ? operationData[0]:[]
+    for(let i=0;i<arrForLength.length;i++){
+        operationRes.push(operationData.map(arr=>arr[i]))
+    }
+    const operationDataSource = operationRes.map(arr => {
+        return {
+            date: arr[0].date,
+            operation: arr.map(obj => {
+                const { date, ...rest } = obj
+                return {
+                    ...rest
+                }
+            })
+        }
+    })
+    //-------------------
+    let growthData = respData.map(firm => {
+        return firm.growth.map(obj=>{
+            return {
+                stkcd:firm.stkcd,
+                ...obj
+            }
+        })
+    })
+
+    let growthRes = []
+    arrForLength = growthData[0] ? growthData[0]:[]
+    for(let i=0;i<arrForLength.length;i++){
+        growthRes.push(growthData.map(arr=>arr[i]))
+    }
+    const growthDataSource = growthRes.map(arr => {
+        return {
+            date: arr[0].date,
+            growth: arr.map(obj => {
+                const { date, ...rest } = obj
+                return {
+                    ...rest
+                }
+            })
+        }
+    })
+    //-------------------
+    let cashData = respData.map(firm => {
+        return firm.cash.map(obj=>{
+            return {
+                stkcd:firm.stkcd,
+                ...obj
+            }
+        })
+    })
+
+    let cashRes = []
+    arrForLength = cashData[0] ? cashData[0]:[]
+    for(let i=0;i<arrForLength.length;i++){
+        cashRes.push(cashData.map(arr=>arr[i]))
+    }
+    const cashDataSource = cashRes.map(arr => {
+        return {
+            date: arr[0].date,
+            cash: arr.map(obj => {
+                const { date, ...rest } = obj
+                return {
+                    ...rest
+                }
+            })
+        }
+    })
+    //-------------------
+    let marketData = respData.map(firm => {
+        return firm.market.map(obj=>{
+            return {
+                stkcd:firm.stkcd,
+                ...obj
+            }
+        })
+    })
+
+    let marketRes = []
+    arrForLength = marketData[0] ? marketData[0]:[]
+    for(let i=0;i<arrForLength.length;i++){
+        marketRes.push(marketData.map(arr=>arr[i]))
+    }
+    const marketDataSource = marketRes.map(arr => {
+        return {
+            date: arr[0].date,
+            market: arr.map(obj => {
+                const { date, ...rest } = obj
+                return {
+                    ...rest
+                }
+            })
+        }
+    })
 
     return {
-        profitabilityDataSource,
-        solvencyDataSource
+        profitDataSource,
+        solvencyDataSource,
+        operationDataSource,
+        growthDataSource,
+        cashDataSource,
+        marketDataSource,
     }
 }
 
@@ -85,10 +193,10 @@ export const handleDataSource = (respData) => {
 //处理纵向分析数据 
 //return:
 // {
-//     profitabilityDataSource:[
+//     profitDataSource:[
 //       {
 //         stkcd,
-//         profitability:[{date1,roe1,...},{date2,roe2,...}],
+//         profit:[{date1,roe1,...},{date2,roe2,...}],
 //       },
 //       {},
 //       ...
@@ -106,7 +214,7 @@ export const handleDataSource = (respData) => {
 export const handleTimeDataSource = (respData) => {
     //---------------
     let profitData = respData.map(firm => {
-        return firm.profitability.map(obj => {
+        return firm.profit.map(obj => {
             return {
                 stkcd: firm.stkcd,
                 ...obj
@@ -114,10 +222,10 @@ export const handleTimeDataSource = (respData) => {
         })
     })
 
-    const profitabilityDataSource = profitData.map(arr => {
+    const profitDataSource = profitData.map(arr => {
         return {
             stkcd: arr[0]? arr[0].stkcd:'123456',
-            profitability: arr.map(obj => {
+            profit: arr.map(obj => {
                 const { stkcd, ...rest } = obj
                 return {
                     ...rest
@@ -147,9 +255,97 @@ export const handleTimeDataSource = (respData) => {
             })
         }
     })
+    //-------------------
+    let operationData = respData.map(firm => {
+        return firm.operation.map(obj => {
+            return {
+                stkcd: firm.stkcd,
+                ...obj
+            }
+        })
+    })
+
+    const operationDataSource = operationData.map(arr => {
+        return {
+            stkcd: arr[0] ? arr[0].stkcd : '123456',
+            operation: arr.map(obj => {
+                const { stkcd, ...rest } = obj
+                return {
+                    ...rest
+                }
+            })
+        }
+    })
+    //-------------------
+    let growthData = respData.map(firm => {
+        return firm.growth.map(obj => {
+            return {
+                stkcd: firm.stkcd,
+                ...obj
+            }
+        })
+    })
+
+    const growthDataSource = growthData.map(arr => {
+        return {
+            stkcd: arr[0] ? arr[0].stkcd : '123456',
+            growth: arr.map(obj => {
+                const { stkcd, ...rest } = obj
+                return {
+                    ...rest
+                }
+            })
+        }
+    })
+    //-------------------
+    let cashData = respData.map(firm => {
+        return firm.cash.map(obj => {
+            return {
+                stkcd: firm.stkcd,
+                ...obj
+            }
+        })
+    })
+
+    const cashDataSource = cashData.map(arr => {
+        return {
+            stkcd: arr[0] ? arr[0].stkcd : '123456',
+            cash: arr.map(obj => {
+                const { stkcd, ...rest } = obj
+                return {
+                    ...rest
+                }
+            })
+        }
+    })
+    //-------------------
+    let marketData = respData.map(firm => {
+        return firm.market.map(obj => {
+            return {
+                stkcd: firm.stkcd,
+                ...obj
+            }
+        })
+    })
+
+    const marketDataSource = marketData.map(arr => {
+        return {
+            stkcd: arr[0] ? arr[0].stkcd : '123456',
+            market: arr.map(obj => {
+                const { stkcd, ...rest } = obj
+                return {
+                    ...rest
+                }
+            })
+        }
+    })
 
     return {
-        profitabilityDataSource,
-        solvencyDataSource
+        profitDataSource,
+        solvencyDataSource,
+        operationDataSource,
+        growthDataSource,
+        cashDataSource,
+        marketDataSource
     }
 }

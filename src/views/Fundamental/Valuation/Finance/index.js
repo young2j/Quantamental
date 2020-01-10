@@ -12,20 +12,36 @@ import {
     PageTitle,
     SearchBar,
     SelectBar,
+
     ProfitTabTable,
     ProfitTabChart,
     ProfitTabTimeTable, 
     ProfitTabTimeChart,
+
     SolvencyTabTable,
     SolvencyTabChart,
+    SolvencyTabTimeTable,
+    SolvencyTabTimeChart,  
+
     OperationTabTable,
     OperationTabChart,
+    OperationTabTimeTable,
+    OperationTabTimeChart,
+
     GrowthTabTable,
     GrowthTabChart,
+    GrowthTabTimeTable,
+    GrowthTabTimeChart,
+
     CashTabTable,
     CashTabChart,
+    CashTabTimeTable,
+    CashTabTimeChart,
+
     MarketTabTable,
     MarketTabChart,
+    MarketTabTimeTable,
+    MarketTabTimeChart,
 } from '../../../../components/Finance'
 
 import './index.less'
@@ -63,11 +79,11 @@ class Finance extends Component {
             ) 
     }    
     render() {
-        console.log('this.props:',this.props);
 
         const {switchTableToChart} = this.state
         const dataSource = handleDataSource(this.props.financeInfo.data)
         const timeDataSource = handleTimeDataSource(this.props.financeInfo.data)
+        
         return (
             <Card 
                 className="finance-page"
@@ -99,14 +115,14 @@ class Finance extends Component {
                     >
                        { this.props.horizontal ? (
                             switchTableToChart ?
-                            <ProfitTabChart dataSource={dataSource.profitabilityDataSource}/>
+                            <ProfitTabChart dataSource={dataSource.profitDataSource}/>
                             :
-                            <ProfitTabTable dataSource={dataSource.profitabilityDataSource}/>
+                            <ProfitTabTable dataSource={dataSource.profitDataSource}/>
                             ):(
                             switchTableToChart ?
-                            <ProfitTabTimeChart dataSource={timeDataSource.profitabilityDataSource}/>
+                            <ProfitTabTimeChart dataSource={timeDataSource.profitDataSource}/>
                             :
-                            <ProfitTabTimeTable dataSource={timeDataSource.profitabilityDataSource}/>
+                            <ProfitTabTimeTable dataSource={timeDataSource.profitDataSource}/>
                             )
                       }
                     </Tabs.TabPane>
@@ -118,10 +134,18 @@ class Finance extends Component {
                        </span>
                      }
                    >
-                    {
-                        switchTableToChart ?
-                        <SolvencyTabTable/>:<SolvencyTabChart/>
-                    }
+                        {this.props.horizontal ? (
+                            switchTableToChart ?
+                                <SolvencyTabChart dataSource={dataSource.solvencyDataSource} />
+                                :
+                                <SolvencyTabTable dataSource={dataSource.solvencyDataSource} />
+                        ) : (
+                            switchTableToChart ?
+                                <SolvencyTabTimeChart dataSource={timeDataSource.solvencyDataSource} />
+                                :
+                                <SolvencyTabTimeTable dataSource={timeDataSource.solvencyDataSource} />
+                            )
+                        }
                    </Tabs.TabPane>
                     <Tabs.TabPane key='3'
                       tab = {
@@ -130,10 +154,19 @@ class Finance extends Component {
                             营运能力
                         </span>
                       }
-                    >{
+                    >
+                        {this.props.horizontal ? (
                             switchTableToChart ?
-                        <OperationTabTable/>:<OperationTabChart/>
-                    }
+                                <OperationTabChart dataSource={dataSource.operationDataSource} />
+                                :
+                                <OperationTabTable dataSource={dataSource.operationDataSource} />
+                        ) : (
+                                switchTableToChart ?
+                                    <OperationTabTimeChart dataSource={timeDataSource.operationDataSource} />
+                                    :
+                                    <OperationTabTimeTable dataSource={timeDataSource.operationDataSource} />
+                            )
+                        }
                     </Tabs.TabPane>
                     <Tabs.TabPane key='4'
                       tab = {
@@ -143,9 +176,17 @@ class Finance extends Component {
                         </span>
                       }
                     >
-                        {
+                        {this.props.horizontal ? (
                             switchTableToChart ?
-                          <GrowthTabTable/>:<GrowthTabChart/>
+                                <GrowthTabChart dataSource={dataSource.growthDataSource} />
+                                :
+                                <GrowthTabTable dataSource={dataSource.growthDataSource} />
+                        ) : (
+                                switchTableToChart ?
+                                    <GrowthTabTimeChart dataSource={timeDataSource.growthDataSource} />
+                                    :
+                                    <GrowthTabTimeTable dataSource={timeDataSource.growthDataSource} />
+                            )
                         }
                     </Tabs.TabPane>
                     <Tabs.TabPane key='5'
@@ -156,9 +197,17 @@ class Finance extends Component {
                         </span>
                       }
                     >
-                        {
+                        {this.props.horizontal ? (
                             switchTableToChart ?
-                          <CashTabTable/>:<CashTabChart/>
+                                <CashTabChart dataSource={dataSource.cashDataSource} />
+                                :
+                                <CashTabTable dataSource={dataSource.cashDataSource} />
+                        ) : (
+                                switchTableToChart ?
+                                    <CashTabTimeChart dataSource={timeDataSource.cashDataSource} />
+                                    :
+                                    <CashTabTimeTable dataSource={timeDataSource.cashDataSource} />
+                            )
                         }
                     </Tabs.TabPane>
                     <Tabs.TabPane key='6'
@@ -169,9 +218,17 @@ class Finance extends Component {
                         </span>
                       }
                     >
-                        {
-                          switchTableToChart ?
-                          <MarketTabTable/>:<MarketTabChart/>
+                        {this.props.horizontal ? (
+                            switchTableToChart ?
+                                <MarketTabChart dataSource={dataSource.marketDataSource} />
+                                :
+                                <MarketTabTable dataSource={dataSource.marketDataSource} />
+                        ) : (
+                                switchTableToChart ?
+                                    <MarketTabTimeChart dataSource={timeDataSource.marketDataSource} />
+                                    :
+                                    <MarketTabTimeTable dataSource={timeDataSource.marketDataSource} />
+                            )
                         }
                     </Tabs.TabPane>
                 </Tabs>
@@ -180,13 +237,13 @@ class Finance extends Component {
                 <div className='footer-btn-group'>
                     <Button className='footer-btn-left'
                         onClick={() => this.setState({
-                            switchTableToChart:true
+                            switchTableToChart:false
                         })}
                     >看表</Button>
                     <Icon type='retweet' />
                     <Button className='footer-btn-right'
                         onClick={() => this.setState({
-                            switchTableToChart: false
+                            switchTableToChart: true
                         })}
                     >看图</Button>
                 </div>

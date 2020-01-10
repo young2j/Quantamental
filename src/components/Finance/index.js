@@ -1,10 +1,34 @@
 import { PageTitle, SearchBar,SelectBar } from './PageHeader'
-import { ProfitTabTable, ProfitTabChart,ProfitTabTimeTable,ProfitTabTimeChart } from './PageTabsContent/ProfitTabContent'
-import { SolvencyTabTable, SolvencyTabChart } from './PageTabsContent/SolvencyTabContent'
-import { OperationTabTable, OperationTabChart } from './PageTabsContent/OperationTabContent'
-import { GrowthTabTable, GrowthTabChart } from './PageTabsContent/GrowthTabContent'
-import { CashTabTable, CashTabChart } from './PageTabsContent/CashTabContent'
-import { MarketTabTable, MarketTabChart } from './PageTabsContent/MarketTabContent'
+import { 
+    ProfitTabTable, 
+    ProfitTabChart,
+    ProfitTabTimeTable,
+    ProfitTabTimeChart } from './PageTabsContent/ProfitTabContent'
+import { 
+    SolvencyTabTable, 
+    SolvencyTabChart,
+    SolvencyTabTimeTable,
+    SolvencyTabTimeChart} from './PageTabsContent/SolvencyTabContent'
+import { 
+    OperationTabTable, 
+    OperationTabChart,
+    OperationTabTimeTable,
+    OperationTabTimeChart } from './PageTabsContent/OperationTabContent'
+import { 
+    GrowthTabTable, 
+    GrowthTabChart,
+    GrowthTabTimeTable,
+    GrowthTabTimeChart } from './PageTabsContent/GrowthTabContent'
+import { 
+    CashTabTable, 
+    CashTabChart,
+    CashTabTimeTable,
+    CashTabTimeChart } from './PageTabsContent/CashTabContent'
+import { 
+    MarketTabTable, 
+    MarketTabChart,
+    MarketTabTimeTable,
+    MarketTabTimeChart } from './PageTabsContent/MarketTabContent'
 
 export {
     PageTitle,
@@ -18,16 +42,28 @@ export {
 
     SolvencyTabTable,
     SolvencyTabChart,
+    SolvencyTabTimeTable,
+    SolvencyTabTimeChart,    
 
     OperationTabTable,
     OperationTabChart,
+    OperationTabTimeTable,
+    OperationTabTimeChart,
+
 
     GrowthTabTable,
     GrowthTabChart,
+    GrowthTabTimeTable,
+    GrowthTabTimeChart,
 
     CashTabTable,
     CashTabChart,
+    CashTabTimeTable,
+    CashTabTimeChart,    
     
+
     MarketTabTable,
     MarketTabChart,
+    MarketTabTimeTable,
+    MarketTabTimeChart,    
 }

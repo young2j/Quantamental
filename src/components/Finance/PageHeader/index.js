@@ -39,7 +39,7 @@ class PageTitle extends Component {
                     :
                     this.props.currentFirmName + '|纵向分析'
                 }
-                <Icon type="block" />
+                <Icon type="block" style={{ color:"#2db7f5"}}/>
             </Typography.Text>
         </div>
         )

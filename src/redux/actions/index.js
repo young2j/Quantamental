@@ -34,8 +34,6 @@ export const searchFirm = (stkcd,firmName,startDate,endDate) => async dispatch =
     const respData = await getFinanceInfos(stkcd, startDate, endDate)
 
     if (respData.code==="200"){
-        console.log("respData:", respData);
-        
         const data = respData.data
         dispatch({
                     type:actionTypes.SEARCH_FIRM,
