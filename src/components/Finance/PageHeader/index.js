@@ -9,7 +9,7 @@ import {
     Typography,
     Select,
     Divider,
-    Badge
+    Radio
 } from 'antd';
 
 import './index.less'
@@ -21,7 +21,7 @@ import { horizontalComparision,searchFirm,addFirm,selectFirm,deleteFirm } from '
 //==============================
 @connect(state=> {
         return { 
-            horizontal: state.horizontal,
+            horizontal: state.financeInfo.horizontal,
             currentFirmName:state.financeInfo.currentFirmName
         } 
 },{horizontalComparision,addFirm})
@@ -57,7 +57,8 @@ class SearchBar extends Component {
         super(props)
         this.state = {
             searchDataSource: [],
-            addFirmCode:''
+            addFirmCode:'',
+            addFirmCondition:1,
         }
     }
     //处理输入的值，并提供数据源
@@ -130,20 +131,22 @@ class SearchBar extends Component {
                             }
                             onSearch={this.onPressEnter} />
                     </AutoComplete>
-                    <Badge count={this.props.financeInfo.firmCount} 
-                           showZero overflowCount={10}
-                           offset={[10,10]}
+
+                    <Button 
+                        // ghost
+                        style={{padding:5}}                            
+                        onClick={this.handleAddFirm}
+                        // type="primary"
+                        // shape='square'
+                        icon='plus'>
+                        添加可比公司
+                    </Button>
+                    <Radio.Group defaultValue={1} name="radiogroup" className='radio-group'
+                        onChange={e=>this.setState({addFirmCondition:e.target.value})}
                     >
-                        <Button 
-                            // ghost
-                            style={{padding:5}}                            
-                            onClick={this.handleAddFirm}
-                            // type="primary"
-                            // shape='square'
-                            icon='plus'>
-                            添加可比公司
-                        </Button>
-                    </Badge>                    
+                        <Radio value={1}>按聚类</Radio>
+                        <Radio value={2}>按行业</Radio>
+                    </Radio.Group>
                 </div>
             )
     }

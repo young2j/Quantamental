@@ -241,7 +241,8 @@ class SolvencyTabTable extends Component {
                     size='middle'
                     bordered={false}
                     rowKey={(record) => record.stkcd}
-                    dataSource={dataSource}
+                    pagination={{hideOnSinglePage:true}}
+                dataSource={dataSource}
                     columns={columns.solvencyColumns}
                     footer={()=><TableFooter />}
                 />
@@ -666,7 +667,8 @@ class SolvencyTabTimeTable extends Component {
                     size='middle'
                     bordered={false}
                     rowKey={(record) => record.date}
-                    dataSource={dataSource}
+                    pagination={{hideOnSinglePage:true}}
+                dataSource={dataSource}
                     columns={columns.solvencyColumns}
                     footer={()=><TableFooter />}
                 />

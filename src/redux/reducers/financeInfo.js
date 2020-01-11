@@ -2,6 +2,7 @@ import actionTypes from "../actions/actionTypes";
 
 const initState = {
     isLoading:false,
+    horizontal:true,
     firmCount:5,
     currentFirmCode: '111111',
     currentFirmName:'Virtual公司',
@@ -77,6 +78,12 @@ const initState = {
 
 export default (state=initState,action)=>{
     switch (action.type) {
+        case actionTypes.HORIZONTAL:
+            return {
+                ...state,
+                horizontal: !state.horizontal
+            }
+
         case actionTypes.START_REQUEST:
             return {
                 ...state,

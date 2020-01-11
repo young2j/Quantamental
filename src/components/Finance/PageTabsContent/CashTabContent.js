@@ -240,7 +240,8 @@ class CashTabTable extends Component {
                     size='middle'
                     bordered={false}
                     rowKey={(record) => record.stkcd}
-                    dataSource={dataSource}
+                    pagination={{hideOnSinglePage:true}}
+                dataSource={dataSource}
                     columns={columns.cashColumns}
                     footer={()=><TableFooter />}
                 />
@@ -611,7 +612,8 @@ class CashTabTimeTable extends Component {
                     size='middle'
                     bordered={false}
                     rowKey={(record) => record.date}
-                    dataSource={dataSource}
+                    pagination={{hideOnSinglePage:true}}
+                dataSource={dataSource}
                     columns={columns.cashColumns}
                     footer={()=><TableFooter />}
                 />

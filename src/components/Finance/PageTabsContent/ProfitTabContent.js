@@ -239,6 +239,7 @@ class ProfitTabTable extends Component {
                 size='middle'
                 bordered={false}
                 rowKey={(record)=>record.stkcd}
+                pagination={{hideOnSinglePage:true}}
                 dataSource={dataSource}
                 columns={columns.profitColumns}
                 footer={()=><TableFooter/>}
@@ -641,7 +642,8 @@ class ProfitTabTimeTable extends Component {
                     size='middle'
                     bordered={false}
                     rowKey={(record) => record.date}
-                    dataSource={dataSource}
+                    pagination={{hideOnSinglePage:true}}
+                dataSource={dataSource}
                     columns={columns.profitColumns}
                     footer={()=><TableFooter />}
                 />

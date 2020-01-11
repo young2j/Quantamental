@@ -7,7 +7,7 @@ import {
 
 import { message } from 'antd'
 
-//====================通用==============
+//--------------------通用----------------------
 const startRequest = () => {
     return {
         type: actionTypes.START_REQUEST
@@ -18,15 +18,15 @@ const endRequest = () => {
         type: actionTypes.END_REQUEST
     }
 }
-
-//-------------点击横向分析-------------
+//==================================Finance=============================================
+//-------------------点击横向分析---------------
 export const horizontalComparision=()=> dispatch =>{
     dispatch({
         type:actionTypes.HORIZONTAL
     })
 }
 
-//----------搜索公司-------------
+//-------------------搜索公司------------------
 //默认返回搜索公司及所处行业前5家公司信息
 export const searchFirm = (stkcd,firmName,startDate,endDate) => async dispatch => {
     dispatch(startRequest())
@@ -50,7 +50,7 @@ export const searchFirm = (stkcd,firmName,startDate,endDate) => async dispatch =
 }
 
 
-//------------添加可比公司--------------
+//-------------------添加可比公司---------------
 export const addFirm = (stkcd, startDate, endDate)=>dispatch=>{
     dispatch(startRequest())
     getFinanceYearsInfos(stkcd, startDate, endDate)
@@ -67,7 +67,7 @@ export const addFirm = (stkcd, startDate, endDate)=>dispatch=>{
     })
 }
 
-//------------添加时间维度-------------
+//-------------------添加时间维度---------------
 export const addDate= (stkcd,date)=>dispatch=>{ //实际应该传入当前显示或添加的所有公司代码
     dispatch(startRequest())
     getFinanceYearInfos(stkcd,date)
@@ -83,7 +83,7 @@ export const addDate= (stkcd,date)=>dispatch=>{ //实际应该传入当前显示
             }
         })
 }
-//-------------删除时间维度------------
+//-------------------删除时间维度----------------
 export const deleteDate = (stkcd, date) => dispatch => { //实际应该传入当前显示或添加的所有公司代码
     dispatch({
         type: actionTypes.DELETE_DATE,
@@ -92,14 +92,14 @@ export const deleteDate = (stkcd, date) => dispatch => { //实际应该传入当
     })
 }
 
-//-------------选择时间维度-------------
+//-------------------选择时间维度-----------------
 export const selectDate = (date)=>dispatch=>{
     dispatch({
         type:actionTypes.SELECT_DATE,
         date
     })
 }
-//------------改变时间范围-------------
+//-------------------改变时间范围-----------------
 export const changeRange = (stkcd, startDate, endDate)=>dispatch=>{ //实际应该传入当前显示或添加的所有公司代码
     dispatch(startRequest())
     getFinanceYearsInfos(stkcd,startDate,endDate)
@@ -116,7 +116,7 @@ export const changeRange = (stkcd, startDate, endDate)=>dispatch=>{ //实际应�
         })
 }
 
-//-------------删除可比公司---------------
+//-------------------删除可比公司-----------------
 export const deleteFirm= stkcd=>{
     return dispatch=>{
         dispatch({
@@ -127,7 +127,7 @@ export const deleteFirm= stkcd=>{
 }
 
 
-//---------------关注公司-------------还没实现
+//-------------------关注公司-------------还没实现
 export const followFirm=stkcd=>{
     return dispatch=>{
         dispatch({
@@ -139,7 +139,7 @@ export const followFirm=stkcd=>{
 
 
 
-//---------------选中一家公司-------------
+//------------------选中一家公司------------------
 export const selectFirm = stkcd => dispatch=>{
     return dispatch({
         type:actionTypes.SELECT_FIRM,
@@ -147,3 +147,5 @@ export const selectFirm = stkcd => dispatch=>{
     })
 }
 
+
+//==================================Evaluation=============================================

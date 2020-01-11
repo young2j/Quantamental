@@ -94,7 +94,7 @@ class Finance extends Component {
                 type='inner'
             >
                 {
-                    this.props.horizontal ? <SearchBar /> : <SelectBar />
+                    this.props.financeInfo.horizontal ? <SearchBar /> : <SelectBar />
                 }
                 <Tabs defaultActiveKey="1" 
                     tabBarGutter={30}
@@ -113,7 +113,7 @@ class Finance extends Component {
                             </span>
                         }
                     >
-                       { this.props.horizontal ? (
+                       { this.props.financeInfo.horizontal ? (
                             switchTableToChart ?
                             <ProfitTabChart dataSource={dataSource.profitDataSource}/>
                             :
@@ -134,7 +134,7 @@ class Finance extends Component {
                        </span>
                      }
                    >
-                        {this.props.horizontal ? (
+                        {this.props.financeInfo.horizontal ? (
                             switchTableToChart ?
                                 <SolvencyTabChart dataSource={dataSource.solvencyDataSource} />
                                 :
@@ -155,7 +155,7 @@ class Finance extends Component {
                         </span>
                       }
                     >
-                        {this.props.horizontal ? (
+                        {this.props.financeInfo.horizontal ? (
                             switchTableToChart ?
                                 <OperationTabChart dataSource={dataSource.operationDataSource} />
                                 :
@@ -176,7 +176,7 @@ class Finance extends Component {
                         </span>
                       }
                     >
-                        {this.props.horizontal ? (
+                        {this.props.financeInfo.horizontal ? (
                             switchTableToChart ?
                                 <GrowthTabChart dataSource={dataSource.growthDataSource} />
                                 :
@@ -197,7 +197,7 @@ class Finance extends Component {
                         </span>
                       }
                     >
-                        {this.props.horizontal ? (
+                        {this.props.financeInfo.horizontal ? (
                             switchTableToChart ?
                                 <CashTabChart dataSource={dataSource.cashDataSource} />
                                 :
@@ -218,7 +218,7 @@ class Finance extends Component {
                         </span>
                       }
                     >
-                        {this.props.horizontal ? (
+                        {this.props.financeInfo.horizontal ? (
                             switchTableToChart ?
                                 <MarketTabChart dataSource={dataSource.marketDataSource} />
                                 :

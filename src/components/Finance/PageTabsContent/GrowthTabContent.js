@@ -240,7 +240,8 @@ class GrowthTabTable extends Component {
                     size='middle'
                     bordered={false}
                     rowKey={(record) => record.stkcd}
-                    dataSource={dataSource}
+                    pagination={{hideOnSinglePage:true}}
+                dataSource={dataSource}
                     columns={columns.growthColumns}
                     footer={()=><TableFooter />}
                 />
@@ -627,7 +628,8 @@ class GrowthTabTimeTable extends Component {
                     size='middle'
                     bordered={false}
                     rowKey={(record) => record.date}
-                    dataSource={dataSource}
+                    pagination={{hideOnSinglePage:true}}
+                dataSource={dataSource}
                     columns={columns.growthColumns}
                     footer={()=><TableFooter />}
                 />
