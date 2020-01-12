@@ -93,6 +93,7 @@ class Finance extends Component {
                 hoverable
                 type='inner'
             >
+            <Card.Grid style={{width:'100%'}}>
                 {
                     this.props.financeInfo.horizontal ? <SearchBar /> : <SelectBar />
                 }
@@ -247,6 +248,7 @@ class Finance extends Component {
                         })}
                     >看图</Button>
                 </div>
+            </Card.Grid>                
             </Card>
         );
     }

@@ -229,10 +229,6 @@ class OperationTabTable extends Component {
             }
         })
 
-        const columns = {
-            operationColumns,
-            // operationColumns: data[0].operationColumns,
-        }
 
         return (
             <Spin spinning={this.props.financeInfo.isLoading}>
@@ -242,7 +238,7 @@ class OperationTabTable extends Component {
                     rowKey={(record) => record.stkcd}
                     pagination={{hideOnSinglePage:true}}
                 dataSource={dataSource}
-                    columns={columns.operationColumns}
+                    columns={operationColumns}
                     footer={()=><TableFooter />}
                 />
             </Spin>
@@ -577,6 +573,8 @@ class OperationTabTimeTable extends Component {
                         />
                     ),
                     dataIndex: k,
+                    align:'center',
+
                     render: (text, record) => {
                         return (
                             <div style={{ color: '#1890ff' }}>{text}</div>
@@ -603,10 +601,6 @@ class OperationTabTimeTable extends Component {
             }
         })
 
-        const columns = {
-            operationColumns,
-            // operationColumns: data[0].operationColumns,
-        }
 
         return (
             <Spin spinning={this.props.financeInfo.isLoading}>
@@ -616,7 +610,7 @@ class OperationTabTimeTable extends Component {
                     rowKey={(record) => record.date}
                     pagination={{hideOnSinglePage:true}}
                 dataSource={dataSource}
-                    columns={columns.operationColumns}
+                    columns={operationColumns}
                     footer={()=><TableFooter />}
                 />
             </Spin>
@@ -832,7 +826,6 @@ class OperationTabTimeChart extends Component {
     }
 
     render() {
-        console.log(" this.props.dataSource:", this.props.dataSource);
 
         return (
             <div ref={this.lineChartRef} style={{ height: '420px', marginBottom: '40px', width: '90%' }}></div>

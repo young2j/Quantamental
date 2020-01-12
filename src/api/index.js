@@ -69,3 +69,7 @@ export const getFinanceYearInfos=(stkcd,date)=>{
     })
 }
 
+//-------------获得一家公司模型估值信息-----------------
+export const getEvaluationInfo=stkcd=>{
+    return service.get(`/fundamental/evaluation/${stkcd}`)
+}

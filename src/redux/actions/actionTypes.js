@@ -15,7 +15,7 @@ export default {
     
     SELECT_FIRM:"SELECT_FIRM", //选中一家公司
     CHANGE_RANGE:'CHANGE_RANGE', //改变时间范围
+    //========================================
+    GET_EVA:'GET_EVA',//获得估值信息
 
-
-    WATCH_TABLE:'WATCH_TABLE',
 }

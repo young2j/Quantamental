@@ -229,10 +229,6 @@ class GrowthTabTable extends Component {
             }
         })
 
-        const columns = {
-            growthColumns,
-            // growthColumns: data[0].growthColumns,
-        }
 
         return (
             <Spin spinning={this.props.financeInfo.isLoading}>
@@ -242,7 +238,7 @@ class GrowthTabTable extends Component {
                     rowKey={(record) => record.stkcd}
                     pagination={{hideOnSinglePage:true}}
                 dataSource={dataSource}
-                    columns={columns.growthColumns}
+                    columns={growthColumns}
                     footer={()=><TableFooter />}
                 />
             </Spin>
@@ -591,6 +587,8 @@ class GrowthTabTimeTable extends Component {
                         />
                     ),
                     dataIndex: k,
+                    align:'center',
+
                     render: (text, record) => {
                         return (
                             <div style={{ color: '#1890ff' }}>{text}</div>
@@ -617,10 +615,6 @@ class GrowthTabTimeTable extends Component {
             }
         })
 
-        const columns = {
-            growthColumns,
-            // growthColumns: data[0].growthColumns,
-        }
 
         return (
             <Spin spinning={this.props.financeInfo.isLoading}>
@@ -629,8 +623,8 @@ class GrowthTabTimeTable extends Component {
                     bordered={false}
                     rowKey={(record) => record.date}
                     pagination={{hideOnSinglePage:true}}
-                dataSource={dataSource}
-                    columns={columns.growthColumns}
+                    dataSource={dataSource}
+                    columns={growthColumns}
                     footer={()=><TableFooter />}
                 />
             </Spin>
@@ -842,7 +836,6 @@ class GrowthTabTimeChart extends Component {
     }
 
     render() {
-        console.log(" this.props.dataSource:", this.props.dataSource);
 
         return (
             <div ref={this.lineChartRef} style={{ height: '420px', marginBottom: '40px', width: '90%' }}></div>

@@ -16,7 +16,7 @@ import './index.less'
 
 import { autoCompleteFirmCode} from '../../../api'
 import { connect } from 'react-redux'
-import { horizontalComparision,searchFirm,addFirm,selectFirm,deleteFirm } from '../../../redux/actions'
+import { horizontalComparision, searchFirm, addFirm, selectFirm, deleteFirm,getEvaInfo } from '../../../redux/actions'
 
 //==============================
 @connect(state=> {
@@ -157,10 +157,8 @@ class SearchBar extends Component {
 @connect(state=>{
     return {
         financeInfo:state.financeInfo,
-        currentFirmCode:state.financeInfo.currentFirmCode,
-        currentFirmName:state.financeInfo.currentFirmName,
     }
-},{addFirm,selectFirm,deleteFirm})
+},{addFirm,selectFirm,deleteFirm,getEvaInfo})
 class SelectBar extends Component {
         state = {
             open: false,
@@ -169,9 +167,10 @@ class SelectBar extends Component {
             maybeDeleteFirm:''
         };
         //处理Selet选中项
-        handleChange = (value,option) => {
-            const stkcd = /^\d{6}/.exec(value)[0]
-            this.props.selectFirm(stkcd)
+        handleSelect = (value,option) => {
+            const [stkcd,firmName] = value.split(' ')
+            this.props.selectFirm(stkcd,firmName)
+            this.props.getEvaInfo(stkcd)
         }
         
 
@@ -191,7 +190,7 @@ class SelectBar extends Component {
             })
         }
         //处理选择的值
-        onSelect = (value) => {
+        onAutoCompleteSelect = (value) => {
             this.setState({
                 addFirmCode: value
             })
@@ -228,10 +227,10 @@ class SelectBar extends Component {
                 <Select 
                     // autoFocus
                     className='select-bar'
-                    defaultValue={this.props.currentFirmCode+` ${this.props.currentFirmName}`}
+                    defaultValue={this.props.financeInfo.currentFirmCode+` ${this.props.financeInfo.currentFirmName}`}
                     open={this.state.open}
                     loading={this.props.financeInfo.isLoading}
-                    onChange={this.handleChange}
+                    onChange={this.handleSelect}
                     // onSelect={(value,option)=>console.log(value,option)} //不带搜索框时===onChange
                     dropdownRender={menu => (
                         <div >
@@ -244,7 +243,7 @@ class SelectBar extends Component {
                                     className="global-search"
                                     size="default"
                                     dataSource={this.state.searchDataSource}
-                                    onSelect={this.onSelect}
+                                    onSelect={this.onAutoCompleteSelect}
                                     onSearch={this.handleSearch}
                                     filterOption={(inputValue, option) =>
                                         option.props.children.indexOf(inputValue) !== -1

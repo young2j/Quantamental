@@ -229,11 +229,6 @@ class CashTabTable extends Component {
             }
         })
 
-        const columns = {
-            cashColumns,
-            // cashColumns: data[0].cashColumns,
-        }
-
         return (
             <Spin spinning={this.props.financeInfo.isLoading}>
                 <Table
@@ -241,8 +236,8 @@ class CashTabTable extends Component {
                     bordered={false}
                     rowKey={(record) => record.stkcd}
                     pagination={{hideOnSinglePage:true}}
-                dataSource={dataSource}
-                    columns={columns.cashColumns}
+                    dataSource={dataSource}
+                    columns={cashColumns}
                     footer={()=><TableFooter />}
                 />
             </Spin>
@@ -575,6 +570,8 @@ class CashTabTimeTable extends Component {
                         />
                     ),
                     dataIndex: k,
+                    align:'center',
+
                     render: (text, record) => {
                         return (
                             <div style={{ color: '#1890ff' }}>{text}</div>
@@ -601,11 +598,6 @@ class CashTabTimeTable extends Component {
             }
         })
 
-        const columns = {
-            cashColumns,
-            // cashColumns: data[0].cashColumns,
-        }
-
         return (
             <Spin spinning={this.props.financeInfo.isLoading}>
                 <Table
@@ -613,8 +605,8 @@ class CashTabTimeTable extends Component {
                     bordered={false}
                     rowKey={(record) => record.date}
                     pagination={{hideOnSinglePage:true}}
-                dataSource={dataSource}
-                    columns={columns.cashColumns}
+                    dataSource={dataSource}
+                    columns={cashColumns}
                     footer={()=><TableFooter />}
                 />
             </Spin>
@@ -815,8 +807,6 @@ class CashTabTimeChart extends Component {
     }
 
     render() {
-        console.log(" this.props.dataSource:", this.props.dataSource);
-
         return (
             <div ref={this.lineChartRef} style={{ height: '420px', marginBottom: '40px', width: '90%' }}></div>
         )

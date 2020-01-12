@@ -8,6 +8,7 @@ const initState = {
     currentFirmName:'Virtual公司',
     currentDate:'2019-12-31',
     selectFirmCode:'111111',
+    selectFirmName:'牛XX公司',
     data: [
         {
             profit: [
@@ -153,7 +154,8 @@ export default (state=initState,action)=>{
         case actionTypes.SELECT_FIRM:
             return {
                 ...state,
-                selectFirmCode:action.payload
+                selectFirmCode:action.payload.stkcd,
+                selectFirmName:action.payload.firmName
             }
 
         case actionTypes.END_REQUEST:

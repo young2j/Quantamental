@@ -230,10 +230,6 @@ class SolvencyTabTable extends Component {
             }
         })
 
-        const columns = {
-            solvencyColumns,
-            // solvencyColumns: data[0].solvencyColumns,
-        }
 
         return (
             <Spin spinning={this.props.financeInfo.isLoading}>
@@ -242,8 +238,8 @@ class SolvencyTabTable extends Component {
                     bordered={false}
                     rowKey={(record) => record.stkcd}
                     pagination={{hideOnSinglePage:true}}
-                dataSource={dataSource}
-                    columns={columns.solvencyColumns}
+                    dataSource={dataSource}
+                    columns={solvencyColumns}
                     footer={()=><TableFooter />}
                 />
             </Spin>
@@ -630,6 +626,8 @@ class SolvencyTabTimeTable extends Component {
                         />
                     ),
                     dataIndex: k,
+                    align:'center',
+
                     render: (text, record) => {
                         return (
                             <div style={{ color: '#1890ff' }}>{text}</div>
@@ -656,10 +654,6 @@ class SolvencyTabTimeTable extends Component {
             }
         })
 
-        const columns = {
-            solvencyColumns,
-            // solvencyColumns: data[0].solvencyColumns,
-        }
 
         return (
             <Spin spinning={this.props.financeInfo.isLoading}>
@@ -668,8 +662,8 @@ class SolvencyTabTimeTable extends Component {
                     bordered={false}
                     rowKey={(record) => record.date}
                     pagination={{hideOnSinglePage:true}}
-                dataSource={dataSource}
-                    columns={columns.solvencyColumns}
+                    dataSource={dataSource}
+                    columns={solvencyColumns}
                     footer={()=><TableFooter />}
                 />
             </Spin>

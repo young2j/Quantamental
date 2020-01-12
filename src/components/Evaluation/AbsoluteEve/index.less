@@ -1,0 +1,71 @@
+.table-wrapper{
+    display: flex;
+    justify-content: space-between;
+    .table-left{
+        // flex:0.2;
+        align-self: center;
+        width: 120px;
+
+        height:188px;
+        margin-top: 20px;
+        padding-top: 80px;
+        border-right: 1px solid;
+
+    }
+    .table-right{
+        flex:0.98;
+        .firm-cash-model-table{
+            display: flex;
+            justify-content: space-between;
+            .table-name{
+                flex:0.1;
+                align-self: center;
+                border-bottom: 1px solid;
+                margin-left: -22px;
+                padding-left: 25px;
+            }
+            .table-data{
+                flex:0.9;
+                align-self: center;
+            }
+        }      
+        .equity-cash-model-table{
+            display: flex;
+            justify-content: space-between;
+            .table-name{
+                flex:0.1;
+                align-self: center;
+                border-bottom: 1px solid; 
+                margin-left: -22px;
+                padding-left: 25px;                               
+            }
+            .table-data{
+                flex:0.9;
+                align-self: center;
+            }
+        } 
+    }
+}
+
+.summary-panel{
+    .ant-table-body{
+        tr:nth-child(5){
+            color:#1890ff;
+            td:first-child{
+                color:#000;
+            }
+        }
+        tr:last-child{
+            color:#f50;
+            td:first-child{
+                color:#000;
+            }
+        }
+    }
+}
+
+.absolute-eva-collapse{
+    .ant-collapse-content-box{
+        padding: 0px;
+    }
+}

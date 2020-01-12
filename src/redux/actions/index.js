@@ -2,7 +2,8 @@ import actionTypes from './actionTypes'
 import { 
     getFinanceInfos,
     getFinanceYearInfos,
-    getFinanceYearsInfos
+    getFinanceYearsInfos,
+    getEvaluationInfo
 } from '../../api'
 
 import { message } from 'antd'
@@ -140,12 +141,36 @@ export const followFirm=stkcd=>{
 
 
 //------------------选中一家公司------------------
-export const selectFirm = stkcd => dispatch=>{
+export const selectFirm = (stkcd,firmName) => dispatch=>{
     return dispatch({
         type:actionTypes.SELECT_FIRM,
-        payload:stkcd
+        payload:{
+            stkcd,
+            firmName
+        }
     })
 }
 
 
 //==================================Evaluation=============================================
+
+export const getEvaInfo = stkcd => dispatch=>{
+    dispatch(startRequest())
+    getEvaluationInfo(stkcd)
+    .then(resp=>{
+        if(resp.code==='200'){
+            dispatch({
+                type:actionTypes.GET_EVA,
+                payload:{
+                    basicInfo:resp.basicInfo,
+                    relativeEvaInfo: resp.relativeEvaInfo,
+                    absoluteEvaInfo: resp.absoluteEvaInfo,
+                }
+            })
+        } else{
+            message.error("数据请求失败!")
+        }
+        dispatch(endRequest())
+    })
+
+}

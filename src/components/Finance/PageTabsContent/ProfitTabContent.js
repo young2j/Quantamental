@@ -228,10 +228,6 @@ class ProfitTabTable extends Component {
             }
         })
 
-        const columns = {
-            profitColumns,
-            // solvencyColumns: data[0].solvencyColumns,
-        }
 
         return (
           <Spin spinning={this.props.financeInfo.isLoading}>
@@ -241,7 +237,7 @@ class ProfitTabTable extends Component {
                 rowKey={(record)=>record.stkcd}
                 pagination={{hideOnSinglePage:true}}
                 dataSource={dataSource}
-                columns={columns.profitColumns}
+                columns={profitColumns}
                 footer={()=><TableFooter/>}
             />
           </Spin>
@@ -567,7 +563,6 @@ class ProfitTabTimeTable extends Component {
     render() {
         let dataSource = this.props.dataSource.filter(obj => obj.stkcd === this.props.selectFirmCode)
         dataSource = dataSource[0] ? dataSource[0].profit : null
-        console.log(this.props);
         
         //columns
         const profitColumns = Object.keys(timeColumnsNames.profit).map((k, i) => {
@@ -605,6 +600,8 @@ class ProfitTabTimeTable extends Component {
                         />
                     ),
                     dataIndex: k,
+                    align:'center',
+
                     render: (text, record) => {
                         return (
                             <div style={{ color: '#1890ff' }}>{text}</div>
@@ -631,10 +628,6 @@ class ProfitTabTimeTable extends Component {
             }
         })
 
-        const columns = {
-            profitColumns,
-            // solvencyColumns: data[0].solvencyColumns,
-        }
 
         return (
             <Spin spinning={this.props.financeInfo.isLoading}>
@@ -643,8 +636,8 @@ class ProfitTabTimeTable extends Component {
                     bordered={false}
                     rowKey={(record) => record.date}
                     pagination={{hideOnSinglePage:true}}
-                dataSource={dataSource}
-                    columns={columns.profitColumns}
+                    dataSource={dataSource}
+                    columns={profitColumns}
                     footer={()=><TableFooter />}
                 />
             </Spin>
@@ -877,7 +870,6 @@ class ProfitTabTimeChart extends Component {
     }
 
     render() {
-        console.log(" this.props.dataSource:", this.props.dataSource);
 
         return (
             <div ref={this.lineChartRef} style={{ height: '420px', marginBottom: '40px', width: '90%' }}></div>

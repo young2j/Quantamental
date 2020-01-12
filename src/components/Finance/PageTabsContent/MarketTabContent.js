@@ -229,11 +229,6 @@ class MarketTabTable extends Component {
             }
         })
 
-        const columns = {
-            marketColumns,
-            // marketColumns: data[0].marketColumns,
-        }
-
         return (
             <Spin spinning={this.props.financeInfo.isLoading}>
                 <Table
@@ -241,8 +236,8 @@ class MarketTabTable extends Component {
                     bordered={false}
                     rowKey={(record) => record.stkcd}
                     pagination={{hideOnSinglePage:true}}
-                dataSource={dataSource}
-                    columns={columns.marketColumns}
+                    dataSource={dataSource}
+                    columns={marketColumns}
                     footer={()=><TableFooter />}
                 />
             </Spin>
@@ -592,6 +587,8 @@ class MarketTabTimeTable extends Component {
                         />
                     ),
                     dataIndex: k,
+                    align:'center',
+
                     render: (text, record) => {
                         return (
                             <div style={{ color: '#1890ff' }}>{text}</div>
@@ -618,10 +615,6 @@ class MarketTabTimeTable extends Component {
             }
         })
 
-        const columns = {
-            marketColumns,
-            // marketColumns: data[0].marketColumns,
-        }
 
         return (
             <Spin spinning={this.props.financeInfo.isLoading}>
@@ -630,8 +623,8 @@ class MarketTabTimeTable extends Component {
                     bordered={false}
                     rowKey={(record) => record.date}
                     pagination={{hideOnSinglePage:true}}
-                dataSource={dataSource}
-                    columns={columns.marketColumns}
+                    dataSource={dataSource}
+                    columns={marketColumns}
                     footer={()=><TableFooter />}
                 />
             </Spin>
@@ -842,7 +835,6 @@ class MarketTabTimeChart extends Component {
     }
 
     render() {
-        console.log(" this.props.dataSource:", this.props.dataSource);
 
         return (
             <div ref={this.lineChartRef} style={{ height: '420px', marginBottom: '40px', width: '90%' }}></div>

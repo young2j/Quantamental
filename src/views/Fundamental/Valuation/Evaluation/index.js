@@ -1,38 +1,85 @@
 import React, { Component } from 'react'
-import { Card} from 'antd'
+import { PageHeader, Tabs, Icon, Statistic, Descriptions } from 'antd';
 import { connect } from 'react-redux'
 
-import { SelectBar } from '../../../../components/Finance/PageHeader'
-import { RelativeEva,AbsoluteEva } from '../../../../components/Evaluation'
-
 import './index.less'
+import { SelectBar } from '../../../../components/Finance/PageHeader'
+import { RelativeEva, AbsoluteEva } from '../../../../components/Evaluation'
 
 
-
-@connect(state=>{
-    const {currentFirmCode,currentFirmName} = state.financeInfo
-    const title = `${currentFirmCode} ${currentFirmName} 模型估值`
-    return {
-        title
-    }
-})
-class Evaluation extends Component {
-    render() {       
-        return (
-            <Card 
-                type='inner'
-                title={this.props.title}
-                extra={<SelectBar/>}
+const Content = (props) => {
+    const { selectFirmCode } = props.firmInfo
+    const { createAt,market,industry } = props.firmInfo.basicInfo
+    return (
+        <div className="page-content"
+            style={{display: 'flex',justifyContent: 'space-between'}}
+        >
+            <div className='description-content'
+                style={{flex:0.8,marginTop:-15,paddingLeft:20}}>
+                <Descriptions size="small" column={2}>
+                    <Descriptions.Item label="公司代码">{selectFirmCode}</Descriptions.Item>
+                    <Descriptions.Item label="成立时间">{createAt}</Descriptions.Item>
+                    <Descriptions.Item label="上市交易所">{market}</Descriptions.Item>
+                    <Descriptions.Item label="所属行业">{industry}</Descriptions.Item>
+                </Descriptions>
+            </div>
+            <div className="statistic-content"
+                style={{display: 'flex',flex:0.35,marginTop:-15}}
             >
-                <Card.Grid style={{width:'100%'}}>
-                    <RelativeEva/>
-                </Card.Grid>
-                <Card.Grid style={{width:'100%'}}>
-                    <AbsoluteEva/>
-                </Card.Grid>
-            </Card>
+                <Statistic title="平均估值" prefix="E¥" value={(Math.random()*100).toFixed(2)} style={{marginRight: 32}}/>
+                <Statistic title="当前股价" prefix="¥" value={(Math.random() * 100).toFixed(2)} />
+            </div>
+        </div>            
+    )
+}
+
+const Footer = (props)=>{
+    return (
+    <Tabs defaultActiveKey='1'
+        type='card'
+        className='eva-tabs'
+    >
+        <Tabs.TabPane key='1'
+            tab={
+                <span>
+                    <Icon type="vertical-align-middle" />
+                    相对估值结果
+                </span>
+            }>
+            <RelativeEva />
+        </Tabs.TabPane>
+        <Tabs.TabPane key='2'
+            tab={
+                <span>
+                    <Icon type="vertical-align-top" />
+                    绝对估值结果
+                </span>
+            }>
+            <AbsoluteEva />
+        </Tabs.TabPane>
+    </Tabs>    
+    )
+}
+
+@connect(state =>state.evaluationInfo)
+class Evaluation extends Component {
+    render() {
+        return (
+            <PageHeader
+                // ghost
+                className="eva-page"
+                backIcon={false}
+                title={this.props.selectFirmName}
+                subTitle="模型估值信息"
+                extra={<SelectBar />}
+                footer={<Footer/>}
+            >
+                <Content firmInfo={this.props}/>
+            </PageHeader>
         )
     }
 }
+
+
 
 export default Evaluation
