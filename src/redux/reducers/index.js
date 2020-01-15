@@ -1,11 +1,13 @@
 import { combineReducers } from 'redux'
 
 import financeInfo from './financeInfo'
-import evaluationInfo from './evaluation'
+import evaluationInfo from './evaluationInfo'
+import qualityInfo from './qualityInfo'
 
 export default combineReducers({
     financeInfo,
-    evaluationInfo
+    evaluationInfo,
+    qualityInfo
 })
 
 

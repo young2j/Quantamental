@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import './index.less'
 import { SelectBar } from '../../../../components/Finance/PageHeader'
 import { RelativeEva, AbsoluteEva } from '../../../../components/Evaluation'
+import {selectFirm,getEvaInfo } from '../../../../redux/actions'
 
 
 const Content = (props) => {
@@ -46,7 +47,7 @@ const Footer = (props)=>{
                     相对估值结果
                 </span>
             }>
-            <RelativeEva />
+            <RelativeEva {...props}/>
         </Tabs.TabPane>
         <Tabs.TabPane key='2'
             tab={
@@ -55,26 +56,41 @@ const Footer = (props)=>{
                     绝对估值结果
                 </span>
             }>
-            <AbsoluteEva />
+            <AbsoluteEva {...props}/>   
         </Tabs.TabPane>
     </Tabs>    
     )
 }
 
-@connect(state =>state.evaluationInfo)
+@connect(state => {
+    return {
+        evaluationInfo: state.evaluationInfo,
+        financeInfo: state.financeInfo
+    }
+}, { getEvaInfo, selectFirm })
 class Evaluation extends Component {
+    componentDidMount() {
+        this.props.selectFirm(
+            this.props.financeInfo.currentFirmCode,
+            this.props.financeInfo.currentFirmName
+        )
+        this.props.getEvaInfo(this.props.financeInfo.currentFirmCode)
+
+    }    
     render() {
+        console.log("this.props.evaluationInfo:", this.props.evaluationInfo);
+        
         return (
             <PageHeader
                 // ghost
                 className="eva-page"
                 backIcon={false}
-                title={this.props.selectFirmName}
+                title={this.props.evaluationInfo.selectFirmName}
                 subTitle="模型估值信息"
                 extra={<SelectBar />}
-                footer={<Footer/>}
+                footer={<Footer evaluationInfo={this.props.evaluationInfo}/>}
             >
-                <Content firmInfo={this.props}/>
+                <Content firmInfo={this.props.evaluationInfo}/>
             </PageHeader>
         )
     }

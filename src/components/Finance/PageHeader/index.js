@@ -16,7 +16,7 @@ import './index.less'
 
 import { autoCompleteFirmCode} from '../../../api'
 import { connect } from 'react-redux'
-import { horizontalComparision, searchFirm, addFirm, selectFirm, deleteFirm,getEvaInfo } from '../../../redux/actions'
+import { horizontalComparision, searchFirm, addFirm, selectFirm, deleteFirm,getEvaInfo,getQuaInfo } from '../../../redux/actions'
 
 //==============================
 @connect(state=> {
@@ -158,7 +158,7 @@ class SearchBar extends Component {
     return {
         financeInfo:state.financeInfo,
     }
-},{addFirm,selectFirm,deleteFirm,getEvaInfo})
+},{addFirm,selectFirm,deleteFirm,getEvaInfo,getQuaInfo})
 class SelectBar extends Component {
         state = {
             open: false,
@@ -171,6 +171,7 @@ class SelectBar extends Component {
             const [stkcd,firmName] = value.split(' ')
             this.props.selectFirm(stkcd,firmName)
             this.props.getEvaInfo(stkcd)
+            this.props.getQuaInfo(stkcd)
         }
         
 

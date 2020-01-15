@@ -1,6 +1,5 @@
-import React, { Component } from 'react'
+import React,{useState} from 'react'
 import { Table,Collapse } from 'antd'
-import { connect } from 'react-redux'
 import _ from 'lodash'
 
 import './index.less'
@@ -47,9 +46,11 @@ const tableWrapper = ({Table,isAI,dataSource,isLoading})=>{
             dataIndex: 'FinalValue',
         },
     ]
-    const firmModelData = isAI? dataSource.firmCashAIModel:dataSource.firmCashModel
+    const firmModelData = isAI? dataSource.firmCashAIModel:dataSource.firmCashModel    
     const equityModelData = isAI? dataSource.equityCashAIModel:dataSource.equityCashModel
+    // eslint-disable-next-line 
     const [item1,...firmCashNumbers] = _.values(firmModelData[firmModelData.length-1])
+    // eslint-disable-next-line 
     const [item2,...equityCashNumbers] = _.values(equityModelData[equityModelData.length-1])
     
     return (
@@ -127,8 +128,9 @@ const RIMTable = (props)=>{
             dataIndex:'sevenYears'
         }
     ]
-    
-    const [item, ...numbers] = _.values(props.dataSource.pop())
+    const forSumData = _.cloneDeep(props.dataSource)
+    // eslint-disable-next-line 
+    const [item, ...numbers] = _.values(forSumData.pop())
     return (
         <Table columns={columns} 
             pagination={false} size='small'
@@ -153,10 +155,10 @@ const SummaryTable=(props)=>{
             title:'企业现金流Model',
             dataIndex:'firmCashModel',
             render:(value,record,index)=>{
-                if(index===4 && value>50){
+                if(index===4 && value>250){
                     return <div style={{ display: 'flex'}}>{value}{upArrow}</div>
                 }
-                else if (index === 4 && value < 50) {
+                else if (index === 4 && value < 250) {
                     return <div style={{ display: 'flex' }}>{value}{downArrow}</div>
                 }
                 else {
@@ -168,10 +170,10 @@ const SummaryTable=(props)=>{
             title:'企业现金流AIModel',
             dataIndex: 'firmCashAIModel',
             render: (value, record, index) => {
-                if (index === 4 && value > 50) {
+                if (index === 4 && value > 250) {
                     return <div style={{ display: 'flex' }}>{value}{upArrow}</div>
                 }
-                else if (index === 4 && value < 50) {
+                else if (index === 4 && value < 250) {
                     return <div style={{ display: 'flex' }}>{value}{downArrow}</div>
                 }
                 else {
@@ -182,10 +184,10 @@ const SummaryTable=(props)=>{
             title:'股权现金流Model',
             dataIndex: 'equityCashModel',
             render: (value, record, index) => {
-                if (index === 4 && value > 50) {
+                if (index === 4 && value > 250) {
                     return <div style={{ display: 'flex' }}>{value}{upArrow}</div>
                 }
-                else if (index === 4 && value < 50) {
+                else if (index === 4 && value < 250) {
                     return <div style={{ display: 'flex' }}>{value}{downArrow}</div>
                 }
                 else {
@@ -196,10 +198,10 @@ const SummaryTable=(props)=>{
             title:'股权现金流AIModel',
             dataIndex: 'equityCashAIModel',
             render: (value, record, index) => {
-                if (index === 4 && value > 50) {
+                if (index === 4 && value > 250) {
                     return <div style={{ display: 'flex' }}>{value}{upArrow}</div>
                 }
-                else if (index === 4 && value < 50) {
+                else if (index === 4 && value < 250) {
                     return <div style={{ display: 'flex' }}>{value}{downArrow}</div>
                 }
                 else {
@@ -210,10 +212,10 @@ const SummaryTable=(props)=>{
             title:'剩余收益Model',
             dataIndex: 'RIMModel',
             render: (value, record, index) => {
-                if (index === 4 && value > 50) {
+                if (index === 4 && value > 250) {
                     return <div style={{ display: 'flex' }}>{value}{upArrow}</div>
                 }
-                else if (index === 4 && value < 50) {
+                else if (index === 4 && value < 250) {
                     return <div style={{ display: 'flex' }}>{value}{downArrow}</div>
                 }
                 else {
@@ -224,10 +226,10 @@ const SummaryTable=(props)=>{
             title:'剩余收益AIModel',
             dataIndex: 'RIMAIModel',
             render: (value, record, index) => {
-                if (index === 4 && value > 50) {
+                if (index === 4 && value > 250) {
                     return <div style={{ display: 'flex' }}>{value}{upArrow}</div>
                 }
-                else if (index === 4 && value < 50) {
+                else if (index === 4 && value < 250) {
                     return <div style={{ display: 'flex' }}>{value}{downArrow}</div>
                 }
                 else {
@@ -247,41 +249,55 @@ const SummaryTable=(props)=>{
     )
 }
 
-@connect(state=>state.evaluationInfo)
-class AbsoluteEva extends Component {
+
+const AbsoluteEva = (props)=>{
+    // const [key, setKey] = useState(['1','2','3','4','5'])
+    const { 
+        isLoading,
+        firmCashModel,
+        equityCashModel,
+        firmCashAIModel,
+        equityCashAIModel,
+        RIMModel,
+        RIMAIModel,
+        SummaryModel } = props.evaluationInfo.absoluteEvaInfo
     
-    render() {
-        const { 
-            isLoading,
-            firmCashModel,
-            equityCashModel,
-            firmCashAIModel,
-            equityCashAIModel,
-            RIMModel,
-            RIMAIModel,
-            SummaryModel } = this.props.absoluteEvaInfo
-       
         return (
-            <Collapse  style={{background:'transparent'}} className='absolute-eva-collapse'
+            <Collapse 
+                // bordered={false}
+                // style={{background:'transparent'}} 
+                className='absolute-eva-collapse' 
+                // onChange={key=>setKey(key)}
+                defaultActiveKey={['5']}
+                expandIconPosition='right'
             >
-                <Panel header="现金流量折现模型" key="1">
+                <Panel header="❀ 模型汇总-估值信息" key="5" className='summary-panel' 
+                // style={{ borderBottom: key.indexOf('5') !== -1 ? 2:null }}
+                >
+                    <SummaryTable dataSource={SummaryModel} isLoading={isLoading} />
+                </Panel>
+                <Panel header="❶ 现金流量折现模型" key="1" 
+                // style={{ borderBottom : key.indexOf('1')!==-1? 2:null}}
+                >
                     {tableWrapper({Table,isAI:false,dataSource:{firmCashModel,equityCashModel}},isLoading)}
                 </Panel>
-                <Panel header="现金流量折现模型(AI)" key="2">
+                <Panel header="① 现金流量折现模型(AI)" key="2" 
+                // style={{ borderBottom: key.indexOf('2') !== -1 ? 2:null }}
+                >
                     {tableWrapper({Table,isAI:true,dataSource:{firmCashAIModel,equityCashAIModel},isLoading})}
                 </Panel>
-                <Panel header="剩余收益模型" key="3">
+                <Panel header="❷ 剩余收益模型" key="3" 
+                // style={{ borderBottom: key.indexOf('3') !== -1 ? 2:null }}
+                >
                     <RIMTable dataSource={RIMModel} isLoading={isLoading}/>
                 </Panel>
-                <Panel header="剩余收益模型AI" key="4">
+                <Panel header="② 剩余收益模型AI" key="4" 
+                // style={{ borderBottom: key.indexOf('4') !== -1 ? 2:null }}
+                >
                     <RIMTable dataSource={RIMAIModel} isLoading={isLoading} />
-                </Panel>
-                <Panel header="模型汇总-估值信息" key="5" className='summary-panel'>
-                    <SummaryTable dataSource={SummaryModel} isLoading={isLoading} />
                 </Panel>
             </Collapse>
         )
     }
-}
 
 export default AbsoluteEva

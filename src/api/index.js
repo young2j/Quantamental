@@ -73,3 +73,9 @@ export const getFinanceYearInfos=(stkcd,date)=>{
 export const getEvaluationInfo=stkcd=>{
     return service.get(`/fundamental/evaluation/${stkcd}`)
 }
+
+
+//-------------获得一家公司质量信息--------------------
+export const getQualityInfo = stkcd=>{
+    return service.get(`/fundamental/quality/${stkcd}`)
+}
