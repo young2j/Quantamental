@@ -29,8 +29,8 @@ service.interceptors.response.use((resp) => {
 })
 
 
-//-----------查询公司代码和名词------------
-export const autoCompleteFirmCode = ()=>{
+//-----------查询公司代码和名称------------
+export const getAllFirmCodeNames = ()=>{
     return service.get("/fundamental/finance/firmcodes")
 }
 
@@ -78,4 +78,11 @@ export const getEvaluationInfo=stkcd=>{
 //-------------获得一家公司质量信息--------------------
 export const getQualityInfo = stkcd=>{
     return service.get(`/fundamental/quality/${stkcd}`)
+}
+
+
+
+//---------------获得股票池公司代码和名称-------------------
+export const getUniverseCode = key=>{
+    return service.get(`/strategy/universe/${key}`)
 }

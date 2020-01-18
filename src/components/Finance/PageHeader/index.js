@@ -14,7 +14,7 @@ import {
 
 import './index.less'
 
-import { autoCompleteFirmCode} from '../../../api'
+import { getAllFirmCodeNames} from '../../../api'
 import { connect } from 'react-redux'
 import { horizontalComparision, searchFirm, addFirm, selectFirm, deleteFirm,getEvaInfo,getQuaInfo } from '../../../redux/actions'
 
@@ -63,7 +63,7 @@ class SearchBar extends Component {
     }
     //处理输入的值，并提供数据源
     handleSearch = value => {
-        autoCompleteFirmCode()
+        getAllFirmCodeNames()
             .then(resp => {
                 const searchDataSource = resp.data.map(item => {
                     return item.stkcd + ` ${item.name}`
@@ -177,7 +177,7 @@ class SelectBar extends Component {
 
         // 处理AutoComplete输入的值，并提供数据源
         handleSearch = value => {
-            autoCompleteFirmCode()
+            getAllFirmCodeNames()
                 .then(resp => {
                     const searchDataSource = resp.data.map(item => {
                         return item.stkcd + ` ${item.name}`
