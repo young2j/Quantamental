@@ -1,5 +1,5 @@
-import React, { Component,useEffect,useState } from 'react'
-// import { Table, Button } from 'antd'
+import React, { Component } from 'react'
+import { Table, Button,Form,Input,Popconfirm } from 'antd'
 
 // import './index.less'
 
@@ -83,7 +83,7 @@ import React, { Component,useEffect,useState } from 'react'
 //         ]
 
 //         return (
-            
+
 //             <Table 
 //                 className='outer-table'
 //                 columns={columns}
@@ -111,13 +111,12 @@ import React, { Component,useEffect,useState } from 'react'
 
 
 
-import { Table, Input, Button, Popconfirm, Form } from 'antd';
 
 const EditableContext = React.createContext();
 
 const EditableRow = ({ index, ...props }) => {
-    // const [form] = Form.useForm();
-    const [form] = Form.create();
+    const [form] = Form.useForm();
+    
     return (
         <Form form={form} component={false}>
             <EditableContext.Provider value={form}>
@@ -196,7 +195,7 @@ const EditableCell = ({
     return <td {...restProps}>{childNode}</td>;
 };
 
-class Step21Content extends React.Component {
+class Step21Content extends Component {
     constructor(props) {
         super(props);
         this.columns = [

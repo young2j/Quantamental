@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { PageHeader, Tabs, Icon, Statistic, Descriptions } from 'antd';
+import { VerticalAlignMiddleOutlined, VerticalAlignTopOutlined } from '@ant-design/icons';
+import { PageHeader, Tabs, Statistic, Descriptions } from 'antd';
 import { connect } from 'react-redux'
 
 import './index.less'
@@ -36,30 +37,30 @@ const Content = (props) => {
 
 const Footer = (props)=>{
     return (
-    <Tabs defaultActiveKey='1'
-        type='card'
-        className='eva-tabs'
-    >
-        <Tabs.TabPane key='1'
-            tab={
-                <span>
-                    <Icon type="vertical-align-middle" />
-                    相对估值结果
-                </span>
-            }>
-            <RelativeEva {...props}/>
-        </Tabs.TabPane>
-        <Tabs.TabPane key='2'
-            tab={
-                <span>
-                    <Icon type="vertical-align-top" />
-                    绝对估值结果
-                </span>
-            }>
-            <AbsoluteEva {...props}/>   
-        </Tabs.TabPane>
-    </Tabs>    
-    )
+        <Tabs defaultActiveKey='1'
+            type='card'
+            className='eva-tabs'
+        >
+            <Tabs.TabPane key='1'
+                tab={
+                    <span>
+                        <VerticalAlignMiddleOutlined />
+                        相对估值结果
+                    </span>
+                }>
+                <RelativeEva {...props}/>
+            </Tabs.TabPane>
+            <Tabs.TabPane key='2'
+                tab={
+                    <span>
+                        <VerticalAlignTopOutlined />
+                        绝对估值结果
+                    </span>
+                }>
+                <AbsoluteEva {...props}/>   
+            </Tabs.TabPane>
+        </Tabs>
+    );
 }
 
 @connect(state => {

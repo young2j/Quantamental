@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { PageHeader, Collapse, Statistic, Descriptions,Icon,Spin} from 'antd';
+import { LikeOutlined, WarningOutlined } from '@ant-design/icons';
+import { PageHeader, Collapse, Statistic, Descriptions, Spin } from 'antd';
 import { connect } from 'react-redux'
 
 import './index.less'
@@ -17,10 +18,10 @@ const {Panel} = Collapse
 
 const statsValue = [
     <div style={{ fontSize: 16, width: 60, color: 'red' }}>☹较差</div>,
-    <div style={{ fontSize: 16, width: 60, color: '#ff9f1a' }}><Icon type="warning" />警惕</div>,
+    <div style={{ fontSize: 16, width: 60, color: '#ff9f1a' }}><WarningOutlined />警惕</div>,
         <div style={{fontSize:16,width:60,color:''}}>一般</div>,
     <div style={{ fontSize: 16, width: 60, color: 'green' }}>☺良好</div>,
-    <div style={{ fontSize: 16, width: 60, color: 'green' }}><Icon type="like"/>很棒</div>,
+    <div style={{ fontSize: 16, width: 60, color: 'green' }}><LikeOutlined />很棒</div>,
     ]
 
 const statsValueFormatter = value =>{

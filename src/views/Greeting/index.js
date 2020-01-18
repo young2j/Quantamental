@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
-import { Layout,Button,Icon} from 'antd';
+import { HeartOutlined } from '@ant-design/icons';
+import { Layout, Button } from 'antd';
 
 
 import './index.less'
@@ -17,6 +18,7 @@ export default class Greeting extends Component {
 
     render() {
         return (
+            // <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
             <Layout className='page-body'>
                 <Header className='page-header' style={{ position: 'fixed', zIndex: 1, width: '100%' }}>
                     <img src={logo} alt="logo"/>
@@ -39,7 +41,7 @@ export default class Greeting extends Component {
                                 <img src={githubImg} alt='' />
                                 <Button style={{ fontWeight: 'bold' }}>
                                     biu一下呗~
-                                    <Icon type='heart' style={{ color: 'hotpink',margin:'0px'}}/>
+                                    <HeartOutlined style={{ color: 'hotpink',margin:'0px'}} />
                                 </Button>
                             </div>
                         </div>
@@ -50,11 +52,8 @@ export default class Greeting extends Component {
                         </div>
                     </div>
                 </Content>
-            </Layout> 
-
-            // <Footer style={{ textAlign: 'center' }}>Ant Design ©2018 Created by Ant UED</Footer>
-
-        )
+            </Layout>
+        );
     }
 }
 

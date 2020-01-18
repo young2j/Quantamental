@@ -1,5 +1,6 @@
 import React, { Component, createRef } from 'react'
-import {Card,Icon,Statistic } from 'antd'
+import { WarningOutlined } from '@ant-design/icons';
+import { Card, Statistic } from 'antd';
 import echarts from 'echarts'
 
 import './index.less'
@@ -122,7 +123,7 @@ const MCscoreColorAndIcon = v => {
         return ['#3f8600',smileFace]
     }
     else if (v >= 50 && v < 70) {
-        return ['#ff9f1a',<Icon type='warning'/>]
+        return ['#ff9f1a',<WarningOutlined />];
     }
     else {
         return ['#cf1322',dangerHead]
@@ -133,7 +134,7 @@ const OZscoreColorAndIcon = v => {
         return ['#cf1322',dangerHead]
     }
     else if (v > 1.81 && v < 2.99) {
-        return ['#ff9f1a',<Icon type='warning'/>]
+        return ['#ff9f1a',<WarningOutlined />];
     }
     else {
         return ['#3f8600',smileFace]

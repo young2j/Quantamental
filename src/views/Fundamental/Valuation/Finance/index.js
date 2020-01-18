@@ -1,12 +1,17 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { 
-    Button,
-    Icon, 
-    Card,
-    Tabs,
-} from 'antd';
+import {
+    AndroidOutlined,
+    DollarOutlined,
+    RetweetOutlined,
+    RiseOutlined,
+    SafetyCertificateOutlined,
+    SlidersOutlined,
+    TransactionOutlined,
+} from '@ant-design/icons';
+
+import { Button, Card, Tabs } from 'antd';
 
 import { 
     PageTitle,
@@ -110,7 +115,7 @@ class Finance extends Component {
                     <Tabs.TabPane key='1'
                         tab={
                             <span>
-                                <Icon type='dollar' />盈利能力  
+                                <DollarOutlined />盈利能力  
                             </span>
                         }
                     >
@@ -130,7 +135,7 @@ class Finance extends Component {
                     <Tabs.TabPane key="2"
                      tab={
                        <span>
-                         <Icon type="safety-certificate" />
+                         <SafetyCertificateOutlined />
                          偿债能力
                        </span>
                      }
@@ -151,7 +156,7 @@ class Finance extends Component {
                     <Tabs.TabPane key='3'
                       tab = {
                         <span>
-                            <Icon type='android'/>
+                            <AndroidOutlined />
                             营运能力
                         </span>
                       }
@@ -172,7 +177,7 @@ class Finance extends Component {
                     <Tabs.TabPane key='4'
                       tab = {
                         <span>
-                            <Icon type='rise'/>
+                            <RiseOutlined />
                             成长能力
                         </span>
                       }
@@ -193,7 +198,7 @@ class Finance extends Component {
                     <Tabs.TabPane key='5'
                       tab = {
                         <span>
-                            <Icon type='transaction'/>
+                            <TransactionOutlined />
                             现金流量
                         </span>
                       }
@@ -214,7 +219,7 @@ class Finance extends Component {
                     <Tabs.TabPane key='6'
                       tab = {
                         <span>
-                            <Icon type='sliders'/>
+                            <SlidersOutlined />
                             市场表现
                         </span>
                       }
@@ -241,7 +246,7 @@ class Finance extends Component {
                             switchTableToChart:false
                         })}
                     >看表</Button>
-                    <Icon type='retweet' />
+                    <RetweetOutlined />
                     <Button className='footer-btn-right'
                         onClick={() => this.setState({
                             switchTableToChart: true

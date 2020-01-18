@@ -1,16 +1,8 @@
 import React, { Component} from 'react'
 
-import {
-    Icon,
-    Button,
-    Input,
-    AutoComplete,
-    message,
-    Typography,
-    Select,
-    Divider,
-    Radio
-} from 'antd';
+import { BlockOutlined, CloseCircleOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
+
+import { Button, Input, AutoComplete, message, Typography, Select, Divider, Radio } from 'antd';
 
 import './index.less'
 
@@ -29,20 +21,20 @@ class PageTitle extends Component {
     render(){
         
       return (
-        <div className='page-title'>
-            <Typography.Text className='page-title-text'
-                onClick={() => this.props.horizontalComparision()}
-                >
-                {
-                    this.props.horizontal ? 
-                    this.props.currentFirmName + '|横向分析'
-                    :
-                    this.props.currentFirmName + '|纵向分析'
-                }
-                <Icon type="block" style={{ color:"#2db7f5"}}/>
-            </Typography.Text>
-        </div>
-        )
+          <div className='page-title'>
+              <Typography.Text className='page-title-text'
+                  onClick={() => this.props.horizontalComparision()}
+                  >
+                  {
+                      this.props.horizontal ? 
+                      this.props.currentFirmName + '|横向分析'
+                      :
+                      this.props.currentFirmName + '|纵向分析'
+                  }
+                  <BlockOutlined style={{ color:"#2db7f5"}} />
+              </Typography.Text>
+          </div>
+      );
     }
 }
 
@@ -111,44 +103,44 @@ class SearchBar extends Component {
 
     render() { 
         return (
-                <div className="global-search-wrapper">
-                    <AutoComplete 
-                        className="global-search"
-                        size="default"
-                        dataSource={this.state.searchDataSource}
-                        onSelect={this.onSelect}
-                        onSearch={this.handleSearch}
-                        placeholder="搜索或添加公司代码"
-                        filterOption={(inputValue, option) =>
-                            option.props.children.indexOf(inputValue) !== -1
+            <div className="global-search-wrapper">
+                <AutoComplete 
+                    className="global-search"
+                    size="default"
+                    dataSource={this.state.searchDataSource}
+                    onSelect={this.onSelect}
+                    onSearch={this.handleSearch}
+                    placeholder="搜索或添加公司代码"
+                    filterOption={(inputValue, option) =>
+                        option.props.children.indexOf(inputValue) !== -1
+                    }
+                >
+                    <Input.Search 
+                        enterButton={
+                            <Button type='default' shape='circle' style={{ height: '32px' }}>
+                                <SearchOutlined />
+                            </Button>
                         }
-                    >
-                        <Input.Search 
-                            enterButton={
-                                <Button type='default' shape='circle' style={{ height: '32px' }}>
-                                    <Icon type='search' />
-                                </Button>
-                            }
-                            onSearch={this.onPressEnter} />
-                    </AutoComplete>
+                        onSearch={this.onPressEnter} />
+                </AutoComplete>
 
-                    <Button 
-                        // ghost
-                        style={{padding:5}}                            
-                        onClick={this.handleAddFirm}
-                        // type="primary"
-                        // shape='square'
-                        icon='plus'>
-                        添加可比公司
-                    </Button>
-                    <Radio.Group defaultValue={1} name="radiogroup" className='radio-group'
-                        onChange={e=>this.setState({addFirmCondition:e.target.value})}
-                    >
-                        <Radio value={1}>按聚类</Radio>
-                        <Radio value={2}>按行业</Radio>
-                    </Radio.Group>
-                </div>
-            )
+                <Button 
+                    // ghost
+                    style={{padding:5}}                            
+                    onClick={this.handleAddFirm}
+                    // type="primary"
+                    // shape='square'
+                    icon={<PlusOutlined />}>
+                    添加可比公司
+                </Button>
+                <Radio.Group defaultValue={1} name="radiogroup" className='radio-group'
+                    onChange={e=>this.setState({addFirmCondition:e.target.value})}
+                >
+                    <Radio value={1}>按聚类</Radio>
+                    <Radio value={2}>按行业</Radio>
+                </Radio.Group>
+            </div>
+        );
     }
 }
 
@@ -252,7 +244,7 @@ class SelectBar extends Component {
                                 >
                                   <Input />
                                 </AutoComplete>
-                                <Button icon='plus' ghost type='primary' className='add-firm-btn'
+                                <Button icon={<PlusOutlined />} ghost type='primary' className='add-firm-btn'
                                     onClick={this.handleAddFirm}>
                                         添加公司
                                 </Button>
@@ -265,14 +257,12 @@ class SelectBar extends Component {
                          onMouseEnter={({ key }) => this.setState({ maybeDeleteFirm: /^\d{6}/.exec(key)[0] })}                                    
                         >
                             {item}
-                            <Icon type='close-circle' className='close-icon'
-                                onClick={this.handleDeleteFirm}
-                            />
+                            <CloseCircleOutlined className='close-icon' onClick={this.handleDeleteFirm} />
                         </Select.Option>
                     ))}
                 </Select>
                 </div>
-            )
+            );
         }
     }
 

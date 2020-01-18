@@ -1,11 +1,19 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
-import { 
-    Layout, 
-    Menu, 
-    Icon,
-    Button
-} from 'antd';
+import { Icon as LegacyIcon } from '@ant-design/compatible';
+
+import {
+    AccountBookOutlined,
+    CalculatorOutlined,
+    ExperimentOutlined,
+    PayCircleOutlined,
+    PercentageOutlined,
+    ReadOutlined,
+    StockOutlined,
+    ToolOutlined,
+} from '@ant-design/icons';
+
+import { Layout, Menu, Button } from 'antd';
 
 import logo from './logo2.png'
 import './index.less'
@@ -48,7 +56,7 @@ class Frame extends Component {
                     <Sider collapsible 
                            collapsed={this.state.collapsed} 
                            trigger={
-                               < Icon type={this.state.triggertype} 
+                               < LegacyIcon type={this.state.triggertype} 
                                       onClick={this.menuToggle}/>
                            }
                            className='frame-sider'
@@ -59,12 +67,12 @@ class Frame extends Component {
                               onClick={this.menuClick}
                               >
                             <Menu.Item key="/dashboard">
-                                <Icon type="stock" />
+                                <StockOutlined />
                                 <span>股市概览</span>
                             </Menu.Item>
                             <Menu.SubMenu title={
                                           <span>
-                                            <Icon type="account-book" />
+                                            <AccountBookOutlined />
                                             <span>挖基本面</span>
                                           </span>
                                         }
@@ -72,33 +80,33 @@ class Frame extends Component {
 
                                 <Menu.SubMenu title={
                                                 <span>
-                                                    <Icon type="calculator" />
+                                                    <CalculatorOutlined />
                                                     <span>估值维度</span>
                                                 </span>
                                             }
                                 >
                                     <Menu.Item key="/fundamental/finance">
-                                        <Icon type="pay-circle" />
+                                        <PayCircleOutlined />
                                         <span>财务分析</span>
                                     </Menu.Item>
                                     <Menu.Item key="/fundamental/evaluation">
-                                        <Icon type="percentage" />
+                                        <PercentageOutlined />
                                         <span>估值模型</span>
                                     </Menu.Item>
                                 </Menu.SubMenu>
 
 
                                 <Menu.Item key="/fundamental/quality">
-                                    <Icon type="tool" />
+                                    <ToolOutlined />
                                     <span>质量维度</span>
                                 </Menu.Item>
                             </Menu.SubMenu>
                             <Menu.Item key='/strategy'>
-                                <Icon type='experiment' />
+                                <ExperimentOutlined />
                                 <span>策略应用</span>
                             </Menu.Item>
                             <Menu.Item key='/knowledge'>
-                                <Icon type='read' />
+                                <ReadOutlined />
                                 <span>知识百科</span>
                             </Menu.Item>
                         </Menu>

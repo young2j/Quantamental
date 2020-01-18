@@ -1,7 +1,7 @@
 import React, { Component, createRef } from 'react'
+import { CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {
     Button,
-    Icon,
     Popconfirm,
     Rate,
     Table,
@@ -9,8 +9,8 @@ import {
     Spin,
     Select,
     Divider,
-    DatePicker
-} from 'antd'
+    DatePicker,
+} from 'antd';
 import echarts from 'echarts'
 import { connect } from 'react-redux'
 import moment from 'moment'
@@ -181,7 +181,7 @@ class OperationTabTable extends Component {
                                         >
                                             <DatePicker size='small' placeholder=' ' className='add-time-datepicker'
                                                 onChange={this.handlePickDate} />
-                                            <Button icon='plus' size='small' ghost
+                                            <Button icon={<PlusOutlined />} size='small' ghost
                                                 className='add-time-btn' type='primary'
                                                 onClick={this.handleAddDate}
                                             >添加时间</Button>
@@ -194,9 +194,7 @@ class OperationTabTable extends Component {
                                         onMouseEnter={({ key }) => this.setState({ maybeDeleteDate: key })}
                                     >
                                         {item}
-                                        <Icon type='close-circle' className='close-icon'
-                                            onClick={this.handleDeleteDate}
-                                        />
+                                        <CloseCircleOutlined className='close-icon' onClick={this.handleDeleteDate} />
                                     </Select.Option>
                                 ))}
                             </Select>
@@ -208,7 +206,7 @@ class OperationTabTable extends Component {
                             <div style={{ color: '#1890ff' }}>{text}</div>
                         )
                     }
-                }
+                };
             }
             return {
                 title: (<span style={{ color: '#1890ff' }}>
@@ -638,7 +636,7 @@ const timeChartOption = {
             label: {
                 formatter: function (s) {
                     // return (new Date(s)).getFullYear();
-                    return s.match(/^\d{6}/)[0]
+                    return s.match(/^\d{6}/)[0];
                 }
             }
         },
