@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
-import { Icon as LegacyIcon } from '@ant-design/compatible';
 
 import {
     AccountBookOutlined,
@@ -11,6 +10,8 @@ import {
     ReadOutlined,
     StockOutlined,
     ToolOutlined,
+    DoubleLeftOutlined,
+    DoubleRightOutlined
 } from '@ant-design/icons';
 
 import { Layout, Menu, Button } from 'antd';
@@ -27,14 +28,12 @@ class Frame extends Component {
     state = {
         collapsed: false,
         menutheme:'light',
-        triggertype: 'double-left'
     };
 
     menuToggle = () => {
         this.setState({
             collapsed: !this.state.collapsed,
             menutheme: this.state.collapsed ? 'light': 'dark',
-            triggertype: this.state.collapsed ?'double-left':'double-right'
         });
     };
 
@@ -56,8 +55,9 @@ class Frame extends Component {
                     <Sider collapsible 
                            collapsed={this.state.collapsed} 
                            trigger={
-                               < LegacyIcon type={this.state.triggertype} 
-                                      onClick={this.menuToggle}/>
+                               (< div onClick={this.menuToggle}>
+                                   {this.state.collapsed ? <DoubleRightOutlined />:<DoubleLeftOutlined/>}
+                                </ div>)
                            }
                            className='frame-sider'
                     >

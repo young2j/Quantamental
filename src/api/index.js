@@ -86,3 +86,13 @@ export const getQualityInfo = stkcd=>{
 export const getUniverseCode = key=>{
     return service.get(`/strategy/universe/${key}`)
 }
+
+//--------------获得选股因子---------------
+export const getFactors = ()=>{
+    return service.get('/strategy/factors')
+}
+
+//--------------获得因子有效性检验信息-------
+export const getFactorValidateInfo = (item)=>{
+    return service.get(`/strategy/validate-factors/${item}`)
+}

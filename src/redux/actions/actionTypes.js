@@ -20,5 +20,9 @@ export default {
 
     //========================================
     GET_QUA:'GET_QUA', //获得质量信息
-
+    
+    //====================
+    MERGE_FACTORS:'MERGE_FACTORS', //合并选择的因子信息
+    ADD_COLUMNS:'ADD_COLUMNS', //新增表（大类因子）
+    DELETE_COLUMNS:'DELETE_COLUMNS' //删除表
 }

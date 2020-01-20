@@ -58,7 +58,7 @@ class SearchBar extends Component {
         getAllFirmCodeNames()
             .then(resp => {
                 const searchDataSource = resp.data.map(item => {
-                    return item.stkcd + ` ${item.name}`
+                    return {value:item.stkcd + ` ${item.name}`}
                 })
                 this.setState({
                     searchDataSource
@@ -106,13 +106,13 @@ class SearchBar extends Component {
             <div className="global-search-wrapper">
                 <AutoComplete 
                     className="global-search"
-                    size="default"
-                    dataSource={this.state.searchDataSource}
+                    // dataSource={this.state.searchDataSource} //V3
+                    options={this.state.searchDataSource}
                     onSelect={this.onSelect}
                     onSearch={this.handleSearch}
                     placeholder="搜索或添加公司代码"
                     filterOption={(inputValue, option) =>
-                        option.props.children.indexOf(inputValue) !== -1
+                        option.value.indexOf(inputValue) !== -1
                     }
                 >
                     <Input.Search 

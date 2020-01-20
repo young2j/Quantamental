@@ -198,3 +198,31 @@ export const getQuaInfo = stkcd=>dispatch=>{
         dispatch(endRequest())
     })
 }
+
+
+//=================================Strategy==================================================
+export const mergeFactors = (columns,dataSource,index)=>dispatch=>{
+    dispatch({
+        type:actionTypes.MERGE_FACTORS,
+        payload:{
+            columns,
+            dataSource,
+            index
+        }
+    })
+}
+
+export const addColumns = ()=>dispatch=>{
+    dispatch({
+        type:actionTypes.ADD_COLUMNS
+    })
+}
+
+export const deleteColumns = (index)=>dispatch=>{
+    dispatch({
+        type:actionTypes.DELETE_COLUMNS,
+        payload:{
+            index
+        }
+    })
+}
