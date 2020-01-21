@@ -35,12 +35,20 @@ const initDataSource = initDataIndex.map(idx => {
 
 
 const initState = {
+  samplePeriod:{},
   columns: initColumns,
   dataSource: initDataSource,
+  factorsValidateOK:[]
 }
 
 export default (state = initState, action) => {
   switch (action.type) {
+    case actionTypes.SELECT_SAMPLE_PERIOD:
+      return {
+        ...state,
+        samplePeriod:action.payload
+      }
+
     case actionTypes.ADD_COLUMNS:
       const newDataIndex = `columns${state.columns.length + 1}`
       const newColumn = [
@@ -75,7 +83,6 @@ export default (state = initState, action) => {
 
     case actionTypes.DELETE_COLUMNS:
       const { index } = action.payload
-      console.log("index:", index);
 
       const deleteColumns = [...state.columns]
       const deleteDataSource = [...state.dataSource]
@@ -101,6 +108,13 @@ export default (state = initState, action) => {
         columns: upDateColumns,
         dataSource: upDateDataSource,
       }
+
+    case actionTypes.COMPUTE_CORR:
+      return {
+        ...state,
+        factorsValidateOK:action.payload
+      }
+
     default:
       return state
   }

@@ -93,6 +93,11 @@ export const getFactors = ()=>{
 }
 
 //--------------获得因子有效性检验信息-------
-export const getFactorValidateInfo = (item)=>{
-    return service.get(`/strategy/validate-factors/${item}`)
+export const getFactorValidateInfo = (item,startDate,endDate)=>{
+    return service.get(`/strategy/validate-factors/${item}`,{
+        params:{
+            startDate,
+            endDate
+        }
+    })
 }

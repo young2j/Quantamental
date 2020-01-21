@@ -22,7 +22,10 @@ export default {
     GET_QUA:'GET_QUA', //获得质量信息
     
     //====================
+    SELECT_SAMPLE_PERIOD:'SELECT_SAMPLE_PERIOD', //选择样本期间
     MERGE_FACTORS:'MERGE_FACTORS', //合并选择的因子信息
     ADD_COLUMNS:'ADD_COLUMNS', //新增表（大类因子）
-    DELETE_COLUMNS:'DELETE_COLUMNS' //删除表
+    DELETE_COLUMNS:'DELETE_COLUMNS', //删除表
+
+    COMPUTE_CORR:'COMPUTE_CORR' //冗余因子剔除--相关系数矩阵
 }

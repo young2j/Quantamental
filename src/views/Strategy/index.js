@@ -4,6 +4,7 @@ import { Card,Steps, Typography, Button,Tag} from 'antd'
 import './index.less'
 import { 
     Step1Content,
+    Step20Content,
     Step21Content,
     Step22Content,
     Step23Content,
@@ -28,7 +29,7 @@ const steps = [
         icon: <Button type='primary' 
                 shape='circle' size='small'
               >2</Button>,
-        content:<Step21Content/>
+        content:<Step20Content/>
     },
     {   
         key:2.1,
@@ -37,7 +38,7 @@ const steps = [
                 shape='circle' size='small'
                style={{border:0,boxShadow:'none'}}
                >2.1</Button>,
-        content: <Step22Content/>
+        content: <Step21Content/>
     },
     {
         key:2.2,
@@ -46,7 +47,7 @@ const steps = [
                 shape='circle' size='small'
                style={{ border: 0, boxShadow: 'none' }}
                >2.2</Button>,
-        content:"content"
+        content: <Step22Content/>
     },
     {
         key:2.3,

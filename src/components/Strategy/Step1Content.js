@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
-import { Tree, Typography, Table, Button, Checkbox, Tag } from 'antd'
+import { Tree, Typography, Table, Button, Checkbox, Tag,DatePicker } from 'antd'
 import _ from 'lodash'
+import moment from 'moment'
 
 
 import { getUniverseCode } from '../../api'
 
 
+const {RangePicker} = DatePicker
 
 const treeData = [
     {
@@ -94,7 +96,7 @@ class Step1Content extends Component {
         deleteRows: [],
         isLoading: false
     }
-
+    
     onTreeExpand = (expandedKeys) => {
         this.setState({
             expandedKeys
@@ -231,8 +233,18 @@ class Step1Content extends Component {
             hideOnSinglePage: true
         }
         return (
-            <div style={{ display: 'flex', border: '2px solid #fafafa', width: "90%", margin: "20px auto" }}>
+            <div>
+                <div style={{marginLeft:'6%'}}>
+                样本期间: 
+                <RangePicker
+                    style={{marginLeft:20,width:'20%'}}
+                    placeholder={['开始时间', '结束时间']}
+                    onChange={this.handlePickDate}
+                    defaultValue={[moment('2010-12-31'),moment('2019-12-31')]}
+                />
+                </div>
 
+            <div style={{ display: 'flex', border: '2px solid #fafafa', width: "90%", margin: "5px auto " }}>
                 <div className='tree-content'
                     style={{ flex: 0.4, borderRight: '2px solid #fafafa', paddingLeft: 30, paddingTop: 40 }}>
                     <Tree
@@ -274,6 +286,7 @@ class Step1Content extends Component {
                     />
                 </div>
             </div>
+        </div>
         );
     }
 }

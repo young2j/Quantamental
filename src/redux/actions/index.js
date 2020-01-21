@@ -201,6 +201,16 @@ export const getQuaInfo = stkcd=>dispatch=>{
 
 
 //=================================Strategy==================================================
+export const selectSamplePeriod = (startDate,endDate)=>dispatch=>{
+    dispatch({
+        type:actionTypes.SELECT_SAMPLE_PERIOD,
+        payload:{
+            startDate,
+            endDate
+        }
+    })
+}
+
 export const mergeFactors = (columns,dataSource,index)=>dispatch=>{
     dispatch({
         type:actionTypes.MERGE_FACTORS,
@@ -224,5 +234,13 @@ export const deleteColumns = (index)=>dispatch=>{
         payload:{
             index
         }
+    })
+}
+
+
+export const toComputeCorr = data=>dispatch=>{
+    dispatch({
+        type:actionTypes.COMPUTE_CORR,
+        payload:data //通过检验的因子数据
     })
 }
