@@ -38,7 +38,7 @@ class Step21Content extends Component {
                 const respData = await getFactorValidateInfo(item,startDate,endDate)
                 data.push({
                     key,
-                    ...respData.data,
+                    ...respData.data,   
                     factor: item
                 })
             }

@@ -5,18 +5,21 @@ import { Table } from 'antd'
 
 import './index.less'
 
-
+import { toComputeScore } from '../../redux/actions'
 
 
 const Step22Content = (props) => {
 
+  const { factorsValidateOK,toComputeScore} = props
   const [factors, setFactors] = useState([])
 
   useEffect(() => {
-    const factors = props.factorsValidateOK.map(o => o.factor)
+    const factors = factorsValidateOK.map(o => o.factor)
     setFactors(factors)
-  }, [props])
+    toComputeScore(factors)
+  }, [factorsValidateOK,toComputeScore]) //组件挂载后 以及 props中的factorsValidateOK变化时执行
 
+  
   //columns
   const columns = factors.map(item => {
     return {
@@ -38,7 +41,11 @@ const Step22Content = (props) => {
     title:'',
     render: (value,record) => (
       <CloseCircleOutlined 
-        onClick={()=>setFactors(factors.filter(item=>item!=record.factor))}
+        onClick={()=>{
+          const updatedFactors = factors.filter(item => item !== record.factor)
+          setFactors(updatedFactors)
+          props.toComputeScore(updatedFactors)
+        }}
       />)
   })
   //dataSource
@@ -47,6 +54,7 @@ const Step22Content = (props) => {
     factors.forEach((item, index) => {
       row.key = i
       row.factor = k
+      // eslint-disable-next-line
       if (index == i) {
         row[item] = 1
       }
@@ -77,4 +85,4 @@ const Step22Content = (props) => {
 
 
 
-export default connect(state => state.strategyInfo)(Step22Content)
+export default connect(state => state.strategyInfo,{toComputeScore})(Step22Content)

@@ -35,10 +35,15 @@ const initDataSource = initDataIndex.map(idx => {
 
 
 const initState = {
-  samplePeriod:{},
+  samplePeriod:{
+    startDate:'2010-12-31',
+    endDate:'2019-12-31'
+  },
   columns: initColumns,
   dataSource: initDataSource,
-  factorsValidateOK:[]
+  factorsValidateOK:[],
+  factorsForComputeScore:[],
+  universeData:[]
 }
 
 export default (state = initState, action) => {
@@ -48,7 +53,12 @@ export default (state = initState, action) => {
         ...state,
         samplePeriod:action.payload
       }
-
+    
+    case actionTypes.SAVE_UNIVERSE:
+      return {
+        ...state,
+        universeData:action.payload
+      }
     case actionTypes.ADD_COLUMNS:
       const newDataIndex = `columns${state.columns.length + 1}`
       const newColumn = [
@@ -113,6 +123,12 @@ export default (state = initState, action) => {
       return {
         ...state,
         factorsValidateOK:action.payload
+      }
+
+    case actionTypes.COMPUTE_SCORE:
+      return {
+        ...state,
+        factorsForComputeScore:action.payload
       }
 
     default:

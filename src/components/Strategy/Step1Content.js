@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { Tree, Typography, Table, Button, Checkbox, Tag,DatePicker } from 'antd'
 import _ from 'lodash'
 import moment from 'moment'
-
+import { connect } from 'react-redux'
 
 import { getUniverseCode } from '../../api'
-
+import { saveUniverse } from '../../redux/actions'
 
 const {RangePicker} = DatePicker
 
@@ -87,6 +87,7 @@ const colorMapToKey = {
     b5: "purple",
 }
 
+@connect(state=>state.strategyInfo,{saveUniverse})
 class Step1Content extends Component {
 
     state = {
@@ -202,6 +203,12 @@ class Step1Content extends Component {
         })
     }
 
+    //做好了后端这个可以不要
+    componentDidUpdate(prevProps, prevState){
+        if(this.state.tableDataSource!==prevState.tableDataSource){
+            this.props.saveUniverse(this.state.tableDataSource)
+        }
+    }
     render() {
 
         const { checkedKeys, expandedKeys, tableDataSource, deleteRows, isLoading } = this.state

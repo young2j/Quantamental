@@ -237,6 +237,12 @@ export const deleteColumns = (index)=>dispatch=>{
     })
 }
 
+export const saveUniverse = (universeData)=>dispatch=>{
+    dispatch({
+        type:actionTypes.SAVE_UNIVERSE,
+        payload:universeData
+    })
+}
 
 export const toComputeCorr = data=>dispatch=>{
     dispatch({
@@ -244,3 +250,12 @@ export const toComputeCorr = data=>dispatch=>{
         payload:data //通过检验的因子数据
     })
 }
+
+export const toComputeScore = data=>dispatch=>{
+    dispatch({
+        type:actionTypes.COMPUTE_SCORE,
+        payload:data //剔除冗余后的因子数据
+    })
+}
+
+
