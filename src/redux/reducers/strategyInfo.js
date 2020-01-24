@@ -1,6 +1,5 @@
 import actionTypes from "../actions/actionTypes";
 
-
 const initTitles = ['估值因子', '成长因子', '资本结构因子', '技术面因子']
 const initDataIndex = ['evaFactors', 'growthFactors', 'CSFactors', 'techFactors']
 
@@ -39,6 +38,26 @@ const initState = {
     startDate:'2010-12-31',
     endDate:'2019-12-31'
   },
+  myPortfolio: {
+    title: "我的组合",
+    key: 'c',
+    children: [
+      {
+        title: 'My Portfolio',
+        key: 'c0',
+      },
+    ],
+  },
+  myFollows: {
+    title: "我的关注",
+    key: 'd',
+    children: [
+      {
+        title: 'My follows',
+        key: 'd0',
+      },
+    ],
+  },
   columns: initColumns,
   dataSource: initDataSource,
   factorsValidateOK:[],
@@ -59,6 +78,40 @@ export default (state = initState, action) => {
         ...state,
         universeData:action.payload
       }
+    
+    case actionTypes.DELETE_MYPORTFOLIO:
+      return {
+        ...state,
+        myPortfolio:{
+          ...state.myPortfolio,
+          children: state.myPortfolio.children.filter(o => o.key !== action.payload)
+        }
+      }
+
+    case actionTypes.SAVE_MYPORTFOLIO:
+      const children = state.myPortfolio.children
+      //eslint-disable-next-line
+      const [lastChild,...otherChild] = children.reversed()
+      
+      lastChild.title = action.payload.title
+      lastChild.key = 'c'+parseInt(lastChild.key)+1
+      return {
+        ...state,
+        myPortfolio:{
+          title:state.myPortfolio.title,
+          children:children.concat([lastChild])
+        }
+      }
+      
+    case actionTypes.DELETE_MYFOLLOWS:
+      return {
+        ...state,
+        myFollows:{
+          ...state.myFollows,
+          children: state.myFollows.children.filter(o => o.key !== action.payload)
+        }
+      }
+    
     case actionTypes.ADD_COLUMNS:
       const newDataIndex = `columns${state.columns.length + 1}`
       const newColumn = [
@@ -130,7 +183,7 @@ export default (state = initState, action) => {
         ...state,
         factorsForComputeScore:action.payload
       }
-
+    
     default:
       return state
   }

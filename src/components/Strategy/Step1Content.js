@@ -1,82 +1,15 @@
 import React, { Component } from 'react'
 import { Tree, Typography, Table, Button, Checkbox, Tag,DatePicker } from 'antd'
+import { CloseCircleOutlined } from '@ant-design/icons'
 import _ from 'lodash'
 import moment from 'moment'
 import { connect } from 'react-redux'
 
 import { getUniverseCode } from '../../api'
-import { saveUniverse } from '../../redux/actions'
+import { saveUniverse,deleteMyPortfolio,deleteMyFollows } from '../../redux/actions'
 
 const {RangePicker} = DatePicker
 
-const treeData = [
-    {
-        title: <Typography.Text strong>全部股票</Typography.Text>,
-        value: 'a',
-        key: 'a'
-    },
-    {
-        title: <Typography.Text strong>指数组合</Typography.Text>,
-        value: 'b',
-        key: 'b',
-        children: [
-            {
-                title: '上证综指',
-                value: 'b0',
-                key: 'b0',
-            },
-            {
-                title: '深圳成指',
-                value: 'b1',
-                key: 'b1',
-            },
-            {
-                title: '创业板指',
-                value: 'b2',
-                key: 'b2',
-            },
-            {
-                title: '上证50',
-                value: 'b3',
-                key: 'b3',
-            },
-            {
-                title: '沪深300',
-                value: 'b4',
-                key: 'b4',
-            },
-            {
-                title: '中证500',
-                value: 'b5',
-                key: 'b5',
-            },
-        ],
-    },
-    {
-        title: <Typography.Text strong>我的组合</Typography.Text>,
-        value: 'c',
-        key: 'c',
-        children: [
-            {
-                title: 'My Portfolio',
-                value: 'c0',
-                key: 'c0',
-            },
-        ],
-    },
-    {
-        title: <Typography.Text strong>我的关注</Typography.Text>,
-        value: 'd',
-        key: 'd',
-        children: [
-            {
-                title: 'My Portfolio',
-                value: 'd0',
-                key: 'd0',
-            },
-        ],
-    },
-];
 
 const colorMapToKey = {
     b0: "magenta",
@@ -87,15 +20,79 @@ const colorMapToKey = {
     b5: "purple",
 }
 
-@connect(state=>state.strategyInfo,{saveUniverse})
+let treeData = [
+    {
+        title: <Typography.Text strong>全部股票</Typography.Text>,
+        key: 'a'
+    },
+    {
+        title: <Typography.Text strong>指数组合</Typography.Text>,
+        key: 'b',
+        children: [
+            {
+                title: '上证综指',
+                key: 'b0',
+            },
+            {
+                title: '深圳成指',
+                key: 'b1',
+            },
+            {
+                title: '创业板指',
+                key: 'b2',
+            },
+            {
+                title: '上证50',
+                key: 'b3',
+            },
+            {
+                title: '沪深300',
+                key: 'b4',
+            },
+            {
+                title: '中证500',
+                key: 'b5',
+            },
+        ],
+    },
+    // {
+    //     title: <Typography.Text strong>我的组合</Typography.Text>,
+    //     key: 'c',
+    //     children: [
+    //         {
+    //             title: 'My Portfolio',
+    //             key: 'c0',
+    //         },
+    //     ],
+    // },
+    // {
+    //     title: <Typography.Text strong>我的关注</Typography.Text>,
+    //     key: 'd',
+    //     children: [
+    //         {
+    //             title: 'My follows',
+    //             key: 'd0',
+    //         },
+    //     ],
+    // },
+]
+
+@connect(state=>state.strategyInfo,{saveUniverse,deleteMyPortfolio,deleteMyFollows})
 class Step1Content extends Component {
 
-    state = {
-        checkedKeys: [],
-        expandedKeys: ['b'],
-        tableDataSource: [],
-        deleteRows: [],
-        isLoading: false
+    constructor(props){
+        super(props)
+        const {myPortfolio,myFollows} = props
+        this.state = {
+            checkedKeys: [],
+            expandedKeys: ['b'],
+            myPortfolio,
+            myFollows,
+            checkable:true,
+            tableDataSource: [],
+            deleteRows: [],
+            isLoading: false
+        }
     }
     
     onTreeExpand = (expandedKeys) => {
@@ -106,7 +103,7 @@ class Step1Content extends Component {
 
     onTreeCheck = (checkedKeys, { checked, node }) => {
         const { key } = node
-
+        
         if (checked) { //如果点击了则标记为check状态，并请求数据
             this.setState({ isLoading: true })
             getUniverseCode(key)
@@ -183,7 +180,6 @@ class Step1Content extends Component {
         return newDataSource
     }
 
-
     onDeleteRows = () => {
         const { tableDataSource, deleteRows } = this.state
         const restTableDataSource = _.difference(tableDataSource, deleteRows)
@@ -208,10 +204,32 @@ class Step1Content extends Component {
         if(this.state.tableDataSource!==prevState.tableDataSource){
             this.props.saveUniverse(this.state.tableDataSource)
         }
+        if(this.props.myPortfolio!==prevProps.myPortfolio){
+            this.setState({
+                checkable: !(this.props.myPortfolio.children.length===0),
+                myPortfolio: this.props.myPortfolio
+            })
+        }
+
+        if (this.props.myFollows !== prevProps.myFollows){
+            this.setState({
+                checkable: !(this.props.myFollows.children.length === 0),
+                myFollows: this.props.myFollows
+            })
+        }
     }
+    
     render() {
 
-        const { checkedKeys, expandedKeys, tableDataSource, deleteRows, isLoading } = this.state
+        const { 
+            checkedKeys, 
+            expandedKeys,
+            myPortfolio,
+            myFollows,
+            checkable,
+            tableDataSource, 
+            deleteRows, 
+            isLoading } = this.state
         
         const columns = [
             {
@@ -231,14 +249,40 @@ class Step1Content extends Component {
                     )
                 }
             }]
-        const pagination = {
-            size: 'small',
-            total: tableDataSource.length,
-            showTotal: (total) => `共${total}条`,
-            showSizeChanger: true,
-            defaultPageSize: 20,
-            hideOnSinglePage: true
+        
+        const myPortfolioTreeData = {
+            ...myPortfolio,
+            title: <Typography.Text strong>我的组合</Typography.Text>,
+            children:myPortfolio.children.map(child=>{
+                return {
+                    title: (<span className='tree-title'>
+                            {child.title}
+                            <CloseCircleOutlined className='closeIcon'
+                                onClick={()=>this.props.deleteMyPortfolio(child.key)}
+                            />
+                        </span>),
+                    key:child.key
+                }
+            })
         }
+        const myFollowsTreeData = {
+            ...myFollows,
+            title: <Typography.Text strong>我的关注</Typography.Text>,
+            children: myFollows.children.map(child => {
+                return {
+                    title: (<span className='tree-title'>
+                        {child.title}
+                        <CloseCircleOutlined className='closeIcon'
+                            onClick={() => this.props.deleteMyFollows(child.key)}
+                        />
+                    </span>),
+                    key: child.key
+                }
+            })
+        }
+        
+        const treeDatas = treeData.concat([myPortfolioTreeData, myFollowsTreeData])
+        
         return (
             <div>
                 <div style={{marginLeft:'6%'}}>
@@ -255,13 +299,13 @@ class Step1Content extends Component {
                 <div className='tree-content'
                     style={{ flex: 0.4, borderRight: '2px solid #fafafa', paddingLeft: 30, paddingTop: 40 }}>
                     <Tree
-                        checkable
+                        checkable={checkable}
                         onExpand={this.onTreeExpand}
                         expandedKeys={expandedKeys}
                         onCheck={this.onTreeCheck}
                         checkedKeys={checkedKeys}
                         onSelect={this.onTreeSelect}
-                        treeData={treeData}
+                        treeData={treeDatas}
                     />
                 </div>
 
@@ -280,7 +324,14 @@ class Step1Content extends Component {
                         size='small'
                         rowKey={record => record.stkcd}
                         scroll={{ y: 380 }}
-                        pagination={pagination}
+                        pagination={{
+                            size: 'small',
+                            total: tableDataSource.length,
+                            showTotal: (total) => `共${total}条`,
+                            showSizeChanger: true,
+                            defaultPageSize: 20,
+                            hideOnSinglePage: true
+                        }}
                         rowSelection={
                             {
                                 type: 'checkbox',

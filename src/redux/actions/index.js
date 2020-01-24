@@ -211,6 +211,19 @@ export const selectSamplePeriod = (startDate,endDate)=>dispatch=>{
     })
 }
 
+export const deleteMyPortfolio = (key)=>dispatch=>{
+    dispatch({
+        type:actionTypes.DELETE_MYPORTFOLIO,
+        payload:key
+    })
+}
+export const deleteMyFollows = (key)=>dispatch=>{
+    dispatch({
+        type:actionTypes.DELETE_MYFOLLOWS,
+        payload:key
+    })
+}
+
 export const mergeFactors = (columns,dataSource,index)=>dispatch=>{
     dispatch({
         type:actionTypes.MERGE_FACTORS,
@@ -258,4 +271,11 @@ export const toComputeScore = data=>dispatch=>{
     })
 }
 
-
+export const saveMyPortfolio= (title,firmCodes)=>dispatch=>{ //当前还未处理组合的公司代码
+    dispatch({
+        type:actionTypes.SAVE_MYPORTFOLIO,
+        payload:{
+            title
+        }
+    })
+}

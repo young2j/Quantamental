@@ -1,5 +1,6 @@
 import React, {Component,createRef} from 'react'
-import { DatePicker,InputNumber,Button,Table,Select} from 'antd'
+import { DatePicker,InputNumber,Button,Table,Select,Modal,Tree,Card, Input} from 'antd'
+import { RightOutlined,ArrowRightOutlined } from '@ant-design/icons'
 import echarts from 'echarts'
 import Moment from 'moment'
 import {extendMoment} from 'moment-range'
@@ -8,10 +9,73 @@ const moment = extendMoment(Moment)
 const {RangePicker} = DatePicker
 const {Option} = Select
 
+
+class ModalContent extends Component{
+    state={
+        leftTreeData:[
+            {
+                key: 0,
+                title: '组合1',
+            }, {
+                key: 1,
+                title: '组合2',
+            }, {
+                key: 2,
+                title: '组合3'
+            }
+        ],
+        rightTreeData:[],
+        blur:true
+    }
+
+    render(){
+        const {leftTreeData,rightTreeData,blur} = this.state
+        return (
+            <div className="modal-content" style={{ display: 'flex' }}>
+                <Card title="回测组合" style={{ flex: 0.5 }}>
+                    <Tree
+                        treeData={leftTreeData}
+                        onSelect={(selectedKeys, { selected, selectedNodes, node, event }) => {
+                            console.log(selectedKeys, { selected, selectedNodes, node, event });
+                            const rightTree =selectedNodes.map(node=>{
+                                return {
+                                    ...node,
+                                    title: blur?
+                                    <Input defaultValue={node.title} 
+                                        size='small' 
+                                        autoFocus 
+                                        allowClear
+                                        onBlur={()=>this.setState({blur:!blur})}
+                                        />
+                                    : <div onClick={()=>this.setState({blur:!blur})}>{node.title}</div>   
+                                }
+                            })
+                            this.setState({
+                                rightTreeData:rightTree
+                            })
+                        }}
+                    multiple
+                    />
+                </Card>
+                <div style={{ alignSelf: 'center' }}>保存至 <RightOutlined /> </div>
+                <Card title="我的组合" style={{ flex: 0.5 }}>
+                    <Tree
+                        treeData={rightTreeData}
+                        onSelect={(selectedKeys, { selected, selectedNodes, node, event }) => {
+                            console.log(selectedKeys, { selected, selectedNodes, node, event });
+                        }}
+                    />
+                </Card>
+            </div>
+        )
+    }
+}
+
+
 const option = {
     title:{
         text:'组合净值',
-        left:'6%'
+        left:'6%',
     },
     legend: {
         data: [],
@@ -40,7 +104,8 @@ const option = {
         splitLine: { show: false }
     },
     grid: {
-        bottom: 80
+        bottom: 80,
+        // top:20
     },
     dataZoom: [{
         textStyle: {
@@ -193,6 +258,7 @@ const dataSource = [
         base: (Math.random() * 200).toFixed(2),
     },
 ]
+
 class Step3Content extends Component {
   constructor(props){
     super(props)  
@@ -200,6 +266,10 @@ class Step3Content extends Component {
         dateRange: [moment('2016-01-01'), moment('2019-12-31')],
         percent:20,
         base:'沪深300',
+
+        visible:false,
+        selectedKeys:[],
+        targetKeys:[]
       }
     this.chartRef = createRef()
   }
@@ -242,12 +312,24 @@ class Step3Content extends Component {
         ]
     })
   }
+
+  handleOk=()=>{
+      this.setState({
+          visible:false
+      })
+  }
+  handleCancel=()=>{
+      this.setState({
+          visible:false
+      })
+  }
+
   componentDidMount(){
     this.drawChart()
   }
 
   render(){
-    const {percent,dateRange,base} = this.state
+    const {percent,dateRange,base,targetKeys,selectedKeys} = this.state
     const columns = [
         {
             title: '指标',
@@ -299,7 +381,7 @@ class Step3Content extends Component {
                     getPopupContainer={triggerNode=>triggerNode}
                     />
                 </div>
-                <div style={{flex:0.25}}>
+                <div style={{flex:0.2}}>
                     <span style={{fontWeight:'bold'}}>选择基准：</span>
                      <Select defaultValue={base}
                         style={{ width: 120 }} 
@@ -314,19 +396,42 @@ class Step3Content extends Component {
                         <Option value="创业板指">创业板指</Option>
                     </Select>
                 </div>
-                <Button type='primary' ghost
-                    shape='round' size='small'
-                    onClick={()=>this.drawChart()} //实际根据state的值向后端请求数据
-                >点击回测</Button>
+                <div style={{flex:0.1}}>
+                    <Button type='primary' ghost
+                        shape='round' size='small'
+                        onClick={()=>this.drawChart()} //实际根据state的值向后端请求数据
+                        >点击回测</Button>
+                </div>
+
+                <div style={{flex:0.1}}>
+                    <Button type="primary" size='small' onClick={()=>this.setState({visible:true})}>
+                        保存组合
+                    </Button>
+                    <Modal
+                        title="保存组合"
+                        okText="保存"
+                        cancelText='取消'
+                        visible={this.state.visible}
+                        onOk={this.handleOk}
+                        onCancel={this.handleCancel}
+                    >   
+                        <ModalContent/>
+                    </Modal>
+                </div>
+
+
             </div>
+            
+
             <div className='backtest-content'
                 style={{display:'flex',justifyContent:'space-between',marginTop:50}}
             >
                 <div className='backtest-chart' 
                     ref={this.chartRef}
-                    style={{ height: 460, width: "60%", left: -40}}
+                    style={{ height: 420, width: "62%", left: -40,top:30}}
                 >
                 </div>
+
                 <div className='backtest-card'>
                     <Table
                         title={()=> (

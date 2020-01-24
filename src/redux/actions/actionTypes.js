@@ -23,11 +23,16 @@ export default {
     
     //====================
     SELECT_SAMPLE_PERIOD:'SELECT_SAMPLE_PERIOD', //选择样本期间
+    DELETE_MYPORTFOLIO:'DELETE_MYPORTFOLIO',//删除我的组合
+    DELETE_MYFOLLOWS:'DELETE_MYFOLLOWS',//删除我的组合
+
     SAVE_UNIVERSE:'SAVE_UNIVERSE',//保存股票池，step2.3显示综合得分用，实际后端做好，就不需要这个
     MERGE_FACTORS:'MERGE_FACTORS', //合并选择的因子信息
     ADD_COLUMNS:'ADD_COLUMNS', //新增表（大类因子）
     DELETE_COLUMNS:'DELETE_COLUMNS', //删除表
 
     COMPUTE_CORR:'COMPUTE_CORR', //冗余因子剔除--提供数据用于计算相关系数矩阵
-    COMPUTE_SCORE:'COMPUTE_SCORE' //提供数据用于计算因子综合得分
+    COMPUTE_SCORE:'COMPUTE_SCORE', //提供数据用于计算因子综合得分
+
+    SAVE_MYPORTFOLIO:"SAVE_MYPORTFOLIO" //保存组合
 }
