@@ -271,11 +271,11 @@ export const toComputeScore = data=>dispatch=>{
     })
 }
 
-export const saveMyPortfolio= (title,firmCodes)=>dispatch=>{ //当前还未处理组合的公司代码
+export const saveMyPortfolio= (portfolio,firmCodes)=>dispatch=>{ //当前还未处理组合的公司代码
     dispatch({
         type:actionTypes.SAVE_MYPORTFOLIO,
         payload:{
-            title
+            portfolio
         }
     })
 }

@@ -1,16 +1,16 @@
 import React, { useReducer, useState, useEffect } from 'react'
 import { connect } from 'react-redux'
-import { List, InputNumber, Slider, Radio, Typography, message,Tag,Table } from 'antd'
+import { List, InputNumber, Slider, Radio, Typography, message, Tag, Table } from 'antd'
 import _ from 'lodash'
 
 import './index.less'
 
-const ListItem = ({ k,v,disabled,dispatch}) => {
+const ListItem = ({ k, v, disabled, dispatch }) => {
 
   const [value, setValue] = useState(v)
   useEffect(() => {
     setValue(v)
-  }, [v,value])
+  }, [v, value])
   return (
     <div style={{ display: 'flex', justifyContent: 'space-between' }}>
       <InputNumber
@@ -22,11 +22,11 @@ const ListItem = ({ k,v,disabled,dispatch}) => {
         parser={value => value.replace('%', '')}
         onChange={value => {
           setValue(value)
-          if (!disabled){
+          if (!disabled) {
             dispatch({
-              type:3,
-              payload:{
-                [k]:value
+              type: 3,
+              payload: {
+                [k]: value
               }
             })
           }
@@ -51,7 +51,7 @@ const ListItem = ({ k,v,disabled,dispatch}) => {
           }
         }}
         value={typeof value === 'number' ? value : 0}
-        getTooltipPopupContainer={(triggerNode)=>triggerNode}
+        getTooltipPopupContainer={(triggerNode) => triggerNode}
         disabled={disabled}
       />
     </div>
@@ -69,9 +69,9 @@ const colorMapToKey = {
 }
 const Step23Content = (props) => {
   console.log(props);
-  const { factorsForComputeScore,universeData} =props // universeData to remove
+  const { factorsForComputeScore, universeData } = props // universeData to remove
   const [dataSource, setDataSource] = useState(factorsForComputeScore)
-  
+
   const reducer = (state, action) => {
     switch (action.type) {
       case 0:
@@ -90,23 +90,23 @@ const Step23Content = (props) => {
           regWeights[item] = (regWeights[item] / sum) * 100
         })
         return regWeights
-      
+
       case 2:
         return {
           ...state
         }
       case 3:
-        const [ k, v ] = Object.entries(action.payload)[0]
+        const [k, v] = Object.entries(action.payload)[0]
         let restKV = Object.assign({}, state)
         restKV[k] = 0
         const restVsum = _.sum(Object.values(restKV))
-        if ((restVsum + v)>100){
+        if ((restVsum + v) > 100) {
           message.error('权重和不能大于100%！')
           return {
             ...state,
-            [k]:100-restVsum
+            [k]: 100 - restVsum
           }
-        } else{
+        } else {
           return {
             ...state,
             ...action.payload
@@ -126,18 +126,18 @@ const Step23Content = (props) => {
     const listData = factorsForComputeScore
     setDataSource(listData)
     dispatch({
-      type:choice
-    }) 
-  }, [factorsForComputeScore,choice])
-  
+      type: choice
+    })
+  }, [factorsForComputeScore, choice])
+
 
   const header = (
-    <div style={{display:'flex'}}>
-      <Typography.Text strong style={{paddingRight:20}}>权重计算方式：</Typography.Text>
-      <Radio.Group 
-      onChange={e=>{
-        setChoice(e.target.value)
-        e.target.value===2? setDisabled(false):setDisabled(true)
+    <div style={{ display: 'flex' }}>
+      <Typography.Text strong style={{ paddingRight: 20 }}>权重计算方式：</Typography.Text>
+      <Radio.Group
+        onChange={e => {
+          setChoice(e.target.value)
+          e.target.value === 2 ? setDisabled(false) : setDisabled(true)
         }}
         value={choice}>
         <Radio value={0}>相等权重</Radio>
@@ -164,15 +164,15 @@ const Step23Content = (props) => {
           </Tag>
         )
       }
-    },{
-      title:'综合得分',
-      dataIndex:'comprehensiveScore',
-      sorter:(a,b)=>a.comprehensiveScore-b.comprehensiveScore,
+    }, {
+      title: '综合得分',
+      dataIndex: 'comprehensiveScore',
+      sorter: (a, b) => a.comprehensiveScore - b.comprehensiveScore,
       defaultSortOrder: 'descend',
     }]
-  const tableDataSource = universeData.map(o=>({
+  const tableDataSource = universeData.map(o => ({
     ...o,
-    comprehensiveScore:(Math.random()*10).toFixed(4)
+    comprehensiveScore: (Math.random() * 10).toFixed(4)
   }))
   return (
     <div>
@@ -187,10 +187,10 @@ const Step23Content = (props) => {
           >
             <div style={{ display: 'flex' }}>
               <p style={{ flex: 0.5 }}>{item}</p>
-              <ListItem 
-                k={item} 
-                v={weights[item]} 
-                disabled={disabled} 
+              <ListItem
+                k={item}
+                v={weights[item]}
+                disabled={disabled}
                 dispatch={dispatch}
               />
             </div>
@@ -201,6 +201,7 @@ const Step23Content = (props) => {
         columns={columns}
         dataSource={tableDataSource}
         size='middle'
+        pagination={{hideOnSinglePage:true}}
       />
     </div>
   )

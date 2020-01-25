@@ -1,11 +1,11 @@
-import React, { Component, useRef, useState, useEffect} from 'react'
+import React, { Component, useRef, useState, useEffect } from 'react'
 import { Table, Button, Popconfirm, Card, Cascader, Input } from 'antd'
-import { SearchOutlined, PlusOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { SearchOutlined, PlusOutlined, QuestionCircleOutlined, CloseCircleOutlined } from '@ant-design/icons';
 import { connect } from 'react-redux'
 
 import './index.less'
 import { getFactors } from '../../api'
-import { addColumns,deleteColumns,mergeFactors } from '../../redux/actions'
+import { addColumns, deleteColumns, mergeFactors } from '../../redux/actions'
 
 const EditableTh = ({
     column,
@@ -85,10 +85,13 @@ const EditableCell = ({
         childNode = editing ? (
             <div id='cascader-wrapper'>
                 <Cascader
+                    style={{zIndex:99}}
                     autoFocus
                     options={factors}
                     placeholder="查找因子"
-                    getPopupContainer={() => document.getElementById('cascader-wrapper')}
+                    // getPopupContainer={() => document.querySelector('#cascader-wrapper')}
+                    // popupPlacement={['bottomLeft']}
+                    // getPopupContainer={(triggerNode) => triggerNode}
                     showSearch={{ filter: (inputValue, path) => path.some(opt => opt.label.indexOf(inputValue) !== -1) }}
                     displayRender={(label, selectedOpt) => label[1]}
                     onChange={(label, selectedOpt) => save(label[1])}
@@ -113,7 +116,7 @@ const EditableCell = ({
 
 
 
-@connect(state => state, { mergeFactors,deleteColumns})
+@connect(state => state, { mergeFactors, deleteColumns })
 class InnerTable extends Component {
     constructor(props) {
         super(props);
@@ -126,7 +129,7 @@ class InnerTable extends Component {
             count: dataSource.length,
         };
     }
-  
+
 
     handleDelete = key => {
         const dataSource = [...this.state.dataSource];
@@ -201,7 +204,7 @@ class InnerTable extends Component {
                             icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                             onConfirm={() => this.props.deleteColumns(this.state.index)}
                             okText="确定" cancelText='取消'
-                        >删除</Popconfirm>
+                        ><CloseCircleOutlined /></Popconfirm>
                     ),
                     render: (value, record, index) => (
                         <Popconfirm
@@ -209,7 +212,7 @@ class InnerTable extends Component {
                             icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                             onConfirm={() => this.handleDelete(record.key)}
                             okText="确定" cancelText='取消'
-                        >删除</Popconfirm>
+                        ><CloseCircleOutlined /></Popconfirm>
                     )
                 }
             }
@@ -240,17 +243,13 @@ class InnerTable extends Component {
                     components={components}
                     columns={columns}
                     dataSource={dataSource}
-                    bordered
+                    bordered={false}
                     pagination={{ hideOnSinglePage: true }}
                     footer={() => (
-                        <Button
+                        <Button id='add-factor-button'
                             onClick={this.handleAdd}
-                            type="primary"
-                            style={{
-                                marginBottom: 16,
-                            }}
                         >
-                            添加因子
+                            添加因子...
                         </Button>)}
                 />
             </Card.Grid>
@@ -260,7 +259,7 @@ class InnerTable extends Component {
 
 
 const Step20Content = (props) => {
-    
+
     //获得cascader的选择项
     let factors = []
     useEffect(() => {
@@ -276,14 +275,14 @@ const Step20Content = (props) => {
             })
         })
     }, [factors])
-    
-    
+
+
     return (
-        <div>
+        <div style={{margin:'auto 60px'}}>
             {
                 props.columns.map((cols, index) => {
                     return (
-                        <InnerTable 
+                        <InnerTable
                             key={index}
                             index={index}
                             columns={cols}
@@ -294,11 +293,13 @@ const Step20Content = (props) => {
                 })
             }
 
-            <Card.Grid hoverable={false}>
+            <Card.Grid hoverable={false}
+                style={{ width: '18%', paddingLeft: 30, height: 200, }}
+            >
                 <Button
                     icon={< PlusOutlined />}
                     onClick={() => props.addColumns()}
-                    style={{ height: 200, width: "100%", minWidth: 150 }}
+                    style={{ height: 120, width: "20%", minWidth: 130, marginTop: 20 }}
                 > 添加大类因子</Button >
             </Card.Grid>
         </div>
@@ -307,7 +308,7 @@ const Step20Content = (props) => {
 
 
 
-export default connect(state=>state.strategyInfo,{addColumns})(Step20Content)
+export default connect(state => state.strategyInfo, { addColumns })(Step20Content)
 
 
 

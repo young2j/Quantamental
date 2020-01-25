@@ -89,17 +89,21 @@ export default (state = initState, action) => {
       }
 
     case actionTypes.SAVE_MYPORTFOLIO:
-      const children = state.myPortfolio.children
-      //eslint-disable-next-line
-      const [lastChild,...otherChild] = children.reversed()
-      
-      lastChild.title = action.payload.title
-      lastChild.key = 'c'+parseInt(lastChild.key)+1
+      let children = state.myPortfolio.children
+      children = children.concat(action.payload.portfolio).map(
+        (item,index)=>{
+          return {
+            key:`c${index}`,
+            title:item.title
+          }
+        }
+      )
       return {
         ...state,
         myPortfolio:{
+          key:state.myPortfolio.key,
           title:state.myPortfolio.title,
-          children:children.concat([lastChild])
+          children
         }
       }
       

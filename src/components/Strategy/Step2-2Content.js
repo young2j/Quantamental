@@ -1,4 +1,4 @@
-import React, { useState,useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { connect } from 'react-redux'
 import { CloseCircleOutlined } from '@ant-design/icons'
 import { Table } from 'antd'
@@ -10,24 +10,29 @@ import { toComputeScore } from '../../redux/actions'
 
 const Step22Content = (props) => {
 
-  const { factorsValidateOK,toComputeScore} = props
+  const { factorsValidateOK, toComputeScore } = props
   const [factors, setFactors] = useState([])
 
   useEffect(() => {
-    const factors = factorsValidateOK.map(o => o.factor)
+    const factors = factorsValidateOK.map(o => {
+      if (o.factor !== '') {
+        return o.factor
+      }
+      return null
+    })
     setFactors(factors)
     toComputeScore(factors)
-  }, [factorsValidateOK,toComputeScore]) //组件挂载后 以及 props中的factorsValidateOK变化时执行
+  }, [factorsValidateOK, toComputeScore]) //组件挂载后 以及 props中的factorsValidateOK变化时执行
 
-  
+
   //columns
   const columns = factors.map(item => {
     return {
       title: `${item}`,
       dataIndex: `${item}`,
-      width:100,
+      width: 100,
       render: (value, record) => (
-        <div style={{ color: value > 0.5? 'red' : null }}>{value}</div>
+        <div style={{ color: value > 0.5 ? 'red' : null }}>{value}</div>
       )
     }
   })
@@ -38,10 +43,10 @@ const Step22Content = (props) => {
   })
 
   columns.push({
-    title:'',
-    render: (value,record) => (
-      <CloseCircleOutlined 
-        onClick={()=>{
+    title: '',
+    render: (value, record) => (
+      <CloseCircleOutlined
+        onClick={() => {
           const updatedFactors = factors.filter(item => item !== record.factor)
           setFactors(updatedFactors)
           props.toComputeScore(updatedFactors)
@@ -69,14 +74,14 @@ const Step22Content = (props) => {
   })
 
   return (
-      <Table 
-        className='corr-table'
-        columns={columns}
-        dataSource={dataSource}
-        size='small'
-        ellipsis
-        pagination={{hideOnSinglePage:true}}
-        />
+    <Table
+      className='corr-table'
+      columns={columns}
+      dataSource={dataSource}
+      size='small'
+      ellipsis
+      pagination={{ hideOnSinglePage: true }}
+    />
   )
 }
 
@@ -85,4 +90,4 @@ const Step22Content = (props) => {
 
 
 
-export default connect(state => state.strategyInfo,{toComputeScore})(Step22Content)
+export default connect(state => state.strategyInfo, { toComputeScore })(Step22Content)

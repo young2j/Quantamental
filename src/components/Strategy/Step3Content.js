@@ -1,69 +1,98 @@
-import React, {Component,createRef} from 'react'
-import { DatePicker,InputNumber,Button,Table,Select,Modal,Tree,Card, Input} from 'antd'
-import { RightOutlined,ArrowRightOutlined } from '@ant-design/icons'
+import React, { Component, createRef } from 'react'
+import { DatePicker, InputNumber, Button, Table, Select, Modal, Tree, Card, Input } from 'antd'
+import {ArrowRightOutlined } from '@ant-design/icons'
 import echarts from 'echarts'
 import Moment from 'moment'
-import {extendMoment} from 'moment-range'
+import { extendMoment } from 'moment-range'
+
+import { saveMyPortfolio } from '../../redux/actions'
+import { connect } from 'react-redux'
 
 const moment = extendMoment(Moment)
-const {RangePicker} = DatePicker
-const {Option} = Select
+const { RangePicker } = DatePicker
+const { Option } = Select
 
-
-class ModalContent extends Component{
-    state={
-        leftTreeData:[
-            {
-                key: 0,
-                title: '组合1',
-            }, {
-                key: 1,
-                title: '组合2',
-            }, {
-                key: 2,
-                title: '组合3'
-            }
-        ],
-        rightTreeData:[],
-        blur:true
+class ModalContent extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            leftTreeData: [
+                {
+                    key: 0,
+                    title: '组合1',
+                }, {
+                    key: 1,
+                    title: '组合2',
+                }, {
+                    key: 2,
+                    title: '组合3'
+                }
+            ],
+            rightTreeData: props.myPortfolio.children,
+        }
     }
 
-    render(){
-        const {leftTreeData,rightTreeData,blur} = this.state
+    componentDidUpdate(prevProps, prevState) {
+        if (this.props.myPortfolio.children !== prevProps.myPortfolio.children) {
+            this.setState({
+                rightTreeData: this.props.myPortfolio.children
+            })
+        }
+    }
+
+    render() {
+        const { leftTreeData, rightTreeData } = this.state
+        const { setMyPortfolio, myPortfolio } = this.props
+
         return (
             <div className="modal-content" style={{ display: 'flex' }}>
-                <Card title="回测组合" style={{ flex: 0.5 }}>
+                <Card title="回测组合" className='left-card'>
                     <Tree
+                        className='left-tree'
                         treeData={leftTreeData}
-                        onSelect={(selectedKeys, { selected, selectedNodes, node, event }) => {
-                            console.log(selectedKeys, { selected, selectedNodes, node, event });
-                            const rightTree =selectedNodes.map(node=>{
+                        multiple
+                        onSelect={(selectedKeys, { selected, selectedNodes, node }) => {
+                            // console.log(selectedKeys, { selected, selectedNodes, node});
+                            const portfolio = selectedNodes.map(node => {
                                 return {
-                                    ...node,
-                                    title: blur?
-                                    <Input defaultValue={node.title} 
-                                        size='small' 
-                                        autoFocus 
-                                        allowClear
-                                        onBlur={()=>this.setState({blur:!blur})}
-                                        />
-                                    : <div onClick={()=>this.setState({blur:!blur})}>{node.title}</div>   
+                                    key: node.key,
+                                    title: node.title
                                 }
                             })
-                            this.setState({
-                                rightTreeData:rightTree
+
+                            const rightTree = selectedNodes.map((node, index) => {
+                                return {
+                                    ...node,
+                                    title:
+                                        <Input defaultValue={node.title}
+                                            className='right-input'
+                                            size='small'
+                                            onChange={e => {
+                                                portfolio.splice(index, 1, {
+                                                    key: node.key,
+                                                    title: e.target.value
+                                                })
+                                            }}
+                                            autoFocus
+                                        />
+                                }
                             })
+
+                            this.setState({
+                                rightTreeData: myPortfolio.children.concat(rightTree)
+                            })
+
+                            setMyPortfolio(portfolio)
                         }}
-                    multiple
                     />
                 </Card>
-                <div style={{ alignSelf: 'center' }}>保存至 <RightOutlined /> </div>
-                <Card title="我的组合" style={{ flex: 0.5 }}>
+
+                <div style={{ alignSelf: 'center' }}>保存至 <ArrowRightOutlined /> </div>
+
+                <Card title="我的组合" className='right-card'>
                     <Tree
+                        className='right-tree'
                         treeData={rightTreeData}
-                        onSelect={(selectedKeys, { selected, selectedNodes, node, event }) => {
-                            console.log(selectedKeys, { selected, selectedNodes, node, event });
-                        }}
                     />
                 </Card>
             </div>
@@ -73,9 +102,9 @@ class ModalContent extends Component{
 
 
 const option = {
-    title:{
-        text:'组合净值',
-        left:'6%',
+    title: {
+        text: '组合净值',
+        left: '6%',
     },
     legend: {
         data: [],
@@ -99,7 +128,7 @@ const option = {
         axisLine: { lineStyle: { color: '#8392A5' } }
     },
     yAxis: {
-        type:'value',
+        type: 'value',
         axisLine: { lineStyle: { color: '#8392A5' } },
         splitLine: { show: false }
     },
@@ -158,7 +187,7 @@ const option = {
         {
             type: 'line',
             name: '组合2',
-            data:[],
+            data: [],
             showSymbol: false,
             lineStyle: {
                 width: 1
@@ -259,198 +288,206 @@ const dataSource = [
     },
 ]
 
+@connect(state => state.strategyInfo, { saveMyPortfolio })
 class Step3Content extends Component {
-  constructor(props){
-    super(props)  
-    this.state={
-        dateRange: [moment('2016-01-01'), moment('2019-12-31')],
-        percent:20,
-        base:'沪深300',
+    constructor(props) {
+        super(props)
+        this.state = {
+            dateRange: [moment('2016-01-01'), moment('2019-12-31')],
+            percent: 20,
+            base: '沪深300',
 
-        visible:false,
-        selectedKeys:[],
-        targetKeys:[]
-      }
-    this.chartRef = createRef()
-  }
-
-  drawChart = ()=>{
-    const chart = echarts.init(this.chartRef.current)
-    chart.setOption(option)
-    //模拟生成数据data，实际需从后端获取
-    const {dateRange,base} = this.state
-    const xAxis = Array.from(
-            moment.range(dateRange[0],dateRange[1]).by('month')
-        ).map(d=>d.format('YYYY-MM-DD'))
-    let datas=[]
-    let i=0
-    while(i<4){
-        let data = []
-        xAxis.forEach(x=>data.push((Math.random()*5).toFixed(4)))
-        datas.push(data)
-        i++
+            visible: false,
+            portfolio: [],
+        }
+        this.chartRef = createRef()
     }
 
-    chart.setOption({
-        legend:{
-            data: [base, '组合1', '组合2', '组合3']
+    drawChart = () => {
+        const chart = echarts.init(this.chartRef.current)
+        chart.setOption(option)
+        //模拟生成数据data，实际需从后端获取
+        const { dateRange, base } = this.state
+        const xAxis = Array.from(
+            moment.range(dateRange[0], dateRange[1]).by('month')
+        ).map(d => d.format('YYYY-MM-DD'))
+        let datas = []
+        let i = 0
+        while (i < 4) {
+            let data = []
+            xAxis.forEach(x => data.push((Math.random() * 5).toFixed(4)))
+            datas.push(data)
+            i++
+        }
+
+        chart.setOption({
+            legend: {
+                data: [base, '组合1', '组合2', '组合3']
+            },
+            xAxis: {
+                data: xAxis
+            },
+            series: [
+                {
+                    name: this.state.base,
+                    data: datas[0]
+                }, {
+                    data: datas[1]
+                }, {
+                    data: datas[2]
+                }, {
+                    data: datas[3]
+                }
+            ]
+        })
+    }
+
+    handleOk = () => {
+        const { portfolio } = this.state
+        this.setState({
+            visible: false
         },
-        xAxis:{
-            data:xAxis
-        },
-        series:[
+            () => this.props.saveMyPortfolio(portfolio)
+        )
+    }
+
+    handleCancel = () => {
+        this.setState({
+            visible: false
+        })
+    }
+
+    componentDidMount() {
+        this.drawChart()
+    }
+
+    render() {
+        const { percent, dateRange, base } = this.state
+        const columns = [
             {
-                name:this.state.base,
-                data:datas[0]
-            },{
-                data:datas[1]
-            },{
-                data:datas[2]
-            },{
-                data:datas[3]
-            }
+                title: '指标',
+                dataIndex: 'item'
+            },
+            {
+                title: '组合1',
+                dataIndex: 'pf1'
+            },
+            {
+                title: '组合2',
+                dataIndex: 'pf2'
+            },
+            {
+                title: '组合3',
+                dataIndex: 'pf3'
+            },
+            {
+                title: base,
+                dataIndex: 'base'
+            },
         ]
-    })
-  }
 
-  handleOk=()=>{
-      this.setState({
-          visible:false
-      })
-  }
-  handleCancel=()=>{
-      this.setState({
-          visible:false
-      })
-  }
-
-  componentDidMount(){
-    this.drawChart()
-  }
-
-  render(){
-    const {percent,dateRange,base,targetKeys,selectedKeys} = this.state
-    const columns = [
-        {
-            title: '指标',
-            dataIndex: 'item'
-        },
-        {
-            title: '组合1',
-            dataIndex: 'pf1'
-        },
-        {
-            title: '组合2',
-            dataIndex: 'pf2'
-        },
-        {
-            title: '组合3',
-            dataIndex: 'pf3'
-        },
-        {
-            title: base,
-            dataIndex: 'base'
-        },
-    ]
-
-    return (
-        <div>
-            <div className="backtest-condition" 
-                style={{ display: 'flex',marginTop:30 }}>
-                <div style={{flex:0.2}}>
-                    <span style={{fontWeight:'bold'}}>选择分组因子：</span> 前&nbsp;
+        return (
+            <div>
+                <div className="backtest-condition"
+                    style={{ display: 'flex', marginTop: 30 }}>
+                    <div style={{ flex: 0.2 }}>
+                        <span style={{ fontWeight: 'bold' }}>选择分组因子：</span> 前&nbsp;
                     <InputNumber
-                        style={{width:70}}
-                        defaultValue={percent}
-                        min={0}
-                        max={100}
-                        formatter={value => `${value}%`}
-                        parser={value => value.replace('%', '')}
-                        onChange={value=>this.setState({percent:value})}
-                        size='small'
-                    />
-                </div>
-                <div style={{ flex: 0.35}}>
-                    <span style={{ fontWeight: 'bold' }}>选择回测时间范围：</span>
-                    <RangePicker
-                    style={{width:230}}
-                    defaultValue={dateRange}
-                    value={dateRange}
-                    size='small'
-                    onChange={(dates,datesString)=>this.setState({dateRange:dates})}
-                    getPopupContainer={triggerNode=>triggerNode}
-                    />
-                </div>
-                <div style={{flex:0.2}}>
-                    <span style={{fontWeight:'bold'}}>选择基准：</span>
-                     <Select defaultValue={base}
-                        style={{ width: 120 }} 
-                        size='small'
-                        getPopupContainer={triggerNode=>triggerNode}
-                        onChange={value=>this.setState({base:value})}>
-                        <Option value="沪深300">沪深300</Option>
-                        <Option value="中证500">中证500</Option>
-                        <Option value="上证50">上证50</Option>
-                        <Option value="上证综指">上证综指</Option>
-                        <Option value="深圳成指">深圳成指</Option>
-                        <Option value="创业板指">创业板指</Option>
-                    </Select>
-                </div>
-                <div style={{flex:0.1}}>
-                    <Button type='primary' ghost
-                        shape='round' size='small'
-                        onClick={()=>this.drawChart()} //实际根据state的值向后端请求数据
+                            style={{ width: 70 }}
+                            defaultValue={percent}
+                            min={0}
+                            max={100}
+                            formatter={value => `${value}%`}
+                            parser={value => value.replace('%', '')}
+                            onChange={value => this.setState({ percent: value })}
+                            size='small'
+                        />
+                    </div>
+                    <div style={{ flex: 0.35 }}>
+                        <span style={{ fontWeight: 'bold' }}>选择回测时间范围：</span>
+                        <RangePicker
+                            style={{ width: 230 }}
+                            defaultValue={dateRange}
+                            value={dateRange}
+                            size='small'
+                            onChange={(dates, datesString) => this.setState({ dateRange: dates })}
+                            getPopupContainer={triggerNode => triggerNode}
+                        />
+                    </div>
+                    <div style={{ flex: 0.2 }}>
+                        <span style={{ fontWeight: 'bold' }}>选择基准：</span>
+                        <Select defaultValue={base}
+                            style={{ width: 120 }}
+                            size='small'
+                            getPopupContainer={triggerNode => triggerNode}
+                            onChange={value => this.setState({ base: value })}>
+                            <Option value="沪深300">沪深300</Option>
+                            <Option value="中证500">中证500</Option>
+                            <Option value="上证50">上证50</Option>
+                            <Option value="上证综指">上证综指</Option>
+                            <Option value="深圳成指">深圳成指</Option>
+                            <Option value="创业板指">创业板指</Option>
+                        </Select>
+                    </div>
+                    <div style={{ flex: 0.1 }}>
+                        <Button type='primary' ghost
+                            shape='round' size='small'
+                            onClick={() => this.drawChart()} //实际根据state的值向后端请求数据
                         >点击回测</Button>
-                </div>
+                    </div>
 
-                <div style={{flex:0.1}}>
-                    <Button type="primary" size='small' onClick={()=>this.setState({visible:true})}>
-                        保存组合
+                    <div style={{ flex: 0.1 }}>
+                        <Button type="primary" size='small' onClick={() => this.setState({ visible: true })}>
+                            保存组合
                     </Button>
-                    <Modal
-                        title="保存组合"
-                        okText="保存"
-                        cancelText='取消'
-                        visible={this.state.visible}
-                        onOk={this.handleOk}
-                        onCancel={this.handleCancel}
-                    >   
-                        <ModalContent/>
-                    </Modal>
+                        <Modal
+                            // title="保存组合"
+                            okText="保存"
+                            cancelText='取消'
+                            visible={this.state.visible}
+                            onOk={this.handleOk}
+                            onCancel={this.handleCancel}
+                        >
+                            <ModalContent
+                                setMyPortfolio={
+                                    (portfolio) => this.setState({ portfolio })
+                                }
+                                {...this.props}
+                            />
+                        </Modal>
+                    </div>
                 </div>
 
 
-            </div>
-            
-
-            <div className='backtest-content'
-                style={{display:'flex',justifyContent:'space-between',marginTop:50}}
-            >
-                <div className='backtest-chart' 
-                    ref={this.chartRef}
-                    style={{ height: 420, width: "62%", left: -40,top:30}}
+                <div className='backtest-content'
+                    style={{ display: 'flex', justifyContent: 'space-between', marginTop: 50 }}
                 >
-                </div>
+                    <div className='backtest-chart'
+                        ref={this.chartRef}
+                        style={{ height: 420, width: "62%", left: -40, top: 30 }}
+                    >
+                    </div>
 
-                <div className='backtest-card'>
-                    <Table
-                        title={()=> (
-                            <p style={{
-                                fontWeight:'bold',
-                                fontSize:16,
-                                textAlign:'center',
-                                marginBottom:0}}
-                            >组合收益率</p>)}
-                        columns={columns}
-                        dataSource={dataSource}
-                        size='small'
-                        pagination={false}
-                    />                       
+                    <div className='backtest-card'>
+                        <Table
+                            title={() => (
+                                <p style={{
+                                    fontWeight: 'bold',
+                                    fontSize: 16,
+                                    textAlign: 'center',
+                                    marginBottom: 0
+                                }}
+                                >组合收益率</p>)}
+                            columns={columns}
+                            dataSource={dataSource}
+                            size='small'
+                            pagination={false}
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
-    )
-  }
+        )
+    }
 }
 
 export default Step3Content

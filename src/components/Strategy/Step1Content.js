@@ -1,14 +1,14 @@
 import React, { Component } from 'react'
-import { Tree, Typography, Table, Button, Checkbox, Tag,DatePicker } from 'antd'
+import { Tree, Typography, Table, Button, Checkbox, Tag, DatePicker } from 'antd'
 import { CloseCircleOutlined } from '@ant-design/icons'
 import _ from 'lodash'
 import moment from 'moment'
 import { connect } from 'react-redux'
 
 import { getUniverseCode } from '../../api'
-import { saveUniverse,deleteMyPortfolio,deleteMyFollows } from '../../redux/actions'
+import { saveUniverse, deleteMyPortfolio, deleteMyFollows } from '../../redux/actions'
 
-const {RangePicker} = DatePicker
+const { RangePicker } = DatePicker
 
 
 const colorMapToKey = {
@@ -77,24 +77,24 @@ let treeData = [
     // },
 ]
 
-@connect(state=>state.strategyInfo,{saveUniverse,deleteMyPortfolio,deleteMyFollows})
+@connect(state => state.strategyInfo, { saveUniverse, deleteMyPortfolio, deleteMyFollows })
 class Step1Content extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props)
-        const {myPortfolio,myFollows} = props
+        const { myPortfolio, myFollows } = props
         this.state = {
             checkedKeys: [],
             expandedKeys: ['b'],
             myPortfolio,
             myFollows,
-            checkable:true,
+            checkable: true,
             tableDataSource: [],
             deleteRows: [],
             isLoading: false
         }
     }
-    
+
     onTreeExpand = (expandedKeys) => {
         this.setState({
             expandedKeys
@@ -103,7 +103,7 @@ class Step1Content extends Component {
 
     onTreeCheck = (checkedKeys, { checked, node }) => {
         const { key } = node
-        
+
         if (checked) { //如果点击了则标记为check状态，并请求数据
             this.setState({ isLoading: true })
             getUniverseCode(key)
@@ -127,9 +127,9 @@ class Step1Content extends Component {
         }
     }
 
-    onTreeSelect = (selectedKeys, { selected, node,...props}) => {
-        const { checked,key,children } = node
-        
+    onTreeSelect = (selectedKeys, { selected, node, ...props }) => {
+        const { checked, key, children } = node
+
         if (!children) { //如果是叶子节点(最末级节点)
             if (!checked && selected) { //如果选中了则标记为check状态，并请求数据 [这里的!checked不能省略]
                 this.setState({ isLoading: true })
@@ -194,43 +194,43 @@ class Step1Content extends Component {
         this.onTreeCheck(['a'], {
             checked: true,
             node: {
-                key:'a'
+                key: 'a'
             }
         })
     }
 
     //做好了后端这个可以不要
-    componentDidUpdate(prevProps, prevState){
-        if(this.state.tableDataSource!==prevState.tableDataSource){
+    componentDidUpdate(prevProps, prevState) {
+        if (this.state.tableDataSource !== prevState.tableDataSource) {
             this.props.saveUniverse(this.state.tableDataSource)
         }
-        if(this.props.myPortfolio!==prevProps.myPortfolio){
+        if (this.props.myPortfolio !== prevProps.myPortfolio) {
             this.setState({
-                checkable: !(this.props.myPortfolio.children.length===0),
+                checkable: !(this.props.myPortfolio.children.length === 0),
                 myPortfolio: this.props.myPortfolio
             })
         }
 
-        if (this.props.myFollows !== prevProps.myFollows){
+        if (this.props.myFollows !== prevProps.myFollows) {
             this.setState({
                 checkable: !(this.props.myFollows.children.length === 0),
                 myFollows: this.props.myFollows
             })
         }
     }
-    
+
     render() {
 
-        const { 
-            checkedKeys, 
+        const {
+            checkedKeys,
             expandedKeys,
             myPortfolio,
             myFollows,
             checkable,
-            tableDataSource, 
-            deleteRows, 
+            tableDataSource,
+            deleteRows,
             isLoading } = this.state
-        
+
         const columns = [
             {
                 title: '股票代码',
@@ -249,19 +249,19 @@ class Step1Content extends Component {
                     )
                 }
             }]
-        
+
         const myPortfolioTreeData = {
             ...myPortfolio,
             title: <Typography.Text strong>我的组合</Typography.Text>,
-            children:myPortfolio.children.map(child=>{
+            children: myPortfolio.children.map(child => {
                 return {
                     title: (<span className='tree-title'>
-                            {child.title}
-                            <CloseCircleOutlined className='closeIcon'
-                                onClick={()=>this.props.deleteMyPortfolio(child.key)}
-                            />
-                        </span>),
-                    key:child.key
+                        {child.title}
+                        <CloseCircleOutlined className='closeIcon'
+                            onClick={() => this.props.deleteMyPortfolio(child.key)}
+                        />
+                    </span>),
+                    key: child.key
                 }
             })
         }
@@ -280,71 +280,71 @@ class Step1Content extends Component {
                 }
             })
         }
-        
+
         const treeDatas = treeData.concat([myPortfolioTreeData, myFollowsTreeData])
-        
+
         return (
             <div>
-                <div style={{marginLeft:'6%'}}>
-                样本期间: 
+                <div style={{ marginLeft: '6%' }}>
+                    样本期间:
                 <RangePicker
-                    style={{marginLeft:20,width:'20%'}}
-                    placeholder={['开始时间', '结束时间']}
-                    onChange={this.handlePickDate}
-                    defaultValue={[moment('2010-12-31'),moment('2019-12-31')]}
-                />
-                </div>
-
-            <div style={{ display: 'flex', border: '2px solid #fafafa', width: "90%", margin: "5px auto " }}>
-                <div className='tree-content'
-                    style={{ flex: 0.4, borderRight: '2px solid #fafafa', paddingLeft: 30, paddingTop: 40 }}>
-                    <Tree
-                        checkable={checkable}
-                        onExpand={this.onTreeExpand}
-                        expandedKeys={expandedKeys}
-                        onCheck={this.onTreeCheck}
-                        checkedKeys={checkedKeys}
-                        onSelect={this.onTreeSelect}
-                        treeData={treeDatas}
+                        style={{ marginLeft: 20, width: '20%' }}
+                        placeholder={['开始时间', '结束时间']}
+                        onChange={this.handlePickDate}
+                        defaultValue={[moment('2010-12-31'), moment('2019-12-31')]}
                     />
                 </div>
 
-                <div className="edit-content"
-                    style={{ display: 'flex', flexFlow: 'column', justifyContent: 'center', borderRight: '2px solid #fafafa', }}>
-                    <Button
-                        type={deleteRows[0] ? 'danger' : null}
-                        onClick={this.onDeleteRows}
-                    >删除</Button>
-                    <Checkbox defaultChecked>过滤黑名单</Checkbox>
-                </div>
+                <div style={{ display: 'flex', border: '2px solid #fafafa', width: "90%", margin: "5px auto ",height:450 }}>
+                    <div className='tree-content'
+                        style={{ flex: 0.4, borderRight: '2px solid #fafafa', paddingLeft: 30, paddingTop: 40 }}>
+                        <Tree
+                            checkable={checkable}
+                            onExpand={this.onTreeExpand}
+                            expandedKeys={expandedKeys}
+                            onCheck={this.onTreeCheck}
+                            checkedKeys={checkedKeys}
+                            onSelect={this.onTreeSelect}
+                            treeData={treeDatas}
+                        />
+                    </div>
 
-                <div className='table-content' style={{ flex: 0.6 }}>
-                    <Table
-                        loading={isLoading}
-                        size='small'
-                        rowKey={record => record.stkcd}
-                        scroll={{ y: 380 }}
-                        pagination={{
-                            size: 'small',
-                            total: tableDataSource.length,
-                            showTotal: (total) => `共${total}条`,
-                            showSizeChanger: true,
-                            defaultPageSize: 20,
-                            hideOnSinglePage: true
-                        }}
-                        rowSelection={
-                            {
-                                type: 'checkbox',
-                                onSelect: (record, selected, selectedRows) => this.setState({ deleteRows: selectedRows }),
-                                onSelectAll: (selected, selectedRows) => this.setState({ deleteRows: selectedRows })
+                    <div className="edit-content"
+                        style={{ display: 'flex', flexFlow: 'column', justifyContent: 'center', borderRight: '2px solid #fafafa', }}>
+                        <Button
+                            type={deleteRows[0] ? 'danger' : null}
+                            onClick={this.onDeleteRows}
+                        >删除</Button>
+                        <Checkbox defaultChecked>过滤黑名单</Checkbox>
+                    </div>
+
+                    <div className='table-content' style={{ flex: 0.6 }}>
+                        <Table
+                            loading={isLoading}
+                            size='small'
+                            rowKey={record => record.stkcd}
+                            scroll={{ y: 380 }}
+                            pagination={{
+                                size: 'small',
+                                total: tableDataSource.length,
+                                showTotal: (total) => `共${total}条`,
+                                showSizeChanger: true,
+                                defaultPageSize: 20,
+                                hideOnSinglePage: true
+                            }}
+                            rowSelection={
+                                {
+                                    type: 'checkbox',
+                                    onSelect: (record, selected, selectedRows) => this.setState({ deleteRows: selectedRows }),
+                                    onSelectAll: (selected, selectedRows) => this.setState({ deleteRows: selectedRows })
+                                }
                             }
-                        }
-                        dataSource={tableDataSource}
-                        columns={columns}
-                    />
+                            dataSource={tableDataSource}
+                            columns={columns}
+                        />
+                    </div>
                 </div>
             </div>
-        </div>
         );
     }
 }

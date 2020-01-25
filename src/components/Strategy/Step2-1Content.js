@@ -10,16 +10,17 @@ import { toComputeCorr } from '../../redux/actions'
 import './index.less'
 
 
-@connect(state => state.strategyInfo,{toComputeCorr})
+@connect(state => state.strategyInfo, { toComputeCorr })
 class Step21Content extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            tableDataSource: []
+            tableDataSource: [],
+            isLoading:true,
         }
     }
 
-    handleDelete = (key)=>{
+    handleDelete = (key) => {
         const tableDataSource = this.state.tableDataSource.filter(item => item.key !== key)
         this.setState({
             tableDataSource
@@ -27,25 +28,26 @@ class Step21Content extends Component {
     }
 
     handleData = async () => {
-        const { dataSource,samplePeriod } = this.props
-        const {startDate,endDate} = samplePeriod
+        const { dataSource, samplePeriod } = this.props
+        const { startDate, endDate } = samplePeriod
         const factors = _.flatMapDeep(dataSource, ds => ds.map(o => Object.values(o)[1]))
 
         let data = []
         for (let key in factors) {
             if (factors.hasOwnProperty(key)) {
                 const item = factors[key];
-                const respData = await getFactorValidateInfo(item,startDate,endDate)
+                const respData = await getFactorValidateInfo(item, startDate, endDate)
                 data.push({
                     key,
-                    ...respData.data,   
+                    ...respData.data,
                     factor: item
                 })
             }
         }
 
         this.setState({
-            tableDataSource: data
+            tableDataSource: data,
+            isLoading:false
         })
     }
 
@@ -53,11 +55,11 @@ class Step21Content extends Component {
         this.handleData()
     }
 
-    componentDidUpdate(prevProps, prevState){
-        if(prevProps.dataSource!==this.props.dataSource){
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.dataSource !== this.props.dataSource) {
             this.handleData()
         }
-        if(prevState.tableDataSource!==this.state.tableDataSource1){
+        if (prevState.tableDataSource !== this.state.tableDataSource1) {
             this.props.toComputeCorr(this.state.tableDataSource)
         }
     }
@@ -122,7 +124,7 @@ class Step21Content extends Component {
                 title: <div style={{ color: '#1890ff', paddingLeft: 16 }}>操作</div>,
                 render: (value, record) => (
                     <Button ghost style={{ color: '#1890ff' }}
-                        onClick={()=>this.handleDelete(record.key)}
+                        onClick={() => this.handleDelete(record.key)}
                     >删除</Button>
                 )
             },
@@ -130,10 +132,11 @@ class Step21Content extends Component {
 
         return (
             <Table
+                loading={this.state.isLoading}
                 className='factor-validate-table'
                 columns={columns}
                 dataSource={this.state.tableDataSource}
-                pagination={{hideOnSinglePage:true}}
+                pagination={{ hideOnSinglePage: true }}
                 size="small"
             />
         )

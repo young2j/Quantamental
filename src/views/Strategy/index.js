@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { Card,Steps, Typography, Button,Tag} from 'antd'
 
 import './index.less'
@@ -68,44 +68,65 @@ const steps = [
     },
 ]
 
-export default class Strategy extends Component {
-    render() {
-        return (
-            <Card title="多因子选股策略" bordered={false}>
-                <Steps onChange={()=>{}} className='strategy-steps'
+const Strategy = ()=>{
+    const [current, setCurrent] = useState(0)
+
+    return (
+        <Card title="多因子选股策略" 
+            className='strategy-card'
+            bordered={false}
+            extra={
+                <Steps 
+                    type='navigation'
+                    className='strategy-steps' 
+                    current={current}
+                    size='small'
+                    onChange={current => setCurrent(current)}
                     progressDot={(iconDot, { index }) => steps[index].icon}
                 >
                     {
-                        steps.map(item=><Step key={item.key} title={item.title} />)
+                        steps.map(item=><Step key={item.key} title={item.title}/>)
                     }
                 </Steps>
-                {
-                    steps.map(item=>{
-                        if(item.key>2 && item.key<3){
-                            return (
-                                <Card.Grid key={item.key} hoverable={false} style={{width:'100%',minHeight:300}}>
-                                    <Typography.Title style={{fontSize:14,fontWeight:'bold',textAlign:'center'}}>
-                                        <Tag>Step {item.key}</Tag> 
-                                        {item.title}
-                                    </Typography.Title >
-                                    {item.content}
-                                </Card.Grid>
-                            )
-                        } else{
-                            return (
-                                <Card.Grid key={item.key} hoverable={false} style={{ width: '100%', minHeight: 300 }}>
-                                    <Typography.Title style={{ fontSize: 15, fontWeight: 'bold',textAlign:'center' }}>
-                                        <Tag color='green'>Step {item.key}</Tag> 
-                                        {item.title}
-                                    </Typography.Title >
-                                    {item.content}
-                                </Card.Grid>
-                            )
-                        }
-                    })
-                }
+            }
+            >
+            <div style={{margin:'10px auto'}}>
+                <Typography.Title 
+                    style={{ fontSize: 14, fontWeight: 'bold', textAlign: 'center',marginBottom:20 }}>
+                    <Tag color='green'>Step {steps[current].key}</Tag>
+                    {steps[current].title}
+                </Typography.Title >
+                {steps[current].content}
+            </div>
+            {/* {
+                steps.map(item=>{
+                    if(item.key>2 && item.key<3){
+                        return (
+                            <Card.Grid key={item.key} hoverable={false} style={{width:'100%',minHeight:300}}>
+                                <Typography.Title style={{fontSize:14,fontWeight:'bold',textAlign:'center'}}>
+                                    <Tag>Step {item.key}</Tag> 
+                                    {item.title}
+                                </Typography.Title >
+                                {item.content}
+                            </Card.Grid>
+                        )
+                    } else{
+                        return (
+                            <Card.Grid key={item.key} hoverable={false} style={{ width: '100%', minHeight: 300 }}>
+                                <Typography.Title style={{ fontSize: 15, fontWeight: 'bold',textAlign:'center' }}>
+                                    <Tag color='green'>Step {item.key}</Tag> 
+                                    {item.title}
+                                </Typography.Title >
+                                {item.content}
+                            </Card.Grid>
+                        )
+                    }
+                })
+            } */}
 
-            </Card>
-        )
-    }
+        </Card>
+    )
 }
+
+
+export default Strategy

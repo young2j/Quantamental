@@ -197,7 +197,7 @@ export default class EarningsQuality extends Component {
     }
 
     render() {
-        console.log(this.props);
+        // console.log(this.props);
         const { Mscore, Dilemma } = this.props.earningsQualityInfo
         const {Oscore,Zscore,Cscore} = Dilemma
 

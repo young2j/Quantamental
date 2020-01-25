@@ -14,7 +14,10 @@
 
 
 .inner-table-grid{
-  min-height: 405px;
+  min-height: 200px;
+  width:18%;
+  min-width: 15%;
+  padding:0px;
   .inner-table{
     margin: 0px !important;
     .ant-table-container::after{
@@ -23,22 +26,55 @@
     .ant-table-container::before{
       box-shadow: none !important; 
     }
-    .ant-table-content{
-      .ant-table-tbody{
-        tr{
-          td{
-            min-width: 140px;
+    .ant-table-container{
+      .ant-table-content{
+          thead{
+            tr{
+              th{
+                padding:5px 16px 0px 16px;
+              }
+            }
           }
-        }
-        tr:last-child{
-          td{
-            border-bottom: 1px solid #3632320c;
+
+        .ant-table-tbody{
+          tr{
+            td:first-child{
+              border-left: 2px solid #fafafa;
+              padding: 4px 0px 4px 16px;
+            }
+            td:last-child{
+              width: 20px;
+              padding:4px 0px 4px 16px;
+              color:transparent;
+            }
+          }
+          tr:hover{
+            td:last-child{
+              color:red;
+            }
+          }
+
+          tr:last-child{
+            td{
+              border-bottom: 1px solid #3632320c;
+            }
           }
         }
       }
     }
+    .ant-table-footer{
+      padding: 1px 11px;
+      button{
+        padding: 0px 5px;
+        border: none;
+        color:#1890ff;
+        background: #fafafa;
+      }
+    }
   }
 }
+
+
 
 
 .factor-validate-table{
@@ -89,4 +125,50 @@
       }
     }
   }
+}
+
+
+
+.modal-content{
+  .left-card{
+    flex:0.8;
+    .ant-card-head{
+      min-height: 24px;
+      .ant-card-head-wrapper{
+        display: block;
+        .ant-card-head-title{
+          padding: 0px;
+        }
+      }
+    }
+  }
+  .right-card{
+    flex:0.8;
+    .ant-card-head{
+      min-height: 24px;
+      .ant-card-head-wrapper{
+        display: block;
+        .ant-card-head-title{
+          padding: 0px;
+        }
+      }
+    }
+    .right-tree{
+      .ant-tree-list{
+        .ant-tree-treenode{
+          .ant-tree-node-content-wrapper{
+            padding:0px;
+          .ant-tree-title{
+            .right-input{
+              border:0px;
+            }
+            .right-input:focus{
+              border:1px solid #40a9ff;
+            }
+          }
+        }
+      }
+    }
+  }
+}
 }
