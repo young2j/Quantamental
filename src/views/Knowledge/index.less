@@ -1,0 +1,61 @@
+#knowledge-page{
+  display: flex;
+  overflow: hidden;
+  .knowledge-chapter{
+    flex:0.77;
+    z-index: 9;
+    transition: flex 0.5s;
+  }
+  .knowledge-toc{
+    max-height: none;
+    padding-left: 4px;
+    .toc-button{
+      position: fixed;
+      top:350px;
+      right:300px;
+      transition: right 0.5s;
+      z-index: 10;
+      button{
+        border-radius: 5px 0px 0px 5px;
+      }
+    }
+    .toc-anchor{
+      position: fixed;
+      right:40px;
+      transition: right 0.5s;
+      .ant-anchor{
+        height: 688px;
+      }
+    }
+  }
+
+
+  .knowledge-chapter-transition{
+    flex:1;
+    z-index: 9;
+    transition: flex 0.5s;
+  }
+
+  .knowledge-toc-transition{
+    max-height: none;
+    .toc-button{
+      position: fixed;
+      top:350px;
+      right:10px;
+      transition: right 0.5s;
+      z-index: 10;
+      button{
+        border-radius: 5px 0px 0px 5px;
+      }
+    }
+    .toc-anchor{
+      position: fixed;
+      right:-250px;
+      transition: right 0.5s; 
+      .ant-anchor{
+        height: 688px;
+      }
+    }
+  
+  }
+}
