@@ -117,7 +117,7 @@ const Knowledge = ()=>{
     return (
         <div id='knowledge-page'>
             <div className={collapse ? 'knowledge-chapter-transition' :'knowledge-chapter'}>
-                <Chapter />
+                <Chapter collapse={collapse}/>
             </div>
 
             <div className={collapse ? 'knowledge-toc-transition':'knowledge-toc'}>

@@ -101,3 +101,9 @@ export const getFactorValidateInfo = (item,startDate,endDate)=>{
         }
     })
 }
+
+
+//--------------获得章节内容-------------
+export const getChapterInfo = (id)=>{
+    return service.get(`/knowledge/chapter/${id}`)
+}
