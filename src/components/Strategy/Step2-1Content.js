@@ -30,7 +30,8 @@ class Step21Content extends Component {
     handleData = async () => {
         const { dataSource, samplePeriod } = this.props
         const { startDate, endDate } = samplePeriod
-        const factors = _.flatMapDeep(dataSource, ds => ds.map(o => Object.values(o)[1]))
+        let factors = _.flatMapDeep(dataSource, ds => ds.map(o => Object.values(o)[1]))
+        factors = factors.filter(f=>f!=='') //过滤掉添加大类元素为null的值
 
         let data = []
         for (let key in factors) {

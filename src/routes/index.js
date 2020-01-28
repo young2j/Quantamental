@@ -1,5 +1,5 @@
 import {
-    Dashboard,
+    StockPredict,
     Finance,
     Evaluation,
     Quality,
@@ -10,8 +10,8 @@ import {
 
 const mainRouter = [
     {
-        path:'/dashboard',
-        component:Dashboard
+        path:'/stockpredict',
+        component:StockPredict
     }, {
         path: '/fundamental/finance',
         component: Finance
@@ -29,6 +29,7 @@ const mainRouter = [
         component: Knowledge
     }
 ]
+
 
 export {
     mainRouter

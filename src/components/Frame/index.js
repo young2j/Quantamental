@@ -68,7 +68,7 @@ class Frame extends Component {
                               >
                             <Menu.Item key="/dashboard">
                                 <StockOutlined />
-                                <span>股市概览</span>
+                                <span>个股预测</span>
                             </Menu.Item>
                             <Menu.SubMenu title={
                                           <span>

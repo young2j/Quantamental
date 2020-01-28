@@ -1,5 +1,5 @@
 import Greeting from './Greeting'
-import Dashboard from './Dashboard'
+import StockPredict from './StockPredict'
 import {Finance,Evaluation,Quality} from './Fundamental'
 import Knowledge from './Knowledge'
 import Strategy from './Strategy'
@@ -8,7 +8,7 @@ import Strategy from './Strategy'
 
 export {
     Greeting,
-    Dashboard,
+    StockPredict,
     Finance,
     Evaluation,
     Quality,
