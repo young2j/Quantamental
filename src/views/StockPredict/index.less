@@ -1,0 +1,59 @@
+.stock-predict{
+  display: flex;
+  justify-content: space-between;
+  .chart{
+    .chart-title{
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 15px;
+    }
+    .k-chart{
+      width: 700px;
+      height: 550px;
+      // margin-top:40px;
+      align-self: center;
+    }
+  }
+
+  .predict-content{
+     display: flex;
+     flex-direction: column;
+     align-self: center;
+     padding: 0px;
+    .predict-card{
+      .ant-card-head{
+        .ant-card-head-wrapper{
+          .ant-card-head-title{
+            flex:1;
+          }
+        }
+      }
+      .ant-card-body{
+        .statistic-stkcd{
+          .ant-statistic-content{
+            .ant-statistic-content-prefix{
+              svg{
+                width: 15px;
+                height: 20px;
+              }
+            }
+          }
+        }
+      }
+    }
+    .predict-table{
+      min-height: 460px;
+      margin-top: 20px;
+      .ant-table-content{
+          font-size: 13px;
+        thead{
+          background: #fafafa;
+          th{
+            text-align: center;
+            padding: 0px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -279,3 +279,8 @@ export const saveMyPortfolio= (portfolio,firmCodes)=>dispatch=>{ //当前还未�
         }
     })
 }
+
+
+//========================StockPredict===================
+//查看某个公司预测信息
+//直接使用selectFirm

@@ -1,14 +1,20 @@
 import React, { Component } from 'react'
 import echarts from 'echarts'
+import { Table,Card,Statistic,Tag,Spin} from 'antd'
+import { ArrowUpOutlined, ArrowDownOutlined,FieldNumberOutlined } from '@ant-design/icons'
+import { connect } from 'react-redux'
 
-var upColor = '#ec0000';
-var upBorderColor = '#8A0000';
-var downColor = '#00da3c';
-var downBorderColor = '#008F28';
+
+import './index.less'
+import { getStockPredict } from '../../api'
+import SearchBar from '../../components/StockPredict'
+
+const upColor = '#ec0000';
+const downColor = '#00da3c';
 
 
 // 数据意义：开盘(open)，收盘(close)，最低(lowest)，最高(highest)
-var data0 = splitData([
+const rawData = [
     ['2019/1/24', 232.26, 232.26, 228.3, 236.94, Math.random() * 100000],
     ['2019/1/25', 230, 229, 228.2, 230.3, Math.random() * 100000],
     ['2019/1/28', 229.35, 234.5, 229.35, 234.92, Math.random() * 100000],
@@ -97,13 +103,14 @@ var data0 = splitData([
     ['2019/6/6', 226.43, 224.11, 224.07, 226.69, Math.random() * 100000],
     ['2019/6/7', 224.26, 221.9, 220.07, 225.63, Math.random() * 100000],
     ['2019/6/13', 219.1, 214.35, 212.22, 219.1, Math.random() * 100000],
-]);
+]
+let data0 = splitData(rawData);
 
 function splitData(rawData) {
-    var categoryData = [];
-    var values = []
-    var volumes = []
-    for (var i = 0; i < rawData.length; i++) {
+    let categoryData = [];
+    let values = []
+    let volumes = []
+    for (let i = 0; i < rawData.length; i++) {
         categoryData.push(rawData[i].splice(0, 1)[0]);
         values.push(rawData[i])
         volumes.push([i, rawData[i][4], rawData[i][0] > rawData[i][1] ? 1 : -1]);
@@ -116,14 +123,14 @@ function splitData(rawData) {
 }
 
 function calculateMA(dayCount) {
-    var result = [];
-    for (var i = 0, len = data0.values.length; i < len; i++) {
+    let result = [];
+    for (let i = 0, len = data0.values.length; i < len; i++) {
         if (i < dayCount) {
             result.push('-');
             continue;
         }
-        var sum = 0;
-        for (var j = 0; j < dayCount; j++) {
+        let sum = 0;
+        for (let j = 0; j < dayCount; j++) {
             sum += data0.values[i - j][1];
         }
         result.push((sum / dayCount).toFixed(3));
@@ -131,202 +138,12 @@ function calculateMA(dayCount) {
     return result;
 }
 
-
-
-const option1 = {
-    title: {
-        text: '上证指数',
-        left: 0
-    },
-    tooltip: {
-        trigger: 'axis',
-        axisPointer: {
-            type: 'cross'
-        }
-    },
+const option = {
     legend: {
-        data: ['日K', 'MA5', 'MA10', 'MA20', 'MA30']
-    },
-    grid: {
-        left: '10%',
-        right: '10%',
-        bottom: '15%'
-    },
-    xAxis: {
-        type: 'category',
-        data: data0.categoryData,
-        scale: true,
-        boundaryGap: false,
-        axisLine: { onZero: false },
-        splitLine: { show: false },
-        splitNumber: 20,
-        min: 'dataMin',
-        max: 'dataMax'
-    },
-    yAxis: {
-        scale: true,
-        splitArea: {
-            show: true
-        }
-    },
-    dataZoom: [
-        {
-            type: 'inside',
-            start: 50,
-            end: 100
-        },
-        {
-            show: true,
-            type: 'slider',
-            top: '90%',
-            start: 50,
-            end: 100
-        }
-    ],
-    series: [
-        {
-            name: '日K',
-            type: 'candlestick',
-            data: data0.values,
-            itemStyle: {
-                color: upColor,
-                color0: downColor,
-                borderColor: upBorderColor,
-                borderColor0: downBorderColor
-            },
-            markPoint: {
-                label: {
-                    normal: {
-                        formatter: function (param) {
-                            return param != null ? Math.round(param.value) : '';
-                        }
-                    }
-                },
-                data: [
-                    {
-                        name: 'XX标点',
-                        coord: ['2019/5/31', 230],
-                        value: 230,
-                        itemStyle: {
-                            color: 'rgb(41,60,85)'
-                        }
-                    },
-                    {
-                        name: 'highest value',
-                        type: 'max',
-                        valueDim: 'highest'
-                    },
-                    {
-                        name: 'lowest value',
-                        type: 'min',
-                        valueDim: 'lowest'
-                    },
-                    {
-                        name: 'average value on close',
-                        type: 'average',
-                        valueDim: 'close'
-                    }
-                ],
-                tooltip: {
-                    formatter: function (param) {
-                        return param.name + '<br>' + (param.data.coord || '');
-                    }
-                }
-            },
-            markLine: {
-                symbol: ['none', 'none'],
-                data: [
-                    [
-                        {
-                            name: 'from lowest to highest',
-                            type: 'min',
-                            valueDim: 'lowest',
-                            symbol: 'circle',
-                            symbolSize: 10,
-                            label: {
-                                show: false
-                            },
-                            emphasis: {
-                                label: {
-                                    show: false
-                                }
-                            }
-                        },
-                        {
-                            type: 'max',
-                            valueDim: 'highest',
-                            symbol: 'circle',
-                            symbolSize: 10,
-                            label: {
-                                show: false
-                            },
-                            emphasis: {
-                                label: {
-                                    show: false
-                                }
-                            }
-                        }
-                    ],
-                    {
-                        name: 'min line on close',
-                        type: 'min',
-                        valueDim: 'close'
-                    },
-                    {
-                        name: 'max line on close',
-                        type: 'max',
-                        valueDim: 'close'
-                    }
-                ]
-            }
-        },
-        {
-            name: 'MA5',
-            type: 'line',
-            data: calculateMA(5),
-            smooth: true,
-            lineStyle: {
-                opacity: 0.5
-            }
-        },
-        {
-            name: 'MA10',
-            type: 'line',
-            data: calculateMA(10),
-            smooth: true,
-            lineStyle: {
-                opacity: 0.5
-            }
-        },
-        {
-            name: 'MA20',
-            type: 'line',
-            data: calculateMA(20),
-            smooth: true,
-            lineStyle: {
-                opacity: 0.5
-            }
-        },
-        {
-            name: 'MA30',
-            type: 'line',
-            data: calculateMA(30),
-            smooth: true,
-            lineStyle: {
-                opacity: 0.5
-            }
-        },
-
-    ]
-};
-
-const option2 = {
-    backgroundColor: '#fff',
-    animation: false,
-    legend: {
-        bottom: 10,
+        // bottom: 5,
+        top:10,
         left: 'center',
-        data: ['Dow-Jones index', 'MA5', 'MA10', 'MA20', 'MA30']
+        data: ['oclh', 'MA5', 'MA10', 'MA20', 'MA30']
     },
     tooltip: {
         trigger: 'axis',
@@ -341,10 +158,10 @@ const option2 = {
             color: '#000'
         },
         position: function (pos, params, el, elRect, size) {
-            var obj = { top: 10 };
+            let obj = { top: 10 };
             obj[['left', 'right'][+(pos[0] < size.viewSize[0] / 2)]] = 30;
             return obj;
-        }
+        },
         // extraCssText: 'width: 170px'
     },
     axisPointer: {
@@ -361,13 +178,15 @@ const option2 = {
             brush: {
                 type: ['lineX', 'clear']
             }
-        }
+        },
+        top:30,
+        right:50
     },
     brush: {
         xAxisIndex: 'all',
-        // brushLink: 'all',
+        brushLink: 'all',
         outOfBrush: {
-            // colorAlpha: 0.1
+            colorAlpha: 0.1
         }
     },
     visualMap: {
@@ -384,15 +203,16 @@ const option2 = {
     },
     grid: [
         {
-            left: '10%',
-            right: '8%',
-            height: '50%'
+            left: '6%',
+            right: '7%',
+            height: '48%',
+            top:'15%'
         },
         {
-            left: '10%',
-            right: '8%',
-            top: '63%',
-            height: '16%'
+            left: '6%',
+            right: '7%',
+            top: '81%',
+            height: '20%'
         }
     ],
     xAxis: [
@@ -403,9 +223,9 @@ const option2 = {
             boundaryGap: false,
             axisLine: { onZero: false },
             splitLine: { show: false },
-            splitNumber: 20,
-            min: 'dataMin',
-            max: 'dataMax',
+            // splitNumber: 20,
+            // min: 'dataMin',
+            // max: 'dataMax',
             axisPointer: {
                 z: 100
             }
@@ -420,9 +240,9 @@ const option2 = {
             axisTick: { show: false },
             splitLine: { show: false },
             axisLabel: { show: false },
-            splitNumber: 20,
-            min: 'dataMin',
-            max: 'dataMax'
+            // splitNumber: 20,
+            // min: 'dataMin',
+            // max: 'dataMax'
         }
     ],
     yAxis: [
@@ -446,40 +266,64 @@ const option2 = {
         {
             type: 'inside',
             xAxisIndex: [0, 1],
-            start: 20,
-            end: 80
+            start: 40,
+            end: 100
         },
         {
             show: true,
             xAxisIndex: [0, 1],
             type: 'slider',
-            top: '85%',
-            start: 20,
-            end: 80
+            top: '70%',
+            start: 40,
+            end: 100
         }
     ],
     series: [
         {
-            name: 'Dow-Jones index',
+            name: 'oclh',
             type: 'candlestick',
-            data: data0.values,
+            data: [],
             itemStyle: {
                 color: upColor,
                 color0: downColor,
                 borderColor: null,
                 borderColor0: null
             },
-            tooltip: {
-                formatter: function (param) {
-                    param = param[0];
-                    return [
-                        'Date: ' + param.name + '<hr size=1 style="margin: 3px 0">',
-                        'Open: ' + param.data[0] + '<br/>',
-                        'Close: ' + param.data[1] + '<br/>',
-                        'Lowest: ' + param.data[2] + '<br/>',
-                        'Highest: ' + param.data[3] + '<br/>'
-                    ].join('');
-                }
+            markPoint: {
+                label: {
+                    normal: {
+                        formatter: function (param) {
+                            return param != null ? Math.round(param.value) : '';
+                        }
+                    }
+                },
+                data: [
+                    {
+                        name: 'highest value',
+                        type: 'max',
+                        valueDim: 'highest'
+                    },
+                    {
+                        name: 'lowest value',
+                        type: 'min',
+                        valueDim: 'lowest'
+                    },
+                ],
+            },
+            markLine: {
+                symbol: ['none', 'none'],
+                data: [
+                    {
+                        name: 'min line on close',
+                        type: 'min',
+                        valueDim: 'close'
+                    },
+                    {
+                        name: 'max line on close',
+                        type: 'max',
+                        valueDim: 'close'
+                    }
+                ]
             }
         },
         {
@@ -487,6 +331,7 @@ const option2 = {
             type: 'line',
             data: calculateMA(5),
             smooth: true,
+            symbolSize:3,
             lineStyle: {
                 opacity: 0.5
             }
@@ -496,6 +341,7 @@ const option2 = {
             type: 'line',
             data: calculateMA(10),
             smooth: true,
+            symbolSize:2,
             lineStyle: {
                 opacity: 0.5
             }
@@ -505,6 +351,7 @@ const option2 = {
             type: 'line',
             data: calculateMA(20),
             smooth: true,
+            symbolSize: 2,
             lineStyle: {
                 opacity: 0.5
             }
@@ -514,6 +361,7 @@ const option2 = {
             type: 'line',
             data: calculateMA(30),
             smooth: true,
+            symbolSize:2,
             lineStyle: {
                 opacity: 0.5
             }
@@ -521,28 +369,286 @@ const option2 = {
         {
             name: 'Volume',
             type: 'bar',
+            id:'bar',
             xAxisIndex: 1,
             yAxisIndex: 1,
-            data: data0.volumes
+            data: []
         }
     ]
 }
 
+const columns = [
+    {
+        title:'公司代码',
+        dataIndex:'stkcd',
+        render:(value)=>value? value:null
+    },
+    {
+        title:'公司简称',
+        dataIndex:'name',
+        width:110,
+    },
+    {
+        title: <span>上一交易<br />日收盘价</span>,
+        dataIndex:'stockPriceLastDay',
+        render: (value) => value? value:null,
+    },
+    {
+        title: <span>预计下一交<br/>易日收盘价</span>,
+        dataIndex:'stockPriceNextDay',
+        render: (value, record) => {
+            const { stockPriceLastDay } = record
+            if(value==='我的关注'){
+                return <Tag color='red'>{value}</Tag >
+            }
+            if (stockPriceLastDay < value) {
+                return (
+                    <span style={{ color: 'red', display: 'flex' }}>
+                        {value}<ArrowUpOutlined />
+                    </span>
+                )
+            }
+            else if (stockPriceLastDay > value) {
+                return (
+                    <span style={{ color: 'green', display: 'flex' }}>
+                        {value}<ArrowDownOutlined/>
+                    </span>
+                )
+            } else {
+                return (
+                    <span>
+                        {value}
+                    </span>
+                )
+            }
+        }
+    },
+    {
+        title: <span>预计<br/>涨(跌)幅</span>,
+        dataIndex:'InDecreasePredict',
+        render:(value,record)=>{
+            const { stockPriceLastDay, stockPriceNextDay} = record
+            const spread = ((stockPriceNextDay-stockPriceLastDay)/stockPriceLastDay).toFixed(2)
+
+            if(!value){
+                return
+            }
+
+            if(stockPriceLastDay<stockPriceNextDay){
+                return (
+                    <span style={{ color: 'red', display: 'flex'}}>
+                        {spread}%<ArrowUpOutlined/>
+                    </span>
+                )
+            }
+            else if(stockPriceLastDay>stockPriceNextDay){
+                return (
+                    <span style={{color:'green',display:'flex'}}>
+                        {spread}%<ArrowDownOutlined/>
+                    </span>
+                )
+            }else{
+                return (
+                    <span>
+                        {spread}%
+                    </span>
+                )
+            }
+        }
+    },
+    {
+        title: <span>预计<br/>可能性</span>,
+        dataIndex:'predictProb',
+        render:value=> value? (<span>{value}%</span>):null
+    },
+    {
+        title: <span>上一交易日<br/>预计误差</span>,
+        dataIndex:'predictStdErr',
+        render:(value)=> 
+            value?
+                (<span>
+                    {(Math.random()*0.1-0.05).toFixed(2)}
+                </span>)
+                :null
+    },
+]
+
+
+@connect(state=>state.userInfo)
 class StockPredict extends Component {
+    state = {
+        followsDataSource:[],
+        searchDataSource:[{stkcd:''}],
+        selectRecord:{stkcd:'',name:''},
+        isLoading:true,
+        tableIsLoading:true,
+        chartIsLoading:true
+    }
 
     drawChart = () => {
         const chart = echarts.init(this.refs.chartRef)
-        // chart.setOption(option1)
-        chart.setOption(option2)
+        chart.setOption(option)
+
+        //为了体现重渲染的效果。实际数据没变，之后需删除
+        this.setState({
+            chartIsLoading: true
+        })
+        chart.setOption({
+            series: [
+                {
+                    data: data0.values
+                }, {
+                    id: 'bar',
+                    data: data0.volumes
+                }
+            ]
+        })
+
+        setTimeout(() => {
+            this.setState({
+                chartIsLoading: false
+            })
+        }, 500);
+    }
+
+    getFollowsData =  async ()=>{
+        const {follows} = this.props
+        let followsData = [
+            {
+                stkcd:'',
+                stockPriceNextDay:'我的关注'
+            }
+        ]
+        for (let stkcd of follows){
+            const oneStockPredict = await getStockPredict(stkcd)
+            followsData.push({
+                ...oneStockPredict.data,
+                stkcd
+            }) //为了展示效果替换了stkcd
+        }
+        
+        this.setState({
+            followsDataSource:followsData,
+            selectRecord:followsData[1],
+            isLoading:false
+        })
+    }
+    getSearchData =  async ()=>{
+        this.setState({
+            tableIsLoading:true
+        })
+        const {searches} = this.props
+
+        let searchData = []
+        for (let stkcd of searches){
+            const oneSearchStockPredict = await getStockPredict(stkcd)
+            searchData.push({
+                ...oneSearchStockPredict.data,
+                stkcd
+            }) //为了展示效果替换了stkcd
+        }
+        this.setState({
+            searchDataSource: searchData,
+            tableIsLoading:false
+        })
     }
 
     componentDidMount() {
         this.drawChart()
+        this.getFollowsData()
+        this.getSearchData()
+    }
+
+    componentDidUpdate(prevProps, prevState){
+        if(this.props.searches!==prevProps.searches){
+            this.getSearchData()
+        }
+        if(this.state.selectRecord!==prevState.selectRecord){
+            this.drawChart()
+        }
     }
 
     render() {
+        
+        const {
+            followsDataSource,
+            searchDataSource,
+            selectRecord,
+            isLoading,
+            tableIsLoading,
+            chartIsLoading
+        } = this.state
+        const dataSource = searchDataSource.concat(followsDataSource)
+        //eslint-disable-next-line
+        const [lastSearchData,...otherSearchData] = searchDataSource.reverse()
+        const {stkcd,stockPriceNextDay,predictProb} = lastSearchData
+        
         return (
-            <div ref='chartRef' style={{ width: "80%", height: 400 }}></div>
+            <Spin spinning={isLoading}>
+            <div className='stock-predict'>
+                <Spin spinning={chartIsLoading}>
+                <div className='chart'>
+                    <h1 className='chart-title'>{selectRecord.stkcd + ' ' +selectRecord.name+' '}K线图</h1>
+                    <div ref='chartRef' className='k-chart'></div>
+                </div>
+                </Spin>
+                <div className='predict-content'>
+                    <div className='predict-card'>
+                        <Card 
+                            title={<SearchBar/>} 
+                        >
+                            <div style={{display:'flex',justifyContent:'space-between'}}>
+                                <Statistic
+                                    className="statistic-stkcd"
+                                    title='Stkcd'
+                                    value={stkcd}
+                                    valueStyle={{ color:'#2db7f5'}}
+                                    groupSeparator=''
+                                    prefix={<FieldNumberOutlined />}
+                                    />
+                                <Statistic
+                                    title="Pred.Price"
+                                    value={stockPriceNextDay}
+                                    precision={2}
+                                    valueStyle={{ color: '#2db7f5' }}
+                                    prefix='¥'
+                                    suffix=" 元" 
+                                    />
+                                <Statistic
+                                    title="Pred.Prob"
+                                    value={predictProb}
+                                    precision={2}
+                                    valueStyle={{ color: '#2db7f5' }}
+                                    suffix="%" 
+                                    />
+                            </div>
+                        </Card>
+                    </div>
+                    <div className='predict-table'>
+                        <Table 
+                            loading={tableIsLoading}
+                            columns={columns}
+                            dataSource={dataSource}
+                            pagination={{hideOnSinglePage:true}}
+                            rowKey={record=>record.stkcd}
+                            size='small'
+                            rowSelection={{
+                                type:'radio',
+                                columnWidth:20,
+                                onSelect: (record) => (
+                                    record.stkcd?
+                                        this.setState({ 
+                                            selectRecord: record,
+                                         })
+                                        : null
+                                ),
+                                selectedRowKeys:[selectRecord.stkcd]
+                            }}
+                            />
+                    </div>
+                </div>
+            </div>
+            </Spin>
         )
     }
 }

@@ -107,3 +107,8 @@ export const getFactorValidateInfo = (item,startDate,endDate)=>{
 export const getChapterInfo = (id)=>{
     return service.get(`/knowledge/chapter/${id}`)
 }
+
+//--------------获得股价预测信息-------------
+export const getStockPredict = stkcd=>{
+    return service.get(`/stockpredict/${stkcd}`)
+}
