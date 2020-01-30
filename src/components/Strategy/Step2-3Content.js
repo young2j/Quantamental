@@ -68,7 +68,6 @@ const colorMapToKey = {
   b5: "purple",
 }
 const Step23Content = (props) => {
-  console.log(props);
   const { factorsForComputeScore, universeData } = props // universeData to remove
   const [dataSource, setDataSource] = useState(factorsForComputeScore)
 

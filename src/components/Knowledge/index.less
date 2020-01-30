@@ -1,7 +1,7 @@
 #chapter-form{
   display: flex;
   flex-direction:column;
-  margin-top: 50px;
+  margin-top: 20px;
   .title-item{
     display: flex;
     justify-content: center;
@@ -32,86 +32,50 @@
   }
   .editor-form{
     z-index: 9;
-    .toolbar-wrapper{
-      border-top: 1px solid #dedede;
-      border-bottom: 1px solid #dedede;
+    margin: 0px auto;
+    .w-e-toolbar{
       box-shadow: 0px 0px 2px 1px gray;
-      position: relative;
-      margin: 20px auto;
-      margin-bottom: 0px;
-      width: 777px;
-      height: 35px;
-      transition: all 1s;
-      .toolbar{
-        position: absolute;
-        margin-left: 60px;
-        transition: all 1s;
-      }
-    }
-
-    .toolbar-wrapper-fixtop{
-      border-top: 1px solid #dedede;
-      border-bottom: 1px solid #dedede;
-      box-shadow: 0px 0px 2px 1px gray;
-      position: fixed;
-      left: 20.2%;
-      top:8.5%;
-      width: 777px;
-      height: 35px;
-      z-index: 20000;
-      background: #fff;
-      transition: all 1s;
-      .toolbar{
-        margin-left: 60px;
-        transition: all 1s;
-      }
-    }
-
-    .toolbar-wrapper-collapse{
-      border-top: 1px solid #dedede;
-      border-bottom: 1px solid #dedede;
-      box-shadow: 0px 0px 2px 1px gray;
-      position: relative;
-      margin: 20px auto;
-      margin-bottom: 0px;
-      width: 1024px;
-      height: 35px;
-      transition: all 1s;
-      .toolbar{
-        position: absolute;
-        margin-left: 180px;
-        transition: all 1s;
-      }
-    }
-    .toolbar-wrapper-collapse-fixtop{
-      border-top: 1px solid #dedede;
-      border-bottom: 1px solid #dedede;
-      box-shadow: 0px 0px 2px 1px gray;
-      position: fixed;
-      left: 21.6%;
-      top:8.5%;
-      width: 1024px;
-      height: 35px;
-      z-index: 20000;
-      background: #fff;
-      transition: all 1s;
-      .toolbar{
-        margin-left: 180px;
-        transition: all 1s;
-      }
+      background-color: #fff !important;
+      padding-left: 40px;
+      top:0px;
+      transition: all 0.5s;
     }
 
     .content{
-      border: 1px solid #dedede;
-      border-top: 0px;
       width: 80%;
       margin: 0px auto;
-      .w-e-text{
+      .w-e-text-container{
         min-height: 700px;
-        overflow: hidden;
       }
-      .w-e-panel-container{
-        margin-top: 66px;
+      .w-e-text{
+        // overflow-y: hidden;
+      }
+    }
+  }
+
+  .editor-form-fixtop{
+    z-index: 9;
+    margin: 0px auto;
+    position: relative;
+    .w-e-toolbar{
+      box-shadow: 0px 0px 2px 1px gray;
+      background-color: #fff !important;
+      padding-left: 40px;
+      position: absolute;
+      top:53.5px;
+      width: 80%;
+      z-index: 20000;
+      transition: all 0.5s;
+    }
+
+    .content{
+      width: 80%;
+      margin: 0px auto;
+      .w-e-text-container{
+        min-height: 700px;
+      }
+      .w-e-text{
+        // overflow-y: hidden;
       }
     }
   }
@@ -121,7 +85,7 @@
     bottom:20px;
     right: 346px;
     z-index:20000;
-    transition: all 1s;
+    transition: all 0.5s;
 
   }
   .submit-btn-collapse{
@@ -129,6 +93,6 @@
     bottom:20px;
     right: 86px;
     z-index:20000;
-    transition: all 1s;
+    transition: all 0.5s;
   }
 }

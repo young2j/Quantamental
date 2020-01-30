@@ -547,7 +547,6 @@ class MarketTabTimeTable extends Component {
     render() {
         let dataSource = this.props.dataSource.filter(obj => obj.stkcd === this.props.selectFirmCode)
         dataSource = dataSource[0] ? dataSource[0].market : null
-        console.log(this.props);
 
         //columns
         const marketColumns = Object.keys(timeColumnsNames.market).map((k, i) => {

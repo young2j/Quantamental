@@ -500,7 +500,6 @@ class SolvencyTabChart extends Component {
 
     render() {
          
-        console.log('this.props.dataSource:',this.props.dataSource)
         return (
             <div ref={this.barChartRef} style={{ height: '420px', marginBottom: '40px', width: '90%' }}></div>
         )
@@ -586,7 +585,6 @@ class SolvencyTabTimeTable extends Component {
     render() {
         let dataSource = this.props.dataSource.filter(obj => obj.stkcd === this.props.selectFirmCode)
         dataSource = dataSource[0] ? dataSource[0].solvency : null
-        console.log(this.props);
 
         //columns
         const solvencyColumns = Object.keys(timeColumnsNames.solvency).map((k, i) => {

@@ -1,10 +1,15 @@
 #knowledge-page{
   display: flex;
   overflow: hidden;
+
   .knowledge-chapter{
     flex:0.77;
     z-index: 9;
-    transition: flex 1s;
+    transition: flex 0.5s;
+    .chapter-wrapper{
+      max-width:1080px;
+      margin:0px auto;
+    }
   }
   .knowledge-toc{
     max-height: none;
@@ -13,7 +18,7 @@
       position: fixed;
       top:350px;
       right:300px;
-      transition: right 1s;
+      transition: right 0.5s;
       z-index: 10;
       button{
         border-radius: 5px 0px 0px 5px;
@@ -22,7 +27,7 @@
     .toc-anchor{
       position: fixed;
       right:40px;
-      transition: right 1s;
+      transition: right 0.5s;
       .ant-anchor{
         height: 688px;
       }
@@ -33,7 +38,11 @@
   .knowledge-chapter-transition{
     flex:1;
     z-index: 9;
-    transition: flex 1s;
+    transition: flex 0.5s;
+    .chapter-wrapper{
+      max-width:1080px;
+      margin:0px auto;
+    }
   }
 
   .knowledge-toc-transition{
@@ -42,7 +51,7 @@
       position: fixed;
       top:350px;
       right:10px;
-      transition: right 1s;
+      transition: right 0.5s;
       z-index: 10;
       button{
         border-radius: 5px 0px 0px 5px;
@@ -51,11 +60,59 @@
     .toc-anchor{
       position: fixed;
       right:-250px;
-      transition: right 1s; 
+      transition: right 0.5s; 
       .ant-anchor{
         height: 688px;
       }
     }
-  
+  }
+  #last-chapter{
+      svg{
+        width: 50px;
+        height: 60px;
+        color: #dedede;
+        position: fixed;
+        top: 60%;
+        z-index: 20001;
+      }
+  }
+  #next-chapter{
+      svg{
+        width: 50px;
+        height: 60px;
+        color: #dedede;
+        position: fixed;
+        top: 60%;
+        right: 22%;
+        transition: all 0.5s;
+        z-index: 20001;
+      }
+  }
+  #next-chapter-collapse{
+      svg{
+        width: 50px;
+        height: 60px;
+        color: #dedede;
+        position: fixed;
+        top: 60%;
+        right: 3%;
+        transition: all 0.5s;
+      }
+  }
+
+  #last-chapter:hover{
+      svg{
+        color: #000;
+      }
+  }
+  #next-chapter:hover{
+      svg{
+        color: #000;
+      }
+  }
+  #next-chapter-collapse:hover{
+      svg{
+        color: #000;
+      }
   }
 }

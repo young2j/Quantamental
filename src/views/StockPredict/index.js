@@ -594,9 +594,7 @@ class StockPredict extends Component {
                 </Spin>
                 <div className='predict-content'>
                     <div className='predict-card'>
-                        <Card 
-                            title={<SearchBar/>} 
-                        >
+                        <Card title={<SearchBar/>} >
                             <div style={{display:'flex',justifyContent:'space-between'}}>
                                 <Statistic
                                     className="statistic-stkcd"

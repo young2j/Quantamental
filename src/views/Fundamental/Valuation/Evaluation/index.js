@@ -79,7 +79,6 @@ class Evaluation extends Component {
 
     }    
     render() {
-        console.log("this.props.evaluationInfo:", this.props.evaluationInfo);
         
         return (
             <PageHeader

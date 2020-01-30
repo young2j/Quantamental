@@ -108,7 +108,6 @@ class Quality extends Component {
     }
     
     render() {
-        console.log('this.props:',this.props);
         const { qualityInfo } = this.props
         return (
         <Spin spinning={qualityInfo.isLoading}>        

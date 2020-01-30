@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
 import { Anchor, Typography, Affix, Button } from 'antd'
-import { DoubleLeftOutlined, DoubleRightOutlined } from '@ant-design/icons'
+import { DoubleLeftOutlined, DoubleRightOutlined,LeftOutlined,RightOutlined } from '@ant-design/icons'
 
 import Chapter from '../../components/Knowledge'
 import './index.less'
+
+
+
 
 
 const chapters = [
@@ -14,7 +17,7 @@ const chapters = [
         children: [
             {
                 title: '第1章 基本面量化投资综述',
-                href: '#',
+                href: '0-0',
                 part: "0-0"
             }
         ],
@@ -25,11 +28,11 @@ const chapters = [
         children: [
             {
                 title: '第2章 快速理解财务报表',
-                href: '#',
+                href: '1-0',
                 part: "1-0",
             }, {
                 title: '第3章 个股分析应用',
-                href: '#',
+                href: '1-1',
                 part: "1-1",
             }
         ]
@@ -40,36 +43,36 @@ const chapters = [
         children: [
             {
                 title: '第4章 打开量化投资的黑匣子',
-                href: '#',
+                href: '2-0',
                 part: "2-0",
             }, {
                 title: '第5章 估值维度',
-                href: '#',
+                href: '2-1',
                 part: "2-1",
             }, {
                 title: '第6章 质量维度一：盈利能力',
-                href: '#',
+                href: '2-2',
                 part: "2-2",
 
             }, {
                 title: '第7章 质量维度二：经营效率',
-                href: '#',
+                href: '2-3',
                 part: "2-3",
             }, {
                 title: '第8章 质量维度三：盈余质量',
-                href: '#',
+                href: '2-4',
                 part: "2-4",
             }, {
                 title: '第9章 质量维度四：投融资决策',
-                href: '#',
+                href: '2-5',
                 part: "2-5",
             }, {
                 title: '第10章 质量维度五：无形资产',
-                href: '#',
+                href: '2-6',
                 part: "2-6",
             }, {
                 title: '第11章 整合框架：现代价值投资理念',
-                href: '#',
+                href: '2-7',
                 part: "2-7",
             }
         ]
@@ -80,15 +83,15 @@ const chapters = [
         children: [
             {
                 title: '第12章 市场参与者信号',
-                href: '#',
+                href: '3-0',
                 part: '3-0'
             }, {
                 title: '第13章 市场价格信号',
-                href: '#',
+                href: '3-1',
                 part: '3-1'
             }, {
                 title: '第14章 市场情绪信号',
-                href: '#',
+                href: '3-2',
                 part: '3-2'
             }
         ]
@@ -99,30 +102,51 @@ const chapters = [
         children: [
             {
                 title: '第15章 量化投资组合：实施与管理',
-                href: '#',
+                href: '4-0',
                 part: '4-0'
             }, {
                 title: '第16章 多因子选股模型',
-                href: '#',
+                href: '4-1',
                 part: '4-1'
             }
         ]
     }
 ]
 
+const chaptersChildren = chapters.reduce((children,o)=>children.concat(o.children),[])
+
 
 const Knowledge = () => {
     const [collapse, setCollapse] = useState(false)
     const [link, setLink] = useState({
         title: '第1章 基本面量化投资综述',
-        href: '#',
+        href: '0-0',
         part: "0-0"
     })
+
+    const toLastChapter = ()=>{
+        let currentIndex = chaptersChildren.findIndex(child => child.href === link.href)
+        const lastIndex = (currentIndex - 1) < 0 ? chaptersChildren.length - 1 : currentIndex - 1
+        setLink(chaptersChildren[lastIndex])
+    }
+    const toNextChapter = ()=>{
+        let currentIndex = chaptersChildren.findIndex(child => child.href === link.href)        
+        const nextIndex = (currentIndex + 1) > chaptersChildren.length - 1 ? 0 : currentIndex + 1
+        setLink(chaptersChildren[nextIndex])
+    }
 
     return (
         <div id='knowledge-page'>
             <div className={collapse ? 'knowledge-chapter-transition' : 'knowledge-chapter'}>
+                <div className='chapter-wrapper'>
+                <LeftOutlined id='last-chapter' 
+                    onClick={toLastChapter}
+                    />
                 <Chapter collapse={collapse} link={link} />
+                <RightOutlined id={collapse? 'next-chapter-collapse':'next-chapter'}
+                    onClick={toNextChapter}
+                    />
+                </div>
             </div>
 
             <div className={collapse ? 'knowledge-toc-transition' : 'knowledge-toc'}>
@@ -138,7 +162,8 @@ const Knowledge = () => {
                 </Affix>
 
                 <Anchor className='toc-anchor'
-                    getCurrentAnchor={() => '0-0'}
+                    key={link.href}
+                    getCurrentAnchor={() => link.href}
                     onClick={(e, linkObj) => {
                         e.preventDefault()
                         setLink(linkObj)
@@ -148,12 +173,12 @@ const Knowledge = () => {
                     {
                         chapters.map(item => {
                             return item.children ?
-                                (<Anchor.Link href={item.part} title={item.title} key={item.part}>
+                                (<Anchor.Link href={item.href} title={item.title} key={item.part}>
                                     {item.children.map(child => {
-                                        return <Anchor.Link href={child.part} title={child.title} key={child.part} />
+                                        return <Anchor.Link href={child.href} title={child.title} key={child.part} />
                                     })}
                                 </Anchor.Link>) :
-                                (<Anchor.Link href={item.part} title={item.title} key={item.part} />)
+                                (<Anchor.Link href={item.href} title={item.title} key={item.part} />)
                         })
                     }
                 </Anchor>

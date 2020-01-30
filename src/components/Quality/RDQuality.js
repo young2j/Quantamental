@@ -88,7 +88,6 @@ export default class RDQuality extends Component {
         this.drawChart()
     }
     render() {
-        console.log(this.props);
         const {RDPatterns,RDCitations} = this.props.RDQualityInfo.RDEfficiency
         
         return (

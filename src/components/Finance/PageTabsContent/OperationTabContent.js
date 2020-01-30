@@ -533,7 +533,6 @@ class OperationTabTimeTable extends Component {
     render() {
         let dataSource = this.props.dataSource.filter(obj => obj.stkcd === this.props.selectFirmCode)
         dataSource = dataSource[0] ? dataSource[0].operation : null
-        console.log(this.props);
 
         //columns
         const operationColumns = Object.keys(timeColumnsNames.operation).map((k, i) => {

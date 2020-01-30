@@ -393,8 +393,6 @@ function calculateMA(dayCount) {
         var sum = 0;
         for (var j = 0; j < dayCount; j++) {
             sum += data0.values[i - j][1];
-            console.log(data0.values[i-j][1]);
-            
         }
         result.push(sum / dayCount);
     }
