@@ -6,7 +6,7 @@ import moment from 'moment'
 import { connect } from 'react-redux'
 
 import { getUniverseCode } from '../../api'
-import { saveUniverse, deleteMyPortfolio, deleteMyFollows } from '../../redux/actions'
+import { saveUniverse, deleteMyPortfolio, notfollowFirm } from '../../redux/actions'
 
 const { RangePicker } = DatePicker
 
@@ -77,17 +77,18 @@ let treeData = [
     // },
 ]
 
-@connect(state => state.strategyInfo, { saveUniverse, deleteMyPortfolio, deleteMyFollows })
+@connect(state => ({...state.strategyInfo,...state.userInfo}), 
+    { saveUniverse, deleteMyPortfolio, notfollowFirm })
 class Step1Content extends Component {
 
     constructor(props) {
         super(props)
-        const { myPortfolio, myFollows } = props
+        const { myPortfolio, follows } = props
         this.state = {
             checkedKeys: [],
             expandedKeys: ['b'],
             myPortfolio,
-            myFollows,
+            myFollows:follows,
             checkable: true,
             tableDataSource: [],
             deleteRows: [],
@@ -206,15 +207,15 @@ class Step1Content extends Component {
         }
         if (this.props.myPortfolio !== prevProps.myPortfolio) {
             this.setState({
-                checkable: !(this.props.myPortfolio.children.length === 0),
+                checkable: this.props.myPortfolio.children.length !== 0,
                 myPortfolio: this.props.myPortfolio
             })
         }
 
-        if (this.props.myFollows !== prevProps.myFollows) {
+        if (this.props.follows !== prevProps.follows) {
             this.setState({
-                checkable: !(this.props.myFollows.children.length === 0),
-                myFollows: this.props.myFollows
+                checkable: this.props.follows.length !== 0,
+                myFollows: this.props.follows
             })
         }
     }
@@ -266,17 +267,17 @@ class Step1Content extends Component {
             })
         }
         const myFollowsTreeData = {
-            ...myFollows,
             title: <Typography.Text strong>我的关注</Typography.Text>,
-            children: myFollows.children.map(child => {
+            key: 'd',
+            children: myFollows.map((stkcd,index) => {
                 return {
                     title: (<span className='tree-title'>
-                        {child.title}
+                        {stkcd}
                         <CloseCircleOutlined className='closeIcon'
-                            onClick={() => this.props.deleteMyFollows(child.key)}
+                            onClick={() => this.props.notfollowFirm(stkcd)}
                         />
                     </span>),
-                    key: child.key
+                    key: `d${index}`
                 }
             })
         }
@@ -295,7 +296,7 @@ class Step1Content extends Component {
                     />
                 </div>
 
-                <div style={{ display: 'flex', border: '2px solid #fafafa', width: "90%", margin: "5px auto ",height:450 }}>
+                <div style={{ display: 'flex', border: '2px solid #fafafa', width: "90%", margin: "5px auto ",height:"80%" }}>
                     <div className='tree-content'
                         style={{ flex: 0.4, borderRight: '2px solid #fafafa', paddingLeft: 30, paddingTop: 40 }}>
                         <Tree

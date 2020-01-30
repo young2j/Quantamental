@@ -48,16 +48,16 @@ const initState = {
       },
     ],
   },
-  myFollows: {
-    title: "我的关注",
-    key: 'd',
-    children: [
-      {
-        title: 'My follows',
-        key: 'd0',
-      },
-    ],
-  },
+  // myFollows: {
+  //   title: "我的关注",
+  //   key: 'd',
+  //   children: [
+  //     {
+  //       title: 'My follows',
+  //       key: 'd0',
+  //     },
+  //   ],
+  // },
   columns: initColumns,
   dataSource: initDataSource,
   factorsValidateOK:[],
@@ -107,14 +107,14 @@ export default (state = initState, action) => {
         }
       }
       
-    case actionTypes.DELETE_MYFOLLOWS:
-      return {
-        ...state,
-        myFollows:{
-          ...state.myFollows,
-          children: state.myFollows.children.filter(o => o.key !== action.payload)
-        }
-      }
+    // case actionTypes.DELETE_MYFOLLOWS:
+    //   return {
+    //     ...state,
+    //     myFollows:{
+    //       ...state.myFollows,
+    //       children: state.myFollows.children.filter(o => o.key !== action.payload)
+    //     }
+    //   }
     
     case actionTypes.ADD_COLUMNS:
       const newDataIndex = `columns${state.columns.length + 1}`

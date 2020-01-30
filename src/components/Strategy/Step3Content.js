@@ -389,7 +389,7 @@ class Step3Content extends Component {
         return (
             <div>
                 <div className="backtest-condition"
-                    style={{ display: 'flex', marginTop: 30 }}>
+                    style={{ display: 'flex', marginTop: 20 }}>
                     <div style={{ flex: 0.2 }}>
                         <span style={{ fontWeight: 'bold' }}>选择分组因子：</span> 前&nbsp;
                     <InputNumber
@@ -460,11 +460,11 @@ class Step3Content extends Component {
 
 
                 <div className='backtest-content'
-                    style={{ display: 'flex', justifyContent: 'space-between', marginTop: 50 }}
+                    style={{ display: 'flex', justifyContent: 'space-between', marginTop: 10 }}
                 >
                     <div className='backtest-chart'
                         ref={this.chartRef}
-                        style={{ height: 420, width: "62%", left: -40, top: 30 }}
+                        style={{ height: 420, width: "65%", left: -40, top: 30 }}
                     >
                     </div>
 

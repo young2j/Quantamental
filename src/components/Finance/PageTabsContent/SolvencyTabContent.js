@@ -1,5 +1,5 @@
 import React, { Component, createRef } from 'react'
-import { CloseCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, PlusOutlined,HeartFilled, HeartOutlined} from '@ant-design/icons';
 import {
     Button,
     Popconfirm,
@@ -17,7 +17,18 @@ import moment from 'moment'
 import _ from 'lodash'
 
 import './tabContent.less'
-import { deleteFirm, addFirm, addDate, deleteDate, selectDate, changeRange } from '../../../redux/actions'
+import {
+    deleteFirm,
+    addFirm,
+    addDate,
+    deleteDate,
+    selectDate,
+    changeRange,
+    addBlackSheet,
+    deleteBlackSheet,
+    followFirm,
+    notfollowFirm
+} from '../../../redux/actions'
 import TableFooter from './TableFooter'
 
 const { RangePicker } = DatePicker
@@ -80,9 +91,13 @@ const columnsNames = {
 @connect(state => {
     return {
         financeInfo: state.financeInfo,
-        currentDate: state.financeInfo.currentDate
+        currentDate: state.financeInfo.currentDate,
+        userInfo: state.userInfo
     }
-}, { deleteFirm, addFirm, addDate, deleteDate, selectDate })
+}, {
+    deleteFirm, addFirm, addDate, deleteDate, selectDate,
+    addBlackSheet, deleteBlackSheet, followFirm, notfollowFirm
+})
 class SolvencyTabTable extends Component {
     constructor(props) {
         super(props)
@@ -135,19 +150,35 @@ class SolvencyTabTable extends Component {
         const options = this.props.dataSource.map(obj => obj.date)
         let dataSource = this.props.dataSource.filter(obj => obj.date === this.props.currentDate)
         dataSource = dataSource[0] ? dataSource[0].solvency : null  //mock数据为了保证有数不出错
+        const { blacksheet, follows } = this.props.userInfo
 
         //columns
         const solvencyColumns = Object.keys(columnsNames.solvency).map((k, i) => {
             if (k === 'operate') {
                 return {
                     title: (<span style={{ color: '#1890ff' }}>
-                        {columnsNames.solvency[k]}
+                        {columnsNames.profit[k]}
                     </span>),
                     dataIndex: k,
-                    render: (text, record) => {
+                    render: (value, record) => {
+                        const stkcd = /^\d{6}/.exec(record.stkcd)[0]
+                        const isMyFollow = follows.indexOf(stkcd) !== -1
+                        const isBlackSheet = blacksheet.indexOf(stkcd) !== -1
                         return (
                             <Button.Group >
-                                <Button type='primary' ghost style={{ border: 'none', padding: "0px 3px" }}>关注</Button>
+                                <Button ghost
+                                    style={{ border: 'none', padding: 0, color: '#000' }}
+                                    icon={isBlackSheet ? <HeartFilled /> : <HeartOutlined />}
+                                    onClick={() => isBlackSheet ? this.props.deleteBlackSheet(stkcd) : this.props.addBlackSheet(stkcd)}
+                                >
+                                    黑名单
+                                </Button>
+                                |<Button type='primary' ghost
+                                    style={{ border: 'none', padding: "0px 3px" }}
+                                    onClick={() => isMyFollow ? this.props.notfollowFirm(stkcd) : this.props.followFirm(stkcd)}
+                                >
+                                    {isMyFollow ? "已关注" : "关注"}
+                                </Button>
                                 <Popconfirm title="确定要移除该公司?" okText='确定' cancelText='取消'
                                     onConfirm={() => this.handleDeleteFirm(record)}
                                 >
@@ -591,19 +622,16 @@ class SolvencyTabTimeTable extends Component {
             if (k === 'operate') {
                 return {
                     title: (<span style={{ color: '#1890ff' }}>
-                        {timeColumnsNames.solvency[k]}
+                        {timeColumnsNames.profit[k]}
                     </span>),
                     dataIndex: k,
                     render: (text, record) => {
                         return (
-                            <Button.Group >
-                                <Button type='primary' ghost style={{ border: 'none', padding: "0px 3px" }}>标记</Button>
-                                <Popconfirm title="确定要移除该年份?" okText='确定' cancelText='取消'
-                                    onConfirm={() => this.handleDeleteDate(record)}
-                                >
-                                    |<Button type='danger' ghost style={{ border: 'none', padding: "0px 3px" }}>移除</Button>
-                                </Popconfirm>
-                            </Button.Group>
+                            <Popconfirm title="确定要移除该年份?" okText='确定' cancelText='取消'
+                                onConfirm={() => this.handleDeleteDate(record)}
+                            >
+                                <Button type='danger' ghost style={{ border: 'none', padding: "0px 3px" }}>移除</Button>
+                            </Popconfirm>
                         )
                     }
                 }

@@ -3,20 +3,9 @@ import _ from 'lodash'
 
 const initState = {
   isLoading:false,
-  follows:['000000','111111','222222','333333','444444','555555','666666','777777'],
-  searches:['888888']
-  // predictInfos:[
-  //   {
-  //     stkcd: "888888",
-  //     name: "增斗必千公司",
-  //     stockPriceLastDay: 95.44,
-  //     stockPriceNextDay: 74.88,
-  //     InDecreasePredict: 94.78,
-  //     predictProb: 86.33,
-  //     predictStdErr: 0.1300768,
-  //   }
-  // ],
-
+  follows:['000000','000001','111111','444444','555555','666666','777777','999999'],
+  blacksheet:['222222','333333'],
+  searches:['888888'],
 }
 
 export default (state=initState,action)=>{
@@ -33,6 +22,34 @@ export default (state=initState,action)=>{
         ...state,
         searches: _.union(searches, [action.payload.stkcd])
       }
+    
+    case actionTypes.ADD_BLACKSHEET:
+      return {
+        ...state,
+        blacksheet:[
+          ...state.blacksheet,
+          action.payload
+        ]
+      }
+    case actionTypes.DELETE_BLACKSHEET:
+      return {
+        ...state,
+        blacksheet:state.blacksheet.filter(item=>item!==action.payload)
+      }  
+
+    case actionTypes.ADD_MYFOLLOWS:
+      return {
+        ...state,
+        follows:[
+          ...state.follows,
+          action.payload
+        ]
+      }
+    case actionTypes.DELETE_MYFOLLOWS:
+      return {
+        ...state,
+        follows:state.follows.filter(item=>item!==action.payload)
+      }  
 
     case actionTypes.END_REQUEST:
       return {

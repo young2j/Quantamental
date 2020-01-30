@@ -129,18 +129,6 @@ export const deleteFirm= stkcd=>{
 }
 
 
-//-------------------关注公司-------------还没实现
-export const followFirm=stkcd=>{
-    return dispatch=>{
-        dispatch({
-            type: actionTypes.FOLLOW_FIRM,
-            payload: stkcd
-        })
-    }
-}
-
-
-
 //------------------选中一家公司------------------
 export const selectFirm = (stkcd,firmName) => dispatch=>{
     return dispatch({
@@ -153,6 +141,40 @@ export const selectFirm = (stkcd,firmName) => dispatch=>{
 }
 
 
+//-------------------关注/取关公司-------------
+export const followFirm=stkcd=>{
+    return dispatch=>{
+        dispatch({
+            type: actionTypes.ADD_MYFOLLOWS,
+            payload: stkcd
+        })
+    }
+}
+export const notfollowFirm=stkcd=>{
+    return dispatch=>{
+        dispatch({
+            type: actionTypes.DELETE_MYFOLLOWS,
+            payload: stkcd
+        })
+    }
+}
+//-------------------添加/删除黑名单公司-------------
+export const addBlackSheet=stkcd=>{
+    return dispatch=>{
+        dispatch({
+            type: actionTypes.ADD_BLACKSHEET,
+            payload: stkcd
+        })
+    }
+}
+export const deleteBlackSheet=stkcd=>{
+    return dispatch=>{
+        dispatch({
+            type: actionTypes.DELETE_BLACKSHEET,
+            payload: stkcd
+        })
+    }
+}
 //==================================Evaluation=============================================
 
 export const getEvaInfo = stkcd => dispatch=>{
@@ -217,10 +239,18 @@ export const deleteMyPortfolio = (key)=>dispatch=>{
         payload:key
     })
 }
-export const deleteMyFollows = (key)=>dispatch=>{
+// export const deleteMyFollows = (key)=>dispatch=>{
+//     dispatch({
+//         type:actionTypes.DELETE_MYFOLLOWS,
+//         payload:key
+//     })
+// }
+export const saveMyPortfolio= (portfolio,firmCodes)=>dispatch=>{ //当前还未处理组合的公司代码
     dispatch({
-        type:actionTypes.DELETE_MYFOLLOWS,
-        payload:key
+        type:actionTypes.SAVE_MYPORTFOLIO,
+        payload:{
+            portfolio
+        }
     })
 }
 
@@ -271,14 +301,6 @@ export const toComputeScore = data=>dispatch=>{
     })
 }
 
-export const saveMyPortfolio= (portfolio,firmCodes)=>dispatch=>{ //当前还未处理组合的公司代码
-    dispatch({
-        type:actionTypes.SAVE_MYPORTFOLIO,
-        payload:{
-            portfolio
-        }
-    })
-}
 
 
 //========================StockPredict===================

@@ -11,7 +11,11 @@ export default {
     DELETE_DATE:'DELETE_DATE',//删除一年的数据
     SELECT_DATE:'SELECT_DATE',//选择当前时间维度
 
-    FOLLOW_FIRM:'FOLLOW_FIRM', //关注公司
+    ADD_BLACKSHEET:'ADD_BLACKSHEET', //添加黑名单
+    DELETE_BLACKSHEET:'DELETE_BLACKSHEET', //删除黑名单
+    ADD_MYFOLLOWS:'ADD_MYFOLLOWS', //添加我的关注
+    // DELETE_MYFOLLOWS:'DELETE_MYFOLLOWS',//删除我的关注[同后]
+
     
     SELECT_FIRM:"SELECT_FIRM", //选中一家公司
     CHANGE_RANGE:'CHANGE_RANGE', //改变时间范围
@@ -24,7 +28,7 @@ export default {
     //====================
     SELECT_SAMPLE_PERIOD:'SELECT_SAMPLE_PERIOD', //选择样本期间
     DELETE_MYPORTFOLIO:'DELETE_MYPORTFOLIO',//删除我的组合
-    DELETE_MYFOLLOWS:'DELETE_MYFOLLOWS',//删除我的组合
+    DELETE_MYFOLLOWS:'DELETE_MYFOLLOWS',//删除我的关注
 
     SAVE_UNIVERSE:'SAVE_UNIVERSE',//保存股票池，step2.3显示综合得分用，实际后端做好，就不需要这个
     MERGE_FACTORS:'MERGE_FACTORS', //合并选择的因子信息
