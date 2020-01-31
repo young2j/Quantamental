@@ -38,5 +38,15 @@ export default {
     COMPUTE_CORR:'COMPUTE_CORR', //冗余因子剔除--提供数据用于计算相关系数矩阵
     COMPUTE_SCORE:'COMPUTE_SCORE', //提供数据用于计算因子综合得分
 
-    SAVE_MYPORTFOLIO:"SAVE_MYPORTFOLIO" //保存组合
+    SAVE_MYPORTFOLIO:"SAVE_MYPORTFOLIO", //保存组合
+
+
+    //===================================
+    GET_NOTIFICATION:'GET_NOTIFICATION', //获得消息
+    MARK_NOTIFICATION: 'MARK_NOTIFICATION', //标记已读
+    MARK_ALL_NOTFICATIONS: 'MARK_ALL_NOTIFICATIONS',
+    START_MARK: 'START_MARK',
+    FINISH_MARK: 'FINISH_MARK',
+    LOGIN:'LOGIN', //用户登录
+    LOGOUT:'LOGOUT',//用户登出
 }

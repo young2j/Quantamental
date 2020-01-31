@@ -112,3 +112,13 @@ export const getChapterInfo = (id)=>{
 export const getStockPredict = stkcd=>{
     return service.get(`/stockpredict/${stkcd}`)
 }
+
+//---------------获得通知信息------------------
+export const getNotifications = ()=>{
+    return service.get('/user/notifications')
+}
+
+//----------用户登录----------
+export const loginVerify = (loginInfo) => {
+    return service.post('/user/login', loginInfo)
+}

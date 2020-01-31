@@ -3,6 +3,7 @@ import StockPredict from './StockPredict'
 import {Finance,Evaluation,Quality} from './Fundamental'
 import Knowledge from './Knowledge'
 import Strategy from './Strategy'
+import {Login,Register,Notification,Profile} from './User'
 
 
 
@@ -14,4 +15,8 @@ export {
     Quality,
     Knowledge,
     Strategy,
+    Login,
+    Register,
+    Notification,
+    Profile
 }

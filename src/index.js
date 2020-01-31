@@ -4,7 +4,7 @@ import { BrowserRouter as Router,Switch,Route} from 'react-router-dom'
 import { Provider } from 'react-redux'
 
 import App from './App';
-import {Greeting} from './views'
+import {Greeting,Login, Register} from './views'
 import store from './redux/store'
 
 ReactDOM.render(
@@ -12,8 +12,9 @@ ReactDOM.render(
       <Router>
         <Switch>
             <Route path='/greeting' component={Greeting}/>
-            <Route path='/' component={App}/>
-
+            <Route path='/user/login' component={Login}/>
+            <Route path='/user/register' component={Register}/>
+            <Route path='/' component={App} />
         </Switch>
       </Router>
     </Provider>,
