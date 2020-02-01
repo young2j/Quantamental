@@ -52,7 +52,7 @@ export {
     Index
 }
 
-const Greeting = ()=>{
+const Greeting = (props)=>{
 
   return (
     <Index>
@@ -65,11 +65,13 @@ const Greeting = ()=>{
         <div className='title'>基本面量化投资</div>
         <p>——开启您的价值投资之旅</p>
         <div className="button-group">
-          <Button style={{ fontWeight: 'bold', width: "120px" }}>开始使用</Button>
+          <Button style={{ fontWeight: 'bold', width: "120px" }}
+            onClick={()=>props.history.push('/')}
+          >开始使用</Button>
           <img src={githubImg} alt='' />
           <Button style={{ fontWeight: 'bold' }}>
-            biu一下呗~
-                <HeartOutlined style={{ color: 'hotpink', margin: '0px' }} />
+            <a href='https://github.com/YangShuangjie/Quantamental'>biu一下呗~</a>
+            <HeartOutlined style={{ color: 'hotpink', margin: '0px' }} />
           </Button>
         </div>
       </div>

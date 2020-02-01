@@ -10,7 +10,18 @@ const initState = {
   username: loginInfo === null ?  'stranger' : loginInfo.username,
   avatar: loginInfo === null ?    '' : loginInfo.avatar,
   role: loginInfo === null ?      '' : loginInfo.role,
+  password:'******',
   isLogin: Boolean(loginInfo),
+  baseInfo:{
+    name:'二哈',
+    sex:'男',
+    city:'成都',
+    country:'中国🇨🇳',
+    birthday:'2222年2月22日',
+    email:'***@example.com',
+    phonenumber:'12345678910',
+    github:'https://github.com/YangShuangjie/Quantamental'
+  },
   follows:['000000','000001','111111','444444','555555','666666','777777','999999'],
   blacksheet:['222222','333333'],
   searches:['888888'],
@@ -132,6 +143,18 @@ export default (state=initState,action)=>{
         isLogin: false
       }
     //-----------
+    case actionTypes.SAVE_PROFILE:
+      const {username,password,blacksheet,follows,...baseInfo} = action.payload
+      
+      return {
+        ...state,
+        baseInfo,
+        username, 
+        password, 
+        blacksheet:state.blacksheet===blacksheet? blacksheet:blacksheet.split(','), //改动了form值就成了字符串而不是数组
+        follows: state.follows === follows ? follows : follows.split(','),
+      }
+
     default:
       return state
   }

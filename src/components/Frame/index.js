@@ -28,6 +28,7 @@ import loginAvatar from './avatar2.jpg'
 
 import { logout } from '../../redux/actions'
 
+
 //-----------------------------
 const weeks = [
     '星期一',
@@ -54,7 +55,7 @@ const weathers = [
 ]
 
 const weatherDefaults = {
-  icon: weathers[Math.round(Math.random()*10)],
+  icon: weathers[Math.round(Math.random()*10)-1],
   color: 'goldenrod',
   size: 40,
   animate: true

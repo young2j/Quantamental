@@ -6,7 +6,8 @@ import {
     getEvaluationInfo,
     getQualityInfo,
     getNotifications,
-    loginVerify
+    loginVerify,
+    profilePost
 } from '../../api'
 
 import { message } from 'antd'
@@ -407,3 +408,22 @@ export const login = (loginInfo) => dispatch => {
         })
 
 }
+
+
+//--------------modifyProfile--------------------------
+export const saveProfile = (values) => dispatch => {
+    dispatch(startRequest())
+    profilePost(values)
+        .then(resp => {
+            dispatch({
+                    type: actionTypes.SAVE_PROFILE,
+                    payload: values // resp.data
+                })
+            }
+        )
+        .finally(
+            ()=>dispatch(endRequest())
+        )
+}
+
+

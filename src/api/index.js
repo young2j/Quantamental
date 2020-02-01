@@ -122,3 +122,8 @@ export const getNotifications = ()=>{
 export const loginVerify = (loginInfo) => {
     return service.post('/user/login', loginInfo)
 }
+
+//-----------修改设置-----------
+export const profilePost = (values)=>{
+    return service.post('/user/profile',values)
+}

@@ -49,4 +49,5 @@ export default {
     FINISH_MARK: 'FINISH_MARK',
     LOGIN:'LOGIN', //用户登录
     LOGOUT:'LOGOUT',//用户登出
+    SAVE_PROFILE:'SAVE_PROFILE',//保存个人设置
 }
