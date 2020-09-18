@@ -118,7 +118,7 @@ export const changeRange = (stkcd, startDate, endDate) => dispatch => { //实际
             } else {
                 message.error("数据请求错误,添加失败!")
             }
-        })
+        }) 
 }
 
 //-------------------删除可比公司-----------------
@@ -140,8 +140,9 @@ export const selectFirm = (stkcd, firmName) => dispatch => {
             stkcd,
             firmName
         }
-    })
+    }) 
 }
+
 
 
 //-------------------关注/取关公司-------------
@@ -375,11 +376,11 @@ const clearLoginInfo = () => {
     window.sessionStorage.removeItem('loginInfo')
 
     return {
-            type: actionTypes.LOGOUT
-        }
+        type: actionTypes.LOGOUT
+    }
 }
 
-export const logout = ()=>dispatch=>{
+export const logout = () => dispatch => {
     dispatch(
         clearLoginInfo()
     )
@@ -416,13 +417,13 @@ export const saveProfile = (values) => dispatch => {
     profilePost(values)
         .then(resp => {
             dispatch({
-                    type: actionTypes.SAVE_PROFILE,
-                    payload: values // resp.data
-                })
-            }
+                type: actionTypes.SAVE_PROFILE,
+                payload: values // resp.data
+            })
+        }
         )
         .finally(
-            ()=>dispatch(endRequest())
+            () => dispatch(endRequest())
         )
 }
 

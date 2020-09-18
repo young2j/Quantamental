@@ -5,7 +5,7 @@ import moment from 'moment'
 
 const isDev = process.env.NODE_ENV==='development'
 const service=axios.create({
-    baseURL: isDev ? 'http://rap2api.taobao.org/app/mock/236247':''
+    baseURL: isDev ? 'http://rap2api.taobao.org/app/mock/236247':'http://rap2api.taobao.org/app/mock/236247'
 })
 
 //-----------全局拦截器--------------------
