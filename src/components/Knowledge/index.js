@@ -144,7 +144,7 @@ class ChapterEditView extends Component {
             name="title"
             rules={[{ required: true }]}
           >
-            <Input />
+            <Input style={{ width: 300, paddingLeft: 5,textAlign: 'center'}}/>
           </Form.Item>
           <Button style={{width:45,paddingLeft:5}}
             onClick={()=>setDisplayForm(!displayForm)}
